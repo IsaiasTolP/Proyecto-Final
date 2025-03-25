@@ -33,9 +33,9 @@ Este repositorio corresponde al proyecto final de 2º DAW
 
 ## Tecnologías
 
-Frontend: Vue.ts + Bootstrap
-Backend: Django + DRF
-Tareas asíncronas: Celery + Redis
-Base de Datos: PostgreSQL (SQLite durante desarrollo)
-Pruebas: Vite + @vue/test-utils + @testing-library/vue
-Control de versiones: Git + Github
+- Frontend: Vue.ts + Bootstrap
+- Backend: Django + DRF
+- Tareas asíncronas: Celery + Redis
+- Base de Datos: PostgreSQL (SQLite durante desarrollo)
+- Pruebas: Vite + @vue/test-utils + @testing-library/vue
+- Control de versiones: Git + Github
