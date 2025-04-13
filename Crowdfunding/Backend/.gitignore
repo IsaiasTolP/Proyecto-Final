@@ -9,3 +9,4 @@ pyvenv.cfg
 media
 node_modules
 .env
+secret.key
