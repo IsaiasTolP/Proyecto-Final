@@ -38,6 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'accounts.apps.AccountsConfig',
+    'contributions.apps.ContributionsConfig',
+    'PaymentMethods.apps.PaymentMethodsConfig',
+    'projects.apps.ProjectsConfig',
+    'shared.apps.SharedConfig',
 ]
 
 MIDDLEWARE = [
