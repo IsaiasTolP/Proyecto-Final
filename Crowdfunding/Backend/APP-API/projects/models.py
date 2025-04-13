@@ -12,6 +12,7 @@ class Project(models.Model):
     description = models.TextField()
     goal = models.DecimalField(max_digits=10, decimal_places=2)
     start_date = models.DateField(auto_now_add=True)
+    is_active = models.BooleanField(default=True)
     category = models.ForeignKey(ProjectCategory, related_name='projects', on_delete=models.PROTECT)
 
     def __str__(self):

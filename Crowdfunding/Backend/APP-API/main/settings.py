@@ -126,3 +126,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Media files (user-uploaded files)
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# For Django Rest Framework
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ],
+}
