@@ -9,6 +9,6 @@ router.register(r'projects', views.ProjectViewSet)
 router.register(r'categories', views.ProjectCategoryViewSet)
 router.register(r'project-images', views.ProjectImageViewSet)
 
-url_patterns = [
+urlpatterns = [
     path('', include(router.urls)),
 ]

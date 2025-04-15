@@ -38,10 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_simplejwt',
     'accounts.apps.AccountsConfig',
     'contributions.apps.ContributionsConfig',
-    'PaymentMethods.apps.PaymentMethodsConfig',
+    'PaymentMethod.apps.PaymentmethodConfig',
     'projects.apps.ProjectsConfig',
+    'users.apps.UsersConfig',
     'shared.apps.SharedConfig',
 ]
 
@@ -137,4 +139,8 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',
     ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+
 }

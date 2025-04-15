@@ -11,3 +11,5 @@ def generate_key():
 def load_key():
     with open('secret.key', 'rb') as key_file:
         return Fernet(key_file.read())
+    
+fernet = load_key()

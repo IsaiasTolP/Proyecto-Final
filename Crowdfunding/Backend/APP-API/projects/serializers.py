@@ -5,6 +5,7 @@ class ProjectCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectCategory
         fields = '__all__'
+        read_only_fields = ['owner']
 
 class ProjectImageSerializer(serializers.ModelSerializer):
     class Meta:

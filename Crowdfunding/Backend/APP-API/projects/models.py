@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 
 class ProjectCategory(models.Model):
@@ -13,7 +14,8 @@ class Project(models.Model):
     goal = models.DecimalField(max_digits=10, decimal_places=2)
     start_date = models.DateField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
-    category = models.ForeignKey(ProjectCategory, related_name='projects', on_delete=models.PROTECT)
+    category = models.ForeignKey(ProjectCategory, related_name='category_projects', on_delete=models.PROTECT)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='user_projects', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name

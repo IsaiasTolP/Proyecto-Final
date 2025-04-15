@@ -6,6 +6,7 @@ class Profile(models.Model):
     bio = models.TextField(max_length=250, blank=True)
     pfp = models.ImageField(upload_to='profile_pics/', default='default.jpg')
     location = models.CharField(max_length=100, blank=True)
+    is_founder = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.user.username} Profile'

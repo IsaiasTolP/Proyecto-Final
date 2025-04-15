@@ -7,7 +7,7 @@ app_name = 'contributions'
 router = DefaultRouter()
 router.register(r'contributions', views.ContributionViewSet)
 
-url_patterns = [
+urlpatterns = [
     path('', include(router.urls)),
 ]
 

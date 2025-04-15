@@ -1,8 +1,6 @@
 from django.db import models
 from django.conf import settings
-from .utils import load_key
-
-fernet = load_key()
+from .utils import fernet
 
 class PaymentMethod(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='payment_methods', null=True)
