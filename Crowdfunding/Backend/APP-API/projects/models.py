@@ -1,5 +1,7 @@
 from django.db import models
 from django.conf import settings
+from imagekit.models import ProcessedImageField
+from imagekit.processors import ResizeToFill
 
 
 class ProjectCategory(models.Model):
@@ -22,7 +24,12 @@ class Project(models.Model):
 
 class ProjectImage(models.Model):
     project = models.ForeignKey(Project, related_name='project_images', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='project_images/')
+    image = ProcessedImageField(
+        upload_to='project_images/',
+        processors=[ResizeToFill(800, 600)],
+        format='JPEG',
+        options={'quality': 90},
+    )
 
     def __str__(self):
         return f'{self.project.name} - Image {self.id}'

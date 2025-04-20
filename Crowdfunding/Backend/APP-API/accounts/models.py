@@ -1,10 +1,17 @@
 from django.db import models
 from django.conf import settings
+from imagekit.models import ProcessedImageField
+from imagekit.processors import ResizeToFill
 
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
     bio = models.TextField(max_length=250, blank=True)
-    pfp = models.ImageField(upload_to='profile_pics/', default='default.jpg')
+    pfp = ProcessedImageField(
+        upload_to='profile_pics/',
+        processors=[ResizeToFill(300, 300)],
+        format='jpg',
+        options={'quality': 90},
+        default='default.jpg')
     location = models.CharField(max_length=100, blank=True)
     is_founder = models.BooleanField(default=False)
 

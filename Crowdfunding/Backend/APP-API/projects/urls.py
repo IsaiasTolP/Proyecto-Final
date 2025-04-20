@@ -5,7 +5,7 @@ from . import views
 app_name = 'projects'
 
 router = DefaultRouter()
-router.register(r'projects', views.ProjectViewSet)
+router.register(r'', views.ProjectViewSet)
 router.register(r'categories', views.ProjectCategoryViewSet)
 router.register(r'project-images', views.ProjectImageViewSet)
 
