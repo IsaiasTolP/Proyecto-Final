@@ -17,7 +17,7 @@
                 <p class="text-muted mb-1">Categoría: {{ project.category.category }}</p>
                 <p class="card-text flex-grow-1">{{ project.description }}</p>
                 <a
-                  :href="`/proyectos/${project.id}`"
+                  :href="`/projects/${project.id}`"
                   class="btn btn-success mt-3"
                   :aria-label="`Ver más sobre ${project.name}`"
                 >Ver más</a>

@@ -8,12 +8,17 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['username', 'password', 'email', 'is_founder']
+        extra_kwargs = {
+            'password': {'write_only': True},
+        }
     
     def create(self, validated_data):
+        is_founder = validated_data.pop('is_founder')
         user = User.objects.create_user(**validated_data)
-        profile = Profile.objects.create(user=user, is_founder=validated_data['is_founder'])
 
-        if profile.is_founder:
-            FounderProfile.objects.create(user=user, profile=profile)
+        if not is_founder:
+            Profile.objects.create(user=user, is_founder=is_founder)
+        else:
+            FounderProfile.objects.create(user=user, is_founder=is_founder)
 
         return user

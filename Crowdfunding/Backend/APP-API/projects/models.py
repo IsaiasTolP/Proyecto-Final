@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFill
+from django.db.models import Sum
 
 
 class ProjectCategory(models.Model):
@@ -21,6 +22,17 @@ class Project(models.Model):
 
     def __str__(self):
         return self.name
+    
+    @property
+    def total_donated(self):
+        total = self.project_contributions.aggregate(total=Sum('amount'))['total']
+        return total or 0
+    
+    @property
+    def percent_completed(self):
+        if self.goal > 0:
+            return round((float(self.total_donated) / float(self.goal)) * 100, 2)
+        return 0
 
 class ProjectImage(models.Model):
     project = models.ForeignKey(Project, related_name='project_images', on_delete=models.CASCADE)

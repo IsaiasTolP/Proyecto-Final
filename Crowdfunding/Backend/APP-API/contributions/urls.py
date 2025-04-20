@@ -5,7 +5,7 @@ from . import views
 app_name = 'contributions'
 
 router = DefaultRouter()
-router.register(r'contributions', views.ContributionViewSet)
+router.register(r'', views.ContributionViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

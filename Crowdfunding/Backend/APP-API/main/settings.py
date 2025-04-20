@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'corsheaders',
     'imagekit',
+    'django_filters',
     'accounts.apps.AccountsConfig',
     'contributions.apps.ContributionsConfig',
     'PaymentMethod.apps.PaymentmethodConfig',

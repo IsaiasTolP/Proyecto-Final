@@ -15,8 +15,15 @@ class ProjectImageSerializer(serializers.ModelSerializer):
 class ProjectSerializer(serializers.ModelSerializer):
     category = ProjectCategorySerializer()
     project_images = ProjectImageSerializer(many=True)
+    total_donated = serializers.ReadOnlyField()
+    percent_completed = serializers.ReadOnlyField()
 
     class Meta:
         model = Project
-        fields = '__all__'
+        fields = [
+            'id', 'name', 'description', 'goal',
+            'start_date', 'is_active',
+            'category', 'owner', 'project_images',
+            'total_donated', 'percent_completed',
+        ]
         read_only_fields = ['start_date']
