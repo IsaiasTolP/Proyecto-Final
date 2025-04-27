@@ -7,7 +7,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['username', 'password', 'email', 'is_founder']
+        fields = ['id', 'username', 'password', 'email', 'is_founder']
         extra_kwargs = {
             'password': {'write_only': True},
         }
@@ -22,3 +22,9 @@ class UserSerializer(serializers.ModelSerializer):
             FounderProfile.objects.create(user=user, is_founder=is_founder)
 
         return user
+    
+    def get_is_founder(self, obj):
+        try:
+            return obj.profile.is_founder
+        except Profile.DoesNotExist:
+            return False

@@ -3,8 +3,9 @@ import { useAuthStore } from "@/stores/auth";
 
 const routes = [
     { path: "/", name: "Home", component: () => import("@/views/Home.vue") },
-    { path: "/auth", name: "Auth", component: () => import("@/components/Auth.vue"), meta: { requiresUnauth: true }},
+    { path: "/auth", name: "Auth", component: () => import("@/components/Auth.vue"), meta: { requiresUnauth: true } },
     { path: "/projects/:id", name: "ProjectDetails", component: () => import("@/views/ProjectDetail.vue"), props: true },
+    { path: "/profile/:id", name: "Account", component: () => import("@/views/Account.vue"), meta: { requiresAuth: true} },
 ]
 
 const router = createRouter({
@@ -17,6 +18,9 @@ router.beforeEach((to, _from, next) => {
 
     if (to.meta.requiresUnauth && auth.isAuthenticated) {
         return next({ name: "Home" });
+    }
+    if (to.meta.requiresAuth && !auth.isAuthenticated) {
+        return next({ name: "Auth" });
     }
     next();
 });

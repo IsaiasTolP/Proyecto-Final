@@ -1,11 +1,12 @@
 from rest_framework import serializers
 from .models import Profile, FounderProfile
+from users.serializers import UserSerializer
 
 class ProfileSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    user = UserSerializer(read_only=True)
     class Meta:
         model = Profile
-        fields = '__all__'
+        fields = ['id', 'user', 'bio', 'pfp', 'location', 'is_founder' ]
 
 class FounderProfileSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())

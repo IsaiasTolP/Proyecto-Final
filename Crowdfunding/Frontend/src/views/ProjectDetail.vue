@@ -40,7 +40,7 @@
               <li><strong>Meta:</strong> €{{ project.goal }}</li>
               <li><strong>Fecha de inicio:</strong> {{ formattedDate }}</li>
               <li>
-                <strong>Estado:</strong>
+                <strong>Estado: </strong>
                 <span :class="project.is_active ? 'text-success' : 'text-danger'">
                   {{ project.is_active ? 'Activo' : 'No activo' }}
                 </span>
@@ -86,24 +86,8 @@
   import { useRoute, useRouter } from 'vue-router';
   import api from '@/services/api';
   import { useAuthStore } from '@/stores/auth';
-  
-  // Tipos según tu modelo Django
-  interface ProjectImage { id: number; image: string; }
-  interface ProjectCategory { id: number; category: string; }
-  interface ProjectOwner { id: number; username: string; }
-  interface Project {
-    id: number;
-    name: string;
-    description: string;
-    goal: string;
-    start_date: string;
-    is_active: boolean;
-    category: ProjectCategory;
-    owner: ProjectOwner;
-    project_images: ProjectImage[];
-    total_donated: string;
-    percent_completed: number;
-  }
+  import type { Project } from '@/interfaces/Project.ts';
+
 
   const route = useRoute();
   const router = useRouter();

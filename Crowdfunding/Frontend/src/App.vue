@@ -12,5 +12,10 @@
 <script setup lang="ts">
 import Header from '@/components/Header.vue';
 import Footer from './components/Footer.vue';
+import { useAuthStore } from '@/stores/auth';
+const auth = useAuthStore();
+if (auth.isAuthenticated && !auth.user) {
+  auth.fetchUser();
+}
 </script>
 

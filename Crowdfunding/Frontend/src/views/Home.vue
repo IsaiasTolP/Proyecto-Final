@@ -33,33 +33,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import api from '@/services/api';
-
-interface ProjectImage {
-  id: number;
-  image: string;
-}
-
-interface ProjectCategory {
-  id: number;
-  category: string;
-}
-
-interface ProjectOwner {
-  id: number;
-  username: string;
-}
-
-interface Project {
-  id: number;
-  name: string;
-  description: string;
-  goal: string;
-  start_date: string;
-  is_active: boolean;
-  category: ProjectCategory;
-  owner: ProjectOwner;
-  project_images: ProjectImage[];
-}
+import type { Project } from '@/interfaces/Project';
 
 const projects = ref<Project[]>([]);
 

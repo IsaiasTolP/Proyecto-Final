@@ -91,24 +91,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import api from '@/services/api';
 import { useAuthStore } from '@/stores/auth';
+import type { AuthData } from '@/interfaces/Auth.ts';
 
 const router = useRouter();
 const isLogin = ref(true);
 const errorMessage = ref('');
 
-interface FormData {
-  username: string;
-  email?: string;
-  password: string;
-  confirmPassword?: string;
-	isFounder?: boolean;
-}
-
-const form = ref<FormData>({
+const form = ref<AuthData>({
   username: '',
   email: '',
   password: '',
@@ -121,32 +113,47 @@ const auth = useAuthStore();
 function toggleMode() {
   isLogin.value = !isLogin.value;
   errorMessage.value = '';
+  form.value.password = '';
+  form.value.confirmPassword = '';
 }
+
+const isFormComplete = computed(() => {
+  if (isLogin.value) {
+    return form.value.username && form.value.password;
+  } else {
+    return (
+      form.value.username &&
+      form.value.email &&
+      form.value.password &&
+      form.value.confirmPassword
+    );
+  }
+});
 
 async function handleSubmit() {
   errorMessage.value = '';
+  if (!isFormComplete.value) {
+    errorMessage.value = 'Por favor completa todos los campos.';
+    return;
+  }
   try {
     if (isLogin.value) {
       // Login
-      const { data } = await api.post('/users/login/', {
-				username: form.value.username,
-				password: form.value.password,
-			});
-			auth.login(data.access, data.refresh);
+      await auth.login(form.value.username, form.value.password);
 			// Redirect to home page after login
 			router.push({ name: 'Home' });
     } else {
-      // Register
+      // Register, cambiar a auth.ts
       if (form.value.password !== form.value.confirmPassword) {
         errorMessage.value = 'Las contraseñas no coinciden.';
         return;
       }
-      await api.post('/users/register/', {
-        username: form.value.username,
-        email: form.value.email,
-        password: form.value.password,
-				is_founder: form.value.isFounder,
-      });
+      await auth.register(
+        form.value.username,
+        form.value.email,
+        form.value.password,
+        form.value.isFounder
+      );
       // After register, change to login
       isLogin.value = true;
       errorMessage.value = 'Registro exitoso, por favor inicia sesión.';

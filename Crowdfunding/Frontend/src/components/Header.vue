@@ -16,6 +16,9 @@
           <li class="nav-item">
             <router-link class="nav-link" to="/">Inicio</router-link>
           </li>
+          <li class="nav-link" v-if="auth.isAuthenticated">
+            <router-link class="nav-link" :to="`/profile/${auth.user?.id}`">Cuenta</router-link>
+          </li>
           <li class="nav-item" v-if="!auth.isAuthenticated">
             <router-link class="nav-link" to="/auth">Login</router-link>
           </li>
