@@ -1,15 +1,25 @@
 <template>
     <div>
       <section class="container py-5">
-        <button class="btn btn-link text-success mb-3" @click="goBack">← Volver</button>
-  
         <div v-if="loading" class="text-center">
           Cargando perfil...
         </div>
-        <div v-else-if="error" class="alert alert-danger">
-          {{ error }}
-        </div>
         <div v-else class="row align-items-center">
+          <div v-if="messageStore.message" :class="['alert', alertClass, 'mt-3']">
+            {{ messageStore.message }}
+            <div class="progress mt-2" style="height: 5px;">
+              <div
+                class="progress-bar"
+                role="progressbar"
+                :style="{ width: `${progress}%` }"
+                aria-valuenow="progress"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              ></div>
+            </div>
+          </div>
+
+          <button class="btn btn-link text-success mb-3 go-back" @click="goBack">← Volver</button>
           <!-- Avatar -->
           <div class="col-md-4 text-center mb-4 mb-md-0">
             <img
@@ -32,6 +42,7 @@
               <router-link to="/profile/edit" class="btn btn-success me-2">Editar Perfil</router-link>
               <router-link to="/payment-methods" class="btn btn-outline-success">Métodos de Pago</router-link>
             </div>
+            
           </div>
         </div>
       </section>
@@ -43,57 +54,69 @@
   import { useRoute, useRouter } from 'vue-router';
   import api from '@/services/api';
   import { useAuthStore } from '@/stores/auth';
-  
-  // Interfaces
-  interface User {
-    id: number;
-    username: string;
-  }
-  
-  interface ProfileData {
-    user: User;
-    bio: string;
-    pfp: string;
-    location: string;
-    is_founder: boolean;
-  }
+  import { useMessageStore } from '@/stores/message';
+  import type { ProfileData } from '@/interfaces/Account';
   
   const route = useRoute();
   const router = useRouter();
   const auth = useAuthStore();
+  const messageStore = useMessageStore();
+  
   
   const profile = ref<ProfileData>({} as ProfileData);
   const currentUser = auth.user;
   const loading = ref(true);
-  const error = ref('');
+  const alertClass = computed(() => (messageStore.type === 'success' ? 'alert-success' : 'alert-danger'));
+  const progress = ref(100);
+  const timer = ref(null as any)
   
   const isOwner = computed(() => !!currentUser && currentUser.id === profile.value.user.id);
   
   function goBack() {
-    router.back();
+    router.push({ name: 'Home' });
   }
   
   async function fetchProfile() {
     loading.value = true;
-    error.value = '';
     try {
       const userId = route.params.id;
       const { data } = await api.get<ProfileData>(`/accounts/profiles/user/${userId}/`);
       profile.value = data;
     } catch (err: any) {
-      error.value = 'Error al cargar el perfil.';
+      messageStore.setMessage('Error al cargar el perfil.', 'error');
     } finally {
       loading.value = false;
     }
   }
+
+  function startTimer() {
+    timer.value = setInterval(() => {
+      if (progress.value > 0) {
+        progress.value--;
+      } else {
+        clearInterval(timer.value);
+        messageStore.clearMessage();
+      }
+    }, 50);
+  }
   
   onMounted(async () => {
     await fetchProfile();
+    if (messageStore.message) {
+      startTimer();
+    }
   });
 </script>
 
 <style scoped>
   .btn-link:hover {
     text-decoration: underline;
+  }
+  .progress-bar {
+    transition: width 0.1s ease-in-out; 
+    background-color: green;
+  }
+  .go-back {
+    display: flex;
   }
 </style>

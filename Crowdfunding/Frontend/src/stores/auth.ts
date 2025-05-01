@@ -28,9 +28,7 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       const response = await api.get('/users/me/');
       user.value = response.data;
-    } catch (error) {
-      console.error('Error fetching user:', error);
-    }
+    } catch (error) {}
   }
 
   function logout() {
@@ -50,7 +48,7 @@ export const useAuthStore = defineStore('auth', () => {
       refreshToken.value = data.refresh ?? refreshToken.value;
       localStorage.setItem('access_token', data.access);
       localStorage.setItem('refresh_token', data.refresh ?? refreshToken.value);
-    } catch {
+    } catch(error) {
       logout();
     }
   }

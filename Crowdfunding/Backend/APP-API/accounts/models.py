@@ -9,9 +9,9 @@ class Profile(models.Model):
     pfp = ProcessedImageField(
         upload_to='profile_pics/',
         processors=[ResizeToFill(300, 300)],
-        format='jpg',
+        format='JPEG',
         options={'quality': 90},
-        default='default.jpg')
+        default='default.jpeg')
     location = models.CharField(max_length=100, blank=True)
     is_founder = models.BooleanField(default=False)
 
