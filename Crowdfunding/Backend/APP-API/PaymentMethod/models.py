@@ -10,8 +10,14 @@ class PaymentMethod(models.Model):
     expiration_date = models.DateField()
 
     def save_card(self, card_number, cvv):
-        self.card_number = fernet.encrypt(card_number.encode())
-        self.cvv = fernet.encrypt(cvv.encode())
+        if isinstance(card_number, str):
+            self.card_number = fernet.encrypt(card_number.encode())
+        if isinstance(cvv, str):
+            self.cvv = fernet.encrypt(cvv.encode())
+    
+    def save(self, *args, **kwargs):
+        self.save_card(self.card_number, self.cvv)
+        super().save(*args, **kwargs)
 
     def get_card_number(self):
         return fernet.decrypt(self.card_number).decode()

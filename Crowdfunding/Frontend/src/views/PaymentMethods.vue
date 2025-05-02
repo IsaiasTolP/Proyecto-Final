@@ -14,7 +14,7 @@
       <div class="d-flex justify-content-between align-items-center">
         <div>
           <h5 class="mb-1">{{ method.holder_name }}</h5>
-          <p class="mb-1">**** **** **** {{ method.card_last4 }}</p>
+          <p class="mb-1">**** **** **** {{ method.card_last4 || '****' }}</p>
           <small class="text-muted">Vence: {{ formatDate(method.expiration_date) }}</small>
         </div>
         <div>
@@ -41,12 +41,18 @@
       </div>
     </div>
 
-    <!-- Diálogo de Edición (vacío de momento) -->
-    <div v-if="editMethod" class="modal-backdrop">
+    <!-- Diálogo de Edición -->
+    <div v-if="editMethod" class="modal-backdrop d-flex justify-content-center align-items-center">
       <div class="modal-dialog shadow">
         <div class="modal-content p-4">
-          <h5>Editar Método de Pago</h5>
-          <EditPaymentMethod :method="editMethod" @close="editMethod = null" />
+          <h5 class="mb-3">Editar Método de Pago</h5>
+          <EditPaymentMethodForm
+            :paymentMethod="editMethod"
+            @update="handleUpdateMethod"
+          />
+          <div class="d-flex justify-content-end mt-3">
+            <button class="btn btn-secondary" @click="editMethod = null">Cancelar</button>
+          </div>
         </div>
       </div>
     </div>
@@ -57,73 +63,83 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import api from '@/services/api';
-import EditPaymentMethod from '@/components/EditPaymentMethod.vue';
+import EditPaymentMethodForm from '@/components/EditPaymentMethodForm.vue';
 
-  const router = useRouter();
-  const paymentMethods = ref<any[]>([]);
-  const deleteId = ref<number | null>(null);
-  const editMethod = ref<any | null>(null);
+const router = useRouter();
+const paymentMethods = ref<any[]>([]);
+const deleteId = ref<number | null>(null);
+const editMethod = ref<any | null>(null);
 
-  onMounted(async () => {
-    await loadPaymentMethods();
-  });
+onMounted(async () => {
+  await loadPaymentMethods();
+});
 
-  async function loadPaymentMethods() {
+async function loadPaymentMethods() {
+  try {
+    const { data } = await api.get('/payment-methods/payment-methods/');
+    paymentMethods.value = data;
+  } catch (err) {
+    console.error('Error al cargar métodos de pago', err);
+  }
+}
+
+function goToAddMethod() {
+  router.push({ name: 'AddPaymentMethod' });
+}
+
+function confirmDelete(id: number) {
+  deleteId.value = id;
+}
+
+async function deleteMethod() {
+  if (deleteId.value !== null) {
     try {
-      const { data } = await api.get('/payments/payment-methods/');
-      paymentMethods.value = data;
+      await api.delete(`/payment-methods/payment-methods/${deleteId.value}/`);
+      paymentMethods.value = paymentMethods.value.filter(pm => pm.id !== deleteId.value);
+      deleteId.value = null;
     } catch (err) {
-      console.error('Error al cargar métodos de pago', err);
+      console.error('Error al eliminar método de pago', err);
     }
   }
+}
 
-  function goToAddMethod() {
-    router.push({ name: 'AddPaymentMethod' });
-  }
+function openEditDialog(method: any) {
+  editMethod.value = { ...method };
+}
 
-  function confirmDelete(id: number) {
-    deleteId.value = id;
+async function handleUpdateMethod(updatedData: any) {
+  try {
+    await api.put(`/payment-methods/payment-methods/${editMethod.value.id}/`, updatedData);
+    await loadPaymentMethods();
+    editMethod.value = null;
+  } catch (err) {
+    console.error('Error al actualizar método de pago', err);
   }
+}
 
-  async function deleteMethod() {
-    if (deleteId.value !== null) {
-      try {
-        await api.delete(`/payments/payment-methods/${deleteId.value}/`);
-        paymentMethods.value = paymentMethods.value.filter(pm => pm.id !== deleteId.value);
-        deleteId.value = null;
-      } catch (err) {
-        console.error('Error al eliminar método de pago', err);
-      }
-    }
-  }
-
-  function openEditDialog(method: any) {
-    editMethod.value = { ...method };
-  }
-
-  function formatDate(dateStr: string) {
-    const options: Intl.DateTimeFormatOptions = { month: '2-digit', year: '2-digit' };
-    return new Date(dateStr).toLocaleDateString(undefined, options);
-  }
+function formatDate(dateStr: string) {
+  const options: Intl.DateTimeFormatOptions = { month: '2-digit', year: '2-digit' };
+  return new Date(dateStr).toLocaleDateString(undefined, options);
+}
 </script>
 
 <style scoped>
-  .modal-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1050;
-  }
-  .modal-dialog {
-    background: white;
-    border-radius: 8px;
-    max-width: 500px;
-    width: 100%;
-  }
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+}
+.modal-dialog {
+  background: white;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 100%;
+}
 </style>

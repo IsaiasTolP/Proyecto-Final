@@ -8,6 +8,7 @@ const routes = [
     { path: "/profile/:id", name: "Account", component: () => import("@/views/Account.vue"), meta: { requiresAuth: true} },
     { path: "/profile/edit", name: "EditProfile", component: () => import("@/views/EditProfile.vue"), meta: { requiresAuth: true} },
     { path: "/payment-methods", name: "PaymentMethods", component: () => import("@/views/PaymentMethods.vue"), meta: { requiresAuth: true} },
+    { path: "/payment-methods/add", name: "AddPaymentMethod", component: () => import("@/components/AddPaymentMethod.vue"), meta: { requiresAuth: true} },
 ]
 
 const router = createRouter({
