@@ -20,7 +20,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 class FounderProfileSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    user = UserSerializer(read_only=True)
     class Meta:
         model = FounderProfile
         fields = ['id', 'user', 'bio', 'pfp', 'location', 'is_founder', 'website', 'social_media', 'contact_email']

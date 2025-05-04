@@ -23,8 +23,8 @@
           <!-- Avatar -->
           <div class="col-md-4 text-center mb-4 mb-md-0">
             <img
-              :src="profile.pfp"
-              :alt="`Foto de perfil de ${profile.user.username}`"
+              :src="typeof profile.pfp === 'string' ? profile.pfp : undefined"
+              :alt="`Foto de perfil de ${profile.user?.username}`"
               class="rounded-circle img-fluid"
               style="width: 150px; height: 150px; object-fit: cover;"
             />
@@ -32,10 +32,17 @@
   
           <!-- Datos de perfil -->
           <div class="col-md-8">
-            <h1 class="mb-2">{{ profile.user.username }}</h1>
+            <h1 class="mb-2">{{ profile.user?.username }}</h1>
             <p class="text-muted mb-1" v-if="profile.is_founder">Fundador</p>
             <p class="mb-3">{{ profile.bio || 'Este usuario no ha añadido una biografía.' }}</p>
             <p class="mb-3" v-if="profile.location"><strong>Ubicación:</strong> {{ profile.location }}</p>
+            <div v-if="auth.user?.is_founder">
+              <p class="mb-3"><strong>Sitio web: </strong><a :href="profile.website">{{ profile.website }}</a></p>
+              <p class="mb-3"><strong>Email de contacto: </strong>{{ profile.contact_email }}</p>
+              <div v-for="(url, key) in profile.social_media" :key="key">
+                <p><a :href="url">{{ key }}</a></p>
+              </div>
+            </div>
   
             <!-- Opciones para el dueño -->
             <div v-if="isOwner" class="mt-4">
@@ -55,7 +62,7 @@
   import api from '@/services/api';
   import { useAuthStore } from '@/stores/auth';
   import { useMessageStore } from '@/stores/message';
-  import type { ProfileData } from '@/interfaces/Account';
+  import type { FounderProfileData } from '@/interfaces/Account';
   
   const route = useRoute();
   const router = useRouter();
@@ -63,14 +70,14 @@
   const messageStore = useMessageStore();
   
   
-  const profile = ref<ProfileData>({} as ProfileData);
+  const profile = ref<FounderProfileData>({} as FounderProfileData);
   const currentUser = auth.user;
   const loading = ref(true);
   const alertClass = computed(() => (messageStore.type === 'success' ? 'alert-success' : 'alert-danger'));
   const progress = ref(100);
   const timer = ref(null as any)
   
-  const isOwner = computed(() => !!currentUser && currentUser.id === profile.value.user.id);
+  const isOwner = computed(() => !!currentUser && currentUser.id === profile.value.user?.id);
   
   function goBack() {
     router.push({ name: 'Home' });
@@ -80,7 +87,10 @@
     loading.value = true;
     try {
       const userId = route.params.id;
-      const { data } = await api.get<ProfileData>(`/accounts/profiles/user/${userId}/`);
+      const url = auth.user?.is_founder
+        ? `/accounts/founders/user/${userId}/`
+        : `/accounts/profiles/user/${userId}/`;
+      const { data } = await api.get<FounderProfileData>(url);
       profile.value = data;
     } catch (err: any) {
       messageStore.setMessage('Error al cargar el perfil.', 'error');

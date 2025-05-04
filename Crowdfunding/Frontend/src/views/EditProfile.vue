@@ -34,14 +34,50 @@
           </div>
   
           <div class="mb-3">
-            <label class="form-label">Redes Sociales</label>
-            <div v-for="(url, key) in form.social_media" :key="key" class="mb-2">
+            <h5 class="form-label">Redes Sociales</h5>
+            <div
+              v-for="(url, key) in form.social_media"
+              :key="String(key)"
+              class="d-flex align-items-center mb-2"
+            >
               <input
-                :placeholder="String(key)"
                 v-model="form.social_media[key]"
+                :placeholder="String(key)"
                 type="url"
-                class="form-control"
+                class="form-control me-2"
+                required
               />
+              <button
+                type="button"
+                class="btn btn-outline-danger"
+                @click="removeSocial(String(key))"
+              >
+              ×
+              </button>
+            </div>
+
+        <!-- — Nuevo par clave/valor — -->
+        <div class="d-flex align-items-center mb-3">
+          <input
+            v-model="newSocial.name"
+            placeholder="Nombre de la red"
+            type="text"
+            class="form-control me-2"
+          />
+          <input
+            v-model="newSocial.url"
+            placeholder="https://..."
+            type="url"
+            class="form-control me-2"
+          />
+            <button
+              type="button"
+              class="btn btn-outline-primary"
+              @click="addSocial"
+              :disabled="!newSocial.name || !newSocial.url"
+            >
+              + Añadir
+            </button>
             </div>
           </div>
         </div>
@@ -50,6 +86,7 @@
         <div v-if="messageStore.message" :class="['alert', 'alert-danger']">{{ messageStore.message }}</div>
   
         <button type="submit" class="btn btn-success">Guardar Cambios</button>
+        <router-link :to="`/profile/${auth.user?.id}`" class="mx-3 btn btn-outline-success">Cancelar</router-link>
       </form>
     </div>
 </template>
@@ -60,27 +97,40 @@
   import api from '@/services/api';
 	import axios, { AxiosError } from 'axios';
 	import { useMessageStore } from '@/stores/message';
+  import { useAuthStore } from '@/stores/auth';
+  import type { FounderProfileData, ProfileData } from '@/interfaces/Account';
   
+  const auth = useAuthStore();
   const router = useRouter();
-  const form = ref<any>({
+
+
+  const form = ref<FounderProfileData>({
+    id: 0,
+    user: null,
     bio: '',
-    pfp: null,
+    pfp: undefined,
     location: '',
     is_founder: false,
     website: '',
     contact_email: '',
     social_media: {}
   });
+  
+  const newSocial = ref({ name: '', url: '' });
   const messageStore = useMessageStore();
 	messageStore.clearMessage();
 
   const error = 'error';
 	const success = 'success';
+  const url = auth.user?.is_founder
+      ? '/accounts/founders/me/'
+      : '/accounts/profiles/me/';
   
   onMounted(async () => {
     try {
-      const { data } = await api.get('/accounts/profiles/me/');
+      const { data } = await api.get<FounderProfileData | ProfileData>(url);
       Object.assign(form.value, data);
+      console.log(form.value.social_media)
     } catch (err) {
 			messageStore.setMessage('Error al cargar los datos del perfil.', error);
     }
@@ -94,12 +144,20 @@
     if (!allowedTypes.includes(file.type)) {
 			messageStore.setMessage('Formato de imagen no válido. Solo se permiten JPEG, JPG y PNG.', error);
       return;
-    }
+    } else
+      messageStore.clearMessage();
     form.value.pfp = file;
   }
 }
-
   
+  function addSocial() {
+    form.value.social_media[newSocial.value.name] = newSocial.value.url;
+  }
+
+  function removeSocial(key: string) {
+    delete form.value.social_media[key];
+  }
+
   async function submitProfile() {
     try {
       const payload = new FormData();
@@ -115,16 +173,14 @@
         payload.append('social_media', JSON.stringify(form.value.social_media || {}));
       }
   
-      const url = form.value.is_founder
-        ? '/accounts/founders/me/'
-        : '/accounts/profiles/me/';
+      
   
       await api.put(url, payload, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
 			messageStore.setMessage('Perfil actualizado con éxito.', success);
-			router.push({ name: 'Account', params: { id: form.value.user.id } });
+			router.push({ name: 'Account', params: { id: auth.user?.id } });
     } catch (err: any) {
 			messageStore.setMessage('Error al guardar los cambios.', error);
 

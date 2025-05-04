@@ -16,11 +16,11 @@
                 <h3 class="card-title h5">{{ project.name }}</h3>
                 <p class="text-muted mb-1">Categoría: {{ project.category.category }}</p>
                 <p class="card-text flex-grow-1">{{ project.description }}</p>
-                <a
-                  :href="`/projects/${project.id}`"
+                <router-link
+                  :to="`/projects/${project.id}`"
                   class="btn btn-success mt-3"
                   :aria-label="`Ver más sobre ${project.name}`"
-                >Ver más</a>
+                >Ver más</router-link>
               </div>
             </div>
           </div>

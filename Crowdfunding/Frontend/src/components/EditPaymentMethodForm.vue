@@ -53,7 +53,7 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, watch, defineProps, defineEmits } from 'vue';
+  import { ref, watch } from 'vue';
 
   const props = defineProps<{
     paymentMethod: {
@@ -72,7 +72,6 @@
     expiration_date: '',
   });
   
-  // Rellenar campos iniciales al montar o cambiar prop
   watch(
     () => props.paymentMethod,
     (method) => {

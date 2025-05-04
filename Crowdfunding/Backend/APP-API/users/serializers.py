@@ -27,7 +27,7 @@ class UserSerializer(serializers.ModelSerializer):
 
         return user
     
-    def get_is_founder(self, instance):
+    def to_representation(self, instance):
         representation = super().to_representation(instance)
         try:
             representation['is_founder'] = instance.profile.is_founder

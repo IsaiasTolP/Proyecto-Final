@@ -41,9 +41,18 @@ class FounderProfileViewSet(viewsets.ModelViewSet):
     queryset = FounderProfile.objects.all()
     serializer_class = FounderProfileSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['contact_email', 'website', 'user']
+    filterset_fields = ['location', 'contact_email', 'website', 'user']
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     parser_classes = [MultiPartParser, FormParser, JSONParser]
+
+    @action(detail=False, methods=['get'], url_path='user/(?P<user_id>[^/.]+)')
+    def get_user_profile(self, request, user_id=None):
+        try:
+            profile = FounderProfile.objects.get(user__id=user_id)
+            serializer = self.get_serializer(profile)
+            return Response(serializer.data)
+        except FounderProfile.DoesNotExist:
+            return Response({"detail": "Profile not found."}, status=status.HTTP_404_NOT_FOUND)
 
     @action(detail=False, methods=['get', 'put'], url_path='me', permission_classes=[permissions.IsAuthenticated])
     def me(self, request):
