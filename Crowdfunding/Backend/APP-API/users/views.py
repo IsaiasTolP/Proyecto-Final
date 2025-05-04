@@ -1,4 +1,5 @@
 from rest_framework import status
+from rest_framework.generics import RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -6,6 +7,7 @@ from .serializers import UserSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from rest_framework.permissions import AllowAny
+from django.contrib.auth.models import User
 
 
 class RegisterUserAPIView(APIView):
@@ -40,6 +42,11 @@ class LoginAPIView(APIView):
 
         return Response({"detail": "Invalid credentials."}, status=status.HTTP_401_UNAUTHORIZED)
 
+
+class UserDetailView(RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    lookup_field = 'id'
 
 class UserMeView(APIView):
     permission_classes = [IsAuthenticated]

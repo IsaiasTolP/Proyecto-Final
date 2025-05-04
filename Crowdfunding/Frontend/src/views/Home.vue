@@ -25,6 +25,10 @@
             </div>
           </div>
         </div>
+        <div class="my-4 text-center" v-if="auth.user?.is_founder">
+          <router-link to="/project/create" class="btn btn-outline-success"><h2>Crear un nuevo proyecto +</h2></router-link>
+        </div>
+        
       </div>
     </section>
   </div>
@@ -33,9 +37,11 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import api from '@/services/api';
+import { useAuthStore } from '@/stores/auth';
 import type { Project } from '@/interfaces/Project';
 
 const projects = ref<Project[]>([]);
+const auth = useAuthStore();
 
 onMounted(async () => {
   try {

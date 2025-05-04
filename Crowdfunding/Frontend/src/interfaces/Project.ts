@@ -1,6 +1,5 @@
 interface ProjectImage { id: number; image: string; }
 interface ProjectCategory { id: number; category: string; }
-interface ProjectOwner { id: number; username: string; }
 interface Project {
     id: number;
     name: string;
@@ -9,10 +8,10 @@ interface Project {
     start_date: string;
     is_active: boolean;
     category: ProjectCategory;
-    owner: ProjectOwner;
+    owner: number;
     project_images: ProjectImage[];
     total_donated: string;
     percent_completed: number;
 }
 
-export type { Project, ProjectImage, ProjectCategory, ProjectOwner };
+export type { Project, ProjectImage, ProjectCategory};

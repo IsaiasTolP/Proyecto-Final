@@ -33,7 +33,7 @@
           <div class="col-md-6">
             <h1 class="mb-3">{{ project.name }}</h1>
             <p class="text-muted mb-1">Categoría: {{ project.category.category }}</p>
-            <p class="text-muted mb-3">Propietario: {{ project.owner.username }}</p>
+            <p class="text-muted mb-3">Propietario: {{ owner.username }}</p>
             <p class="mb-4">{{ project.description }}</p>
   
             <ul class="list-unstyled">
@@ -66,7 +66,7 @@
             </div>
             <div>
               <button
-                v-if="isAuthenticated"
+                v-if="isAuthenticated && !isOwner"
                 class="btn btn-success mt-3"
               >Contribuir</button>
               <router-link
@@ -86,7 +86,8 @@
   import { useRoute, useRouter } from 'vue-router';
   import api from '@/services/api';
   import { useAuthStore } from '@/stores/auth';
-  import type { Project } from '@/interfaces/Project.ts';
+  import type { Project } from '@/interfaces/Project';
+  import type { User } from '@/interfaces/Account';
 
 
   const route = useRoute();
@@ -94,10 +95,13 @@
   const auth = useAuthStore();
   
   const project = ref<Project>({} as Project);
+  const owner = ref<User>({} as User);
   const loading = ref(true);
   const error = ref('');
 
+  const currentUser = auth.user
   const isAuthenticated = computed(() => auth.isAuthenticated);
+  const isOwner = computed(() => !!currentUser && currentUser.id === project.value.owner);
 
   const mainImage = computed(() => project.value.project_images?.[0]?.image || '');
   const formattedDate = computed(() => {
@@ -115,7 +119,18 @@
     } catch (err: any) {
       error.value = 'Error al cargar el proyecto.';
     } finally {
+      await fetchOwner()
       loading.value = false;
+    }
+  }
+
+  async function fetchOwner() {
+    try {
+      const ownerId = project.value.owner
+      const { data } = await api.get(`/users/${ownerId}/`);
+      owner.value = data
+    } catch (err: any) {
+      error.value = 'Error al cargar al creador del proyecto'
     }
   }
 
