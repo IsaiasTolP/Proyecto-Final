@@ -5,9 +5,9 @@ from . import views
 app_name = 'projects'
 
 router = DefaultRouter()
-router.register(r'', views.ProjectViewSet)
-router.register(r'categories', views.ProjectCategoryViewSet)
-router.register(r'project-images', views.ProjectImageViewSet)
+router.register(r'list', views.ProjectViewSet, basename='projects')
+router.register(r'categories', views.ProjectCategoryViewSet, basename='categories')
+router.register(r'project-images', views.ProjectImageViewSet, basename='project-images')
 
 urlpatterns = [
     path('', include(router.urls)),

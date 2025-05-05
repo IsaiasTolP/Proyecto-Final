@@ -32,7 +32,7 @@
           <!-- Detalles -->
           <div class="col-md-6">
             <h1 class="mb-3">{{ project.name }}</h1>
-            <p class="text-muted mb-1">Categoría: {{ project.category.category }}</p>
+            <p class="text-muted mb-1">Categoría: {{ projectCategory.category }}</p>
             <p class="text-muted mb-3">Propietario: {{ owner.username }}</p>
             <p class="mb-4">{{ project.description }}</p>
   
@@ -65,15 +65,23 @@
               </small>
             </div>
             <div>
-              <button
+              <router-link
                 v-if="isAuthenticated && !isOwner"
                 class="btn btn-success mt-3"
-              >Contribuir</button>
+                :to="`/project/${project.id}/contribute`"
+              >Contribuir</router-link>
               <router-link
+                v-else-if="isAuthenticated && isOwner"
+                :to="`/project/${project.id}/contributions`"
+                class="btn btn-outline-success mt-3"
+              >Comprueba las contribuciones recibidas
+            </router-link>
+              <router-link 
                 v-else
                 to="/auth"
                 class="btn btn-outline-success mt-3"
-              >Inicia sesión para contribuir</router-link>
+                >Inicia sesión para contribuir
+              </router-link>
             </div>
           </div>
         </div>
@@ -86,7 +94,7 @@
   import { useRoute, useRouter } from 'vue-router';
   import api from '@/services/api';
   import { useAuthStore } from '@/stores/auth';
-  import type { Project } from '@/interfaces/Project';
+  import type { ProjectCategory, Project } from '@/interfaces/Project';
   import type { User } from '@/interfaces/Account';
 
 
@@ -95,6 +103,7 @@
   const auth = useAuthStore();
   
   const project = ref<Project>({} as Project);
+  const projectCategory = ref<ProjectCategory>({} as ProjectCategory);
   const owner = ref<User>({} as User);
   const loading = ref(true);
   const error = ref('');
@@ -114,8 +123,10 @@
     error.value = '';
     try {
       const id = route.params.id;
-      const { data } = await api.get<Project>(`/projects/${id}/`);
-      project.value = data;
+      const projectData = await api.get<Project>(`/projects/list/${id}/`);
+      project.value = projectData.data;
+      const categoryData = await api.get<ProjectCategory>(`/projects/categories/${project.value.category}/`);
+      projectCategory.value = categoryData.data;
     } catch (err: any) {
       error.value = 'Error al cargar el proyecto.';
     } finally {

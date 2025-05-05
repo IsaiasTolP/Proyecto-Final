@@ -13,8 +13,8 @@ class ProjectImageSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ProjectSerializer(serializers.ModelSerializer):
-    category = ProjectCategorySerializer()
-    project_images = ProjectImageSerializer(many=True)
+    category = serializers.PrimaryKeyRelatedField(queryset=ProjectCategory.objects.all())
+    project_images = ProjectImageSerializer(many=True, required=False)
     total_donated = serializers.ReadOnlyField()
     percent_completed = serializers.ReadOnlyField()
 

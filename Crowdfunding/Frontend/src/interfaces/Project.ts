@@ -7,7 +7,7 @@ interface Project {
     goal: string;
     start_date: string;
     is_active: boolean;
-    category: ProjectCategory;
+    category: number;
     owner: number;
     project_images: ProjectImage[];
     total_donated: string;

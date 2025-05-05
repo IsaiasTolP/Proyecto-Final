@@ -14,7 +14,7 @@
               />
               <div class="card-body d-flex flex-column">
                 <h3 class="card-title h5">{{ project.name }}</h3>
-                <p class="text-muted mb-1">Categoría: {{ project.category.category }}</p>
+                <p class="text-muted mb-1">Categoría: {{ projectCategories.find(cat => cat.id === project.category)?.category }}</p>
                 <p class="card-text flex-grow-1">{{ project.description }}</p>
                 <router-link
                   :to="`/projects/${project.id}`"
@@ -38,15 +38,18 @@
 import { onMounted, ref } from 'vue';
 import api from '@/services/api';
 import { useAuthStore } from '@/stores/auth';
-import type { Project } from '@/interfaces/Project';
+import type { Project, ProjectCategory } from '@/interfaces/Project';
 
 const projects = ref<Project[]>([]);
+const projectCategories = ref<ProjectCategory[]>([]);
 const auth = useAuthStore();
 
 onMounted(async () => {
   try {
-    const { data } = await api.get<Project[]>('/projects/');
-    projects.value = data;
+    const projectData = await api.get<Project[]>('/projects/list/');
+    projects.value = projectData.data;
+    const categoriesData = await api.get<ProjectCategory[]>('/projects/categories/');
+    projectCategories.value = categoriesData.data
   } catch (error) {
     console.error('Error al cargar los proyectos:', error);
   }

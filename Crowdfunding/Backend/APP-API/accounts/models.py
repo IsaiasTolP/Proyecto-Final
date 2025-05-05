@@ -2,12 +2,13 @@ from django.db import models
 from django.conf import settings
 from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFill
+from shared.utils import unique_project_image_upload_path
 
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile')
     bio = models.TextField(max_length=250, blank=True)
     pfp = ProcessedImageField(
-        upload_to='profile_pics/',
+        upload_to=unique_project_image_upload_path,
         processors=[ResizeToFill(300, 300)],
         format='JPEG',
         options={'quality': 90},

@@ -3,6 +3,7 @@ from django.conf import settings
 from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFill
 from django.db.models import Sum
+from shared.utils import unique_project_image_upload_path
 
 
 class ProjectCategory(models.Model):
@@ -18,7 +19,7 @@ class Project(models.Model):
     start_date = models.DateField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
     category = models.ForeignKey(ProjectCategory, related_name='category_projects', on_delete=models.PROTECT)
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='user_projects', on_delete=models.CASCADE)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='user_projects', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.name
@@ -37,10 +38,11 @@ class Project(models.Model):
 class ProjectImage(models.Model):
     project = models.ForeignKey(Project, related_name='project_images', on_delete=models.CASCADE)
     image = ProcessedImageField(
-        upload_to='project_images/',
+        upload_to=unique_project_image_upload_path,
         processors=[ResizeToFill(800, 600)],
         format='JPEG',
         options={'quality': 90},
+        default='default.jpg'
     )
 
     def __str__(self):
