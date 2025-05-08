@@ -63,7 +63,7 @@
   import api from '@/services/api';
   import { useAuthStore } from '@/stores/auth';
   import { useMessageStore } from '@/stores/message';
-  import type { FounderProfileData } from '@/interfaces/Account';
+  import type { FounderProfileData, ProfileData } from '@/interfaces/Account';
   
   const route = useRoute();
   const router = useRouter();
@@ -87,10 +87,15 @@
   async function fetchProfile() {
     loading.value = true;
     try {
+      let isFounder: boolean | undefined;
       const userId = route.params.id;
-      const url = auth.user?.is_founder
-        ? `/accounts/founders/user/${userId}/`
-        : `/accounts/profiles/user/${userId}/`;
+      if (userId !== String(auth.user?.id)) {
+        const { data: user } = await api.get<ProfileData>(`/users/${userId}/`)
+        isFounder = user.is_founder
+      } else {
+        isFounder = auth.user?.is_founder;
+      }
+      const url = isFounder ? `/accounts/founders/user/${userId}/` : `/accounts/profiles/user/${userId}/`
       const { data } = await api.get<FounderProfileData>(url);
       profile.value = data;
     } catch (err: any) {

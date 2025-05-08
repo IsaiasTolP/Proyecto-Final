@@ -10,7 +10,7 @@
         <div class="d-flex align-items-center">
           <router-link :to="`/profile/${contribution.contributor.id}`" class="me-3">
             <img
-              :src="`${contribution.profile.pfp}`"
+              :src="contribution.profile?.pfp"
               alt="Foto de perfil"
               class="rounded-circle"
               width="50"
@@ -44,12 +44,11 @@
 <script setup lang="ts">
   import { onMounted, ref } from 'vue';
   import api from '@/services/api';
-import type { ProfileData } from '@/interfaces/Account';
+  import type { ProfileData } from '@/interfaces/Account';
+  import { useRoute } from 'vue-router';
 
-  const props = defineProps<{
-    projectId: number;
-  }>();
-  
+  const route = useRoute();
+  const projectId = route.params.id
   const contributions = ref<any[]>([]);
   
   onMounted(() => {
@@ -60,15 +59,17 @@ import type { ProfileData } from '@/interfaces/Account';
     try {
       const { data: contribution } = await api.get('/contributions/', {
         params: {
-          project: props.projectId,
+          project: String(projectId),
           ordering: '-date',
         },
       });
-			contributions.value = contribution;
-			for (const contribution of contributions.value) {
-    		const profile = await fetchProfile(contribution.contributor.id);
-    		contribution.profile = profile;
-  		}
+      contributions.value = contribution;
+      const profiles = await Promise.all(
+        contributions.value.map(contribution => fetchProfile(contribution.contributor.id))
+      );
+      contributions.value.forEach((contribution, index) => {
+        contribution.profile = profiles[index];
+      });
     } catch (err: any) {
       console.error('Error al obtener contribuciones:', err);
     }
