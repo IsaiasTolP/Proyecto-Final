@@ -27,7 +27,7 @@
         </div>
   
         <div class="mb-3">
-          <label for="images" class="form-label">Imágenes</label>
+          <label for="images" class="form-label">Imágenes (PNG, JPG/JPEG, WEBP)</label>
           <input type="file" id="images" class="form-control" multiple @change="handleImageUpload" />
         </div>
   
@@ -42,7 +42,8 @@
   import { ref, onMounted } from 'vue';
   import { useRouter } from 'vue-router';
   import api from '@/services/api';
-import type { ProjectCategory } from '@/interfaces/Project';
+  import type { ProjectCategory } from '@/interfaces/Project';
+  import { useMessageStore } from '@/stores/message';
   
   const router = useRouter();
   const form = ref({
@@ -55,6 +56,7 @@ import type { ProjectCategory } from '@/interfaces/Project';
   const images = ref<File[]>([]);
   const categories = ref<ProjectCategory[]>([]);
   const error = ref('');
+  const messageStore = useMessageStore();
   
   onMounted(async () => {
     try {
@@ -72,16 +74,25 @@ import type { ProjectCategory } from '@/interfaces/Project';
     }
   }
   
-  async function submitProject() {
+  async function createProject() {
     error.value = '';
     try {
       const { data } = await api.post('/projects/list/', form.value);
-  
+      return data;
+    } catch (e: any) {
+      error.value = `Error al crear el proyecto. Comprueba el formulario`;
+      console.error(e);
+      return null;
+    }
+  }
+
+  async function uploadImages(projectId: number) {
+    try {
       // Si hay imágenes, las subimos asociándolas al ID del proyecto creado
       if (images.value.length > 0) {
         const uploads = images.value.map(img => {
           const imgData = new FormData();
-          imgData.append('project', data.id);
+          imgData.append('project', String(projectId));
           imgData.append('image', img);
           return api.post('/projects/project-images/', imgData, {
             headers: { 'Content-Type': 'multipart/form-data' },
@@ -89,11 +100,18 @@ import type { ProjectCategory } from '@/interfaces/Project';
         });
         await Promise.all(uploads);
       }
-  
-      router.push({ name: 'ProjectDetail', params: { id: data.id } });
     } catch (e: any) {
-      error.value = 'Error al crear el proyecto.';
+      error.value = `Error al subir imágenes. Revisa tu proyecto y los formatos de las imágenes`;
       console.error(e);
+      messageStore.setMessage(error.value, 'error');
     }
+  }
+
+  async function submitProject() {
+    error.value = '';
+    const project = await createProject();
+    if (!project) return;
+    await uploadImages(project.id);
+    router.push({ name: 'ProjectDetails', params: { id: Number(project.id) } });
   }
 </script>

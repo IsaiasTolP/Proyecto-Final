@@ -68,7 +68,7 @@
               <router-link
                 v-if="isAuthenticated && !isOwner"
                 class="btn btn-success mt-3"
-                :to="`/project/${project.id}/contribute`"
+                :to="`/projects/${project.id}/contribute`"
               >Contribuir</router-link>
               <router-link
                 v-else-if="isAuthenticated && isOwner"

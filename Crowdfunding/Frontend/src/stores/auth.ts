@@ -49,7 +49,8 @@ export const useAuthStore = defineStore('auth', () => {
       refreshToken.value = data.refresh ?? refreshToken.value;
       localStorage.setItem('access_token', data.access);
       localStorage.setItem('refresh_token', data.refresh ?? refreshToken.value);
-    } catch(error) {
+      api.defaults.headers.common['Authorization'] = `Bearer ${data.access}`
+    } catch(error: any) {
       logout();
     }
   }

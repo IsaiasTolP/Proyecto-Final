@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
+import api from "@/services/api";
+import type { Project } from '@/interfaces/Project';
 
 const routes = [
     { path: "/", name: "Home", component: () => import("@/views/Home.vue") },
@@ -9,7 +11,8 @@ const routes = [
     { path: "/profile/edit", name: "EditProfile", component: () => import("@/views/EditProfile.vue"), meta: { requiresAuth: true} },
     { path: "/payment-methods", name: "PaymentMethods", component: () => import("@/views/PaymentMethods.vue"), meta: { requiresAuth: true} },
     { path: "/payment-methods/add", name: "AddPaymentMethod", component: () => import("@/components/AddPaymentMethod.vue"), meta: { requiresAuth: true} },
-    { path: "/project/create", name: "CreateProject", component: () => import("@/views/CreateProject.vue"), meta: {requiresAuth: true}}
+    { path: "/project/create", name: "CreateProject", component: () => import("@/views/CreateProject.vue"), meta: {requiresAuth: true}},
+    { path: "/projects/:id/contribute", name: "Contribute", component: () => import("@/views/ContributionForm.vue"), meta: {requiresAuth: true, disallowOwner: true}},
 ]
 
 const router = createRouter({
@@ -17,7 +20,7 @@ const router = createRouter({
     routes,
 });
 
-router.beforeEach((to, _from, next) => {
+router.beforeEach(async (to, _from, next) => {
     const auth = useAuthStore();
 
     if (to.meta.requiresUnauth && auth.isAuthenticated) {
@@ -25,6 +28,19 @@ router.beforeEach((to, _from, next) => {
     }
     if (to.meta.requiresAuth && !auth.isAuthenticated) {
         return next({ name: "Auth" });
+    }
+    if (to.meta.disallowOwner && auth) {
+        const projectId = to.params.id;
+        try {
+            const { data: project } = await api.get<Project>(`/projects/list/${projectId}/`);
+            if (project.owner === auth.user?.id) {
+                return router.back();
+            }
+        } catch (e) {
+            console.error("Error al acceder al formulario", e);
+            return next({ name: "Home" })
+        }
+        
     }
     next();
 });

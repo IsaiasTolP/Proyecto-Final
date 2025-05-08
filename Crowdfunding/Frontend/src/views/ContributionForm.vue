@@ -1,0 +1,95 @@
+<template>
+    <div class="container py-4">
+      <h2 class="mb-4 text-success">Contribuir al Proyecto</h2>
+  
+      <form @submit.prevent="submitContribution">
+        <div class="mb-3">
+          <label for="paymentMethod" class="form-label">Método de Pago</label>
+          <select
+            v-model="form.payment_method"
+            class="form-select"
+            id="paymentMethod"
+            required
+          >
+            <option disabled value="">Selecciona un método</option>
+            <option v-for="method in paymentMethods" :key="method.id" :value="method.id">
+              {{ method.holder_name }} - **** {{ method.card_last4 }}
+            </option>
+          </select>
+        </div>
+  
+        <div class="mb-3">
+          <label for="amount" class="form-label">Cantidad (€)</label>
+          <input
+            v-model.number="form.amount"
+            type="number"
+            step="0.01"
+            min="0.5"
+            class="form-control"
+            id="amount"
+            required
+          />
+        </div>
+  
+        <div class="mb-3">
+          <label for="message" class="form-label">Mensaje (opcional, máx. 140 caracteres)</label>
+          <textarea
+            v-model="form.message"
+            class="form-control"
+            id="message"
+            maxlength="140"
+            rows="3"
+          ></textarea>
+        </div>
+  
+        <button type="submit" class="btn btn-success" :disabled="loading">
+          {{ loading ? 'Enviando...' : 'Contribuir' }}
+        </button>
+      </form>
+    </div>
+</template>
+
+<script setup lang="ts">
+  import { ref, onMounted } from 'vue';
+  import { useRoute, useRouter } from 'vue-router';
+  import api from '@/services/api';
+  
+  const route = useRoute();
+  const router = useRouter();
+  
+  const projectId = Number(route.params.id);
+  const form = ref({
+    amount: null,
+    payment_method: '',
+    message: '',
+    project: projectId,
+  });
+  
+  const paymentMethods = ref<any[]>([]);
+  const loading = ref(false);
+  
+  onMounted(async () => {
+    await fetchPaymentMethods();
+  });
+  
+  async function fetchPaymentMethods() {
+    try {
+      const { data } = await api.get('/payment-methods/payment-methods/');
+      paymentMethods.value = data;
+    } catch (error: any) {
+      console.error('Error al cargar métodos de pago:', error);
+    }
+  }
+  
+  async function submitContribution() {
+    try {
+      loading.value = true;
+      await api.post('/contributions/', form.value);
+      router.push({ name: 'ProjectDetails', params: { projectId } });
+    } catch (error: any) {
+      console.error('Error al enviar contribución:', error.response?.data || error);
+    } finally {
+      loading.value = false;
+    }
+  }
+</script>
