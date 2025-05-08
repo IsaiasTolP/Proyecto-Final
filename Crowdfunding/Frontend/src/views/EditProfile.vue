@@ -118,6 +118,7 @@
   
   const newSocial = ref({ name: '', url: '' });
   const messageStore = useMessageStore();
+  const uploadError = ref(false);
 	messageStore.clearMessage();
 
   const error = 'error';
@@ -142,9 +143,11 @@
     const file = target.files[0];
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
     if (!allowedTypes.includes(file.type)) {
+      uploadError.value = true;
 			messageStore.setMessage('Formato de imagen no válido. Solo se permiten JPEG, JPG y PNG.', error);
       return;
     } else
+      uploadError.value = false;
       messageStore.clearMessage();
     form.value.pfp = file;
   }
@@ -172,9 +175,12 @@
         payload.append('contact_email', form.value.contact_email || '');
         payload.append('social_media', JSON.stringify(form.value.social_media || {}));
       }
-  
-      
-  
+
+      if (uploadError.value) {
+        messageStore.setMessage('Corrige los errores antes de enviar el formulario', error);
+        return;
+      }
+
       await api.put(url, payload, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });

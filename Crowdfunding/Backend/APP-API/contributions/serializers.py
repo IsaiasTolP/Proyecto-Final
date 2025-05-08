@@ -1,8 +1,9 @@
 from rest_framework import serializers
 from .models import Contribution
+from users.serializers import UserSerializer
 
 class ContributionSerializer(serializers.ModelSerializer):
-    contributor = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    contributor = UserSerializer(read_only=True)
 
     class Meta:
         model = Contribution

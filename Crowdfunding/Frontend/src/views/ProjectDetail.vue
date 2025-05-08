@@ -72,7 +72,7 @@
               >Contribuir</router-link>
               <router-link
                 v-else-if="isAuthenticated && isOwner"
-                :to="`/project/${project.id}/contributions`"
+                :to="`/projects/${project.id}/contributions`"
                 class="btn btn-outline-success mt-3"
               >Comprueba las contribuciones recibidas
             </router-link>
