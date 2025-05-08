@@ -1,6 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-md bg-success navbar-dark px-5" role="navigation" aria-label="Main navigation">
     <div class="container-fluid">
+      <img src="@/assets/images/CrowdFundMe.png" width="50rem" height="50rem" alt="Logo de la aplicación">
       <router-link class="navbar-brand" to="/">CrowdFundMe</router-link>
       <button
         class="navbar-toggler"

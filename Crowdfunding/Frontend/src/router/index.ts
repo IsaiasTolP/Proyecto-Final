@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import api from "@/services/api";
 import type { Project } from '@/interfaces/Project';
+import type { ProfileData } from "@/interfaces/Account";
 
 const routes = [
     { path: "/", name: "Home", component: () => import("@/views/Home.vue") },
@@ -13,6 +14,8 @@ const routes = [
     { path: "/payment-methods/add", name: "AddPaymentMethod", component: () => import("@/components/AddPaymentMethod.vue"), meta: { requiresAuth: true} },
     { path: "/project/create", name: "CreateProject", component: () => import("@/views/CreateProject.vue"), meta: {requiresAuth: true}},
     { path: "/projects/:id/contribute", name: "Contribute", component: () => import("@/views/ContributionForm.vue"), meta: {requiresAuth: true, disallowOwner: true}},
+    { path: "/profile/:id/contributions", name: "MyContributionsHistory", component: () => import("@/views/MyContributionsHistory.vue"), meta: { requiresAuth: true, onlyProfileOwner: true}},
+    { path: "/projects/:id/contributions", name: "ProjectContributionsHistory", component: () => import("@/views/ProjectContributionsHistory.vue"), meta: { requiresAuth: true, onlyProjectOwner: true}},
 ]
 
 const router = createRouter({
@@ -29,7 +32,7 @@ router.beforeEach(async (to, _from, next) => {
     if (to.meta.requiresAuth && !auth.isAuthenticated) {
         return next({ name: "Auth" });
     }
-    if (to.meta.disallowOwner && auth) {
+    if (to.meta.disallowOwner) {
         const projectId = to.params.id;
         try {
             const { data: project } = await api.get<Project>(`/projects/list/${projectId}/`);
@@ -41,6 +44,31 @@ router.beforeEach(async (to, _from, next) => {
             return next({ name: "Home" })
         }
         
+    }
+
+    if (to.meta.onlyProfileOwner) {
+        const userId = to.params.id
+        try {
+            const { data: profile } = await api.get<ProfileData>(`/accounts/profiles/user/${userId}/`);
+            if (profile.user?.id !== auth.user?.id) {
+                return router.back()
+            }
+        } catch (e: any) {
+            console.error(e)
+        }
+    }
+
+    if (to.meta.onlyProjectOwner) {
+        const projectId = to.params.id
+        try {
+            const { data: project } = await api.get<Project>(`/projects/list/${projectId}/`);
+            if (project.owner !== auth.user?.id) {
+                return router.back();
+            }
+        } catch (e) {
+            console.error("Error al acceder al formulario", e);
+            return next({ name: "Home" })
+        }
     }
     next();
 });
