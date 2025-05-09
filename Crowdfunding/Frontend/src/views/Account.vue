@@ -36,7 +36,7 @@
             <p class="text-muted mb-1" v-if="profile.is_founder">Fundador</p>
             <p class="mb-3">{{ profile.bio || 'Este usuario no ha añadido una biografía.' }}</p>
             <p class="mb-3" v-if="profile.location"><strong>Ubicación:</strong> {{ profile.location }}</p>
-            <div v-if="auth.user?.is_founder">
+            <div v-if="profile.is_founder">
               <p class="mb-3"><strong>Sitio web: </strong><a :href="profile.website">{{ profile.website }}</a></p>
               <p class="mb-3"><strong>Email de contacto: </strong>{{ profile.contact_email }}</p>
               <div v-for="(url, key) in profile.social_media" :key="key">

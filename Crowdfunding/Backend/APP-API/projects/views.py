@@ -3,7 +3,7 @@ from rest_framework import viewsets
 from rest_framework.permissions import AllowAny
 from rest_framework.filters import SearchFilter, OrderingFilter
 from .models import Project, ProjectCategory, ProjectImage
-from .serializers import ProjectSerializer, ProjectCategorySerializer, ProjectImageSerializer
+from .serializers import ProjectSerializer, ProjectCategorySerializer, ProjectImageSerializer, SimpleProjectSerializer
 from .permissions import IsOwnerOrReadOnly
 
 class ProjectViewSet(viewsets.ModelViewSet):
@@ -25,3 +25,7 @@ class ProjectCategoryViewSet(viewsets.ModelViewSet):
 class ProjectImageViewSet(viewsets.ModelViewSet):
     queryset = ProjectImage.objects.all()
     serializer_class = ProjectImageSerializer
+
+class SimpleProjectViewSet(viewsets.ModelViewSet):
+    queryset = Project.objects.all()
+    serializer_class = SimpleProjectSerializer

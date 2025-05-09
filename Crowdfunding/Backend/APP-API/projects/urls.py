@@ -6,6 +6,7 @@ app_name = 'projects'
 
 router = DefaultRouter()
 router.register(r'list', views.ProjectViewSet, basename='projects')
+router.register(r'simple-project-list', views.SimpleProjectViewSet, basename='simple-projects')
 router.register(r'categories', views.ProjectCategoryViewSet, basename='categories')
 router.register(r'project-images', views.ProjectImageViewSet, basename='project-images')
 

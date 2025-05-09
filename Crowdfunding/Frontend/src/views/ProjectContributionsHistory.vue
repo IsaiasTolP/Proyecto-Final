@@ -10,7 +10,7 @@
         <div class="d-flex align-items-center">
           <router-link :to="`/profile/${contribution.contributor.id}`" class="me-3">
             <img
-              :src="contribution.profile?.pfp"
+              :src="String(contribution.profile?.pfp)"
               alt="Foto de perfil"
               class="rounded-circle"
               width="50"
@@ -46,10 +46,11 @@
   import api from '@/services/api';
   import type { ProfileData } from '@/interfaces/Account';
   import { useRoute } from 'vue-router';
+  import type { Contribution } from '@/interfaces/Contribution';
 
   const route = useRoute();
   const projectId = route.params.id
-  const contributions = ref<any[]>([]);
+  const contributions = ref<Contribution[]>([]);
   
   onMounted(() => {
     fetchContributions();
@@ -57,7 +58,7 @@
   
   async function fetchContributions() {
     try {
-      const { data: contribution } = await api.get('/contributions/', {
+      const { data: contribution } = await api.get<Contribution[]>('/contributions/', {
         params: {
           project: String(projectId),
           ordering: '-date',
@@ -68,7 +69,9 @@
         contributions.value.map(contribution => fetchProfile(contribution.contributor.id))
       );
       contributions.value.forEach((contribution, index) => {
-        contribution.profile = profiles[index];
+        if (profiles[index]) {
+          contribution.profile = profiles[index];
+        }
       });
     } catch (err: any) {
       console.error('Error al obtener contribuciones:', err);

@@ -1,3 +1,5 @@
+import type { User } from "./Account";
+
 interface ProjectImage { id: number; image: string; }
 interface ProjectCategory { id: number; category: string; }
 interface Project {
@@ -13,5 +15,11 @@ interface Project {
     total_donated: string;
     percent_completed: number;
 }
+interface SimpleProject {
+    id: number;
+    name: string;
+    description: string;
+    owner: User;
+}
 
-export type { Project, ProjectImage, ProjectCategory};
+export type { Project, ProjectImage, ProjectCategory, SimpleProject};
