@@ -1,8 +1,8 @@
-// src/stores/auth.ts
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 import api from '@/services/api';
 import type { User } from '@/interfaces/Account';
+import router from '@/router';
 
 export const useAuthStore = defineStore('auth', () => {
   const accessToken = ref<string | null>(localStorage.getItem('access_token'));
@@ -14,10 +14,10 @@ export const useAuthStore = defineStore('auth', () => {
   async function login(username: string, password: string) {
     const response = await api.post('/users/login/', { username, password });
     accessToken.value = response.data.access;
+    refreshToken.value = response.data.refresh;
     localStorage.setItem('access_token', response.data.access);
     localStorage.setItem('refresh_token', response.data.refresh);
     api.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`;
-    
     await fetchUser();
   }
 
@@ -29,15 +29,18 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       const response = await api.get('/users/me/');
       user.value = response.data;
-    } catch (error) {}
+    } catch (error) { }
   }
 
   function logout() {
     accessToken.value = null;
+    refreshToken.value = null;
     user.value = null;
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
     delete api.defaults.headers.common['Authorization'];
+
+    router.push('/auth');
   }
 
   async function refreshAccessToken() {
@@ -48,12 +51,24 @@ export const useAuthStore = defineStore('auth', () => {
       accessToken.value = data.access;
       refreshToken.value = data.refresh ?? refreshToken.value;
       localStorage.setItem('access_token', data.access);
-      localStorage.setItem('refresh_token', data.refresh ?? refreshToken.value);
-      api.defaults.headers.common['Authorization'] = `Bearer ${data.access}`
-    } catch(error: any) {
+      localStorage.setItem('refresh_token', data.refresh ?? refreshToken.value!);
+      api.defaults.headers.common['Authorization'] = `Bearer ${data.access}`;
+    } catch (error) {
+      // Si falla el refresh, limpieza y relanzar el error para que el interceptor capte el error
       logout();
+      throw error;
     }
   }
 
-  return { accessToken, user, isAuthenticated, login, register, fetchUser, logout, refreshAccessToken };
+  return {
+    accessToken,
+    refreshToken,
+    user,
+    isAuthenticated,
+    login,
+    register,
+    fetchUser,
+    logout,
+    refreshAccessToken,
+  };
 });

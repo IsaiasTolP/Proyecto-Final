@@ -99,7 +99,6 @@
       const { data } = await api.get<FounderProfileData>(url);
       profile.value = data;
     } catch (err: any) {
-      messageStore.setMessage('Error al cargar el perfil.', 'error');
     } finally {
       loading.value = false;
     }

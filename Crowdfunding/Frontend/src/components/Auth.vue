@@ -75,6 +75,9 @@
         <div v-if="errorMessage" class="alert alert-danger" role="alert">
           {{ errorMessage }}
         </div>
+        <div v-if="messageStore.message" class="alert alert-danger" role="alert">
+          {{ messageStore.message }}
+        </div>
 
         <button type="submit" class="btn btn-success w-100">
           {{ isLogin ? 'Entrar' : 'Registrarse' }}
@@ -91,12 +94,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { useAuthStore } from '@/stores/auth';
-import type { AuthData } from '@/interfaces/Auth.ts';
+  import { computed, ref } from 'vue';
+  import { useRouter } from 'vue-router';
+  import { useAuthStore } from '@/stores/auth';
+  import type { AuthData } from '@/interfaces/Auth.ts';
+  import { useMessageStore } from '@/stores/message';
 
 const router = useRouter();
+const messageStore = useMessageStore();
 const isLogin = ref(true);
 const errorMessage = ref('');
 

@@ -8,6 +8,9 @@ export const useMessageStore = defineStore("message", () => {
     function setMessage(msg: string, t: string) {
         message.value = msg;
         type.value = t;
+        setInterval(() => {
+        clearMessage();
+        }, 5000);
     }
 
     function clearMessage() {

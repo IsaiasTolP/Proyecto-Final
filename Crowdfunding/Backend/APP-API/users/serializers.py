@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from accounts.models import Profile, FounderProfile
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 class UserSerializer(serializers.ModelSerializer):
     is_founder = serializers.BooleanField(default=False)
@@ -34,3 +35,8 @@ class UserSerializer(serializers.ModelSerializer):
         except Profile.DoesNotExist:
             representation['is_founder'] = False
         return representation
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        return super().get_token(user)
