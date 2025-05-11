@@ -144,8 +144,8 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 # Token duration
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=1),
-    "REFRESH_TOKEN_LIFETIME": timedelta(minutes=2),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
+    "REFRESH_TOKEN_LIFETIME": timedelta(hours=12),
 }
 
 
