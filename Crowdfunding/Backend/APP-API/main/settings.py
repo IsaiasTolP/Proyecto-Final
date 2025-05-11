@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from datetime import timedelta
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -43,6 +44,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'imagekit',
     'django_filters',
+    'django_rq',
     'accounts.apps.AccountsConfig',
     'contributions.apps.ContributionsConfig',
     'PaymentMethod.apps.PaymentmethodConfig',
@@ -166,3 +168,23 @@ REST_FRAMEWORK = {
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',  # Vite dev server
 ]
+
+## RQ config
+RQ_QUEUES = {
+    'default': {
+        'HOST': config('REDIS_HOST', default='localhost'),
+        'PORT': config('REDIS_PORT', cast=int, default=6379),
+        'DB': config('REDIS_DB', cast=int, default=0),
+        'PASSWORD': config('REDIS_PASSWORD', default=None)
+    }
+}
+
+## SMTP config
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('SMTP_KEY', default=None)
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+DEFAULT_FROM_EMAIL = 'CrowFundMe toledoisaias54@gmail.com'
