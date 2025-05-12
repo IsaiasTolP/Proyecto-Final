@@ -3,7 +3,7 @@ from rest_framework import viewsets
 from rest_framework.filters import SearchFilter, OrderingFilter
 from .models import Contribution
 from .serializers import ContributionSerializer
-from .tasks import send_receipt_email
+from .tasks import send_receipt_email, send_received_contribution_email
 
 class ContributionViewSet(viewsets.ModelViewSet):
     queryset = Contribution.objects.all()
@@ -23,6 +23,12 @@ class ContributionViewSet(viewsets.ModelViewSet):
 
         send_receipt_email.delay(
             user_email=self.request.user.email,
+            project_name=contribution.project.name,
+            amount=contribution.amount
+        )
+
+        send_received_contribution_email.delay(
+            user_email=contribution.project.owner.email,
             project_name=contribution.project.name,
             amount=contribution.amount
         )
