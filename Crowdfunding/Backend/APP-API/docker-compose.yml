@@ -1,15 +1,20 @@
 services:
+  # Contenedor para Django
   web:
     build: .
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - .:/app
+      - .:/app  # Monta todo el código
+      - ./data:/app/data  # Guarda la base de datos SQLite fuera del contenedor (directorio data)
     ports:
       - "8000:8000"
     depends_on:
       - redis
+    environment:
+      - DJANGO_SETTINGS_MODULE=myproject.settings
 
+  # Contenedor para Redis
   redis:
-    image: redis:lastest
+    image: redis:latest
     ports:
       - "6379:6379"
