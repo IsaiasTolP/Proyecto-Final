@@ -183,10 +183,10 @@ RQ_QUEUES = {
 }
 
 ## Only for Windows development
-RQ_WORKER_CLASS = 'main.windows_worker.SimpleWorker'
-RQ = {
-    'WORKER_CLASS': RQ_WORKER_CLASS,
-}
+# RQ_WORKER_CLASS = 'main.windows_worker.SimpleWorker'
+# RQ = {
+#     'WORKER_CLASS': RQ_WORKER_CLASS,
+# }
 
 ## SMTP config
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
