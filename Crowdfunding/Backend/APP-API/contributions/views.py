@@ -3,6 +3,7 @@ from rest_framework import viewsets
 from rest_framework.filters import SearchFilter, OrderingFilter
 from .models import Contribution
 from .serializers import ContributionSerializer
+from .tasks import send_receipt_email
 
 class ContributionViewSet(viewsets.ModelViewSet):
     queryset = Contribution.objects.all()
@@ -18,4 +19,10 @@ class ContributionViewSet(viewsets.ModelViewSet):
     search_fields = ['project__name', 'contributor__username']
 
     def perform_create(self, serializer):
-        serializer.save(contributor=self.request.user)
+        contribution = serializer.save(contributor=self.request.user)
+
+        send_receipt_email.delay(
+            user_email=self.request.user.email,
+            project_name=contribution.project.name,
+            amount=contribution.amount
+        )
