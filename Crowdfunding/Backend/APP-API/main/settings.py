@@ -175,8 +175,15 @@ RQ_QUEUES = {
         'HOST': config('REDIS_HOST', default='localhost'),
         'PORT': config('REDIS_PORT', cast=int, default=6379),
         'DB': config('REDIS_DB', cast=int, default=0),
+        'DEFAULT_TIMEOUT': 360,
         'PASSWORD': config('REDIS_PASSWORD', default=None)
     }
+}
+
+## Only for Windows development
+RQ_WORKER_CLASS = 'main.windows_worker.SimpleWorker'
+RQ = {
+    'WORKER_CLASS': RQ_WORKER_CLASS,
 }
 
 ## SMTP config
@@ -187,4 +194,4 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('SMTP_KEY', default=None)
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
-DEFAULT_FROM_EMAIL = 'CrowFundMe toledoisaias54@gmail.com'
+DEFAULT_FROM_EMAIL = 'CrowFundMe <toledoisaias54@gmail.com>'
