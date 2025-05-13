@@ -1,0 +1,133 @@
+<template>
+  <div class="container py-5">
+    <h2 class="mb-4 text-primary">Editar Proyecto</h2>
+
+    <form @submit.prevent="submitProject" enctype="multipart/form-data">
+      <div class="mb-3">
+        <label for="name" class="form-label">Nombre del Proyecto</label>
+        <input v-model="form.name" type="text" id="name" class="form-control" required />
+      </div>
+
+      <div class="mb-3">
+        <label for="description" class="form-label">Descripción</label>
+        <textarea v-model="form.description" id="description" rows="4" class="form-control" required></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label for="goal" class="form-label">Objetivo de Recaudación (€)</label>
+        <input v-model="form.goal" type="number" id="goal" class="form-control" step="0.01" required />
+      </div>
+
+      <div class="mb-3">
+        <label for="category" class="form-label">Categoría</label>
+        <select v-model="form.category" id="category" class="form-select" required>
+          <option value="" disabled>Selecciona una categoría</option>
+          <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.category }}</option>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label for="images" class="form-label">Añadir Imágenes Nuevas</label>
+        <input type="file" id="images" class="form-control" multiple @change="handleImageUpload" />
+      </div>
+
+      <div v-if="error" class="alert alert-danger">{{ error }}</div>
+
+      <button class="btn btn-primary" type="submit">Guardar Cambios</button>
+    </form>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import api from '@/services/api';
+import type { ProjectCategory } from '@/interfaces/Project';
+import { useMessageStore } from '@/stores/message';
+
+const route = useRoute();
+const router = useRouter();
+const projectId = Number(route.params.id);
+const messageStore = useMessageStore();
+
+const form = ref({
+  name: '',
+  description: '',
+  goal: '',
+  category: 0,
+});
+
+const images = ref<File[]>([]);
+const categories = ref<ProjectCategory[]>([]);
+const error = ref('');
+
+onMounted(async () => {
+  try {
+    const [{ data: project }, { data: catData }] = await Promise.all([
+      api.get(`/projects/list/${projectId}/`),
+      api.get('/projects/categories/')
+    ]);
+
+    form.value = {
+      name: project.name,
+      description: project.description,
+      goal: project.goal,
+      category: project.category,
+    };
+
+    categories.value = catData;
+  } catch (e) {
+    error.value = 'Error al cargar el proyecto o las categorías.';
+    console.error(e);
+  }
+});
+
+function handleImageUpload(event: Event) {
+  const target = event.target as HTMLInputElement;
+  if (target.files) {
+    images.value = Array.from(target.files);
+  }
+}
+
+async function updateProject() {
+  try {
+    await api.put(`/projects/list/${projectId}/`, form.value);
+  } catch (e) {
+    error.value = 'Error al actualizar el proyecto.';
+    console.error(e);
+    throw e;
+  }
+}
+
+async function uploadImages() {
+  try {
+    if (images.value.length > 0) {
+      const uploads = images.value.map(img => {
+        const formData = new FormData();
+        formData.append('project', String(projectId));
+        formData.append('image', img);
+        return api.post('/projects/project-images/', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+      });
+      await Promise.all(uploads);
+    }
+  } catch (e) {
+    error.value = 'Error al subir imágenes.';
+    console.error(e);
+    messageStore.setMessage(error.value, 'error');
+  }
+}
+
+async function submitProject() {
+  error.value = '';
+  try {
+    await updateProject();
+    await uploadImages();
+    messageStore.setMessage('Proyecto actualizado correctamente', 'success');
+    router.push({ name: 'ProjectDetails', params: { id: projectId } });
+  } catch {
+    // Error ya manejado
+  }
+}
+</script>

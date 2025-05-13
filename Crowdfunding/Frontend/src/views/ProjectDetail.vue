@@ -37,7 +37,7 @@
             <p class="mb-4">{{ project.description }}</p>
   
             <ul class="list-unstyled">
-              <li><strong>Meta:</strong> €{{ project.goal }}</li>
+              <li><strong>Meta:</strong> {{ project.goal }} €</li>
               <li><strong>Fecha de inicio:</strong> {{ formattedDate }}</li>
               <li>
                 <strong>Estado: </strong>
@@ -61,7 +61,7 @@
                 </div>
               </div>
               <small class="text-muted">
-                €{{ project.total_donated }} recaudados de €{{ project.goal }}
+                {{ project.total_donated }} € recaudados de {{ project.goal }} €
               </small>
             </div>
             <div>
@@ -70,12 +70,20 @@
                 class="btn btn-success mt-3"
                 :to="`/projects/${project.id}/contribute`"
               >Contribuir</router-link>
-              <router-link
-                v-else-if="isAuthenticated && isOwner"
-                :to="`/projects/${project.id}/contributions`"
-                class="btn btn-outline-success mt-3"
-              >Comprueba las contribuciones recibidas
-            </router-link>
+              <div v-else-if="isAuthenticated && isOwner">
+                <router-link
+                  :to="`/projects/${project.id}/contributions`"
+                  class="btn btn-outline-success mt-3"
+                >Comprueba las contribuciones recibidas
+                </router-link>
+                <router-link
+        	          :to="`/projects/edit/${project.id}`"
+        	          class="btn btn-outline-secondary mt-3 ms-2"
+      	          >
+        	        Editar
+      	        </router-link>
+              </div>
+              
               <router-link 
                 v-else
                 to="/auth"

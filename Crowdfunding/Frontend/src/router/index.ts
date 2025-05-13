@@ -16,6 +16,9 @@ const routes = [
     { path: "/projects/:id/contribute", name: "Contribute", component: () => import("@/views/ContributionForm.vue"), meta: {requiresAuth: true, disallowOwner: true}},
     { path: "/profile/:id/contributions", name: "MyContributionsHistory", component: () => import("@/views/MyContributionsHistory.vue"), meta: { requiresAuth: true, onlyProfileOwner: true}},
     { path: "/projects/:id/contributions", name: "ProjectContributionsHistory", component: () => import("@/views/ProjectContributionsHistory.vue"), meta: { requiresAuth: true, onlyProjectOwner: true}},
+    { path: "/user/edit", name: "EditUser", component: () => import("@/views/EditUser.vue"), meta: { requiresAuth: true} },
+    { path: "/projects/me", name: "MyProjects", component: () => import("@/views/MyProjects.vue"), meta: { requiresAuth: true, founderRequired: true} },
+    { path: "/projects/edit/:id", name: "EditProject", component: () => import("@/views/EditProject.vue"), meta: { requiresAuth: true, onlyProjectOwner: true} },
 ]
 
 const router = createRouter({
@@ -32,6 +35,19 @@ router.beforeEach(async (to, _from, next) => {
     if (to.meta.requiresAuth && !auth.isAuthenticated) {
         return next({ name: "Auth" });
     }
+
+    if (to.meta.founderRequired) {
+        try {
+            const { data: profile } = await api.get<ProfileData>(`/accounts/profiles/me/`);
+            if (!profile.is_founder) {
+                return router.back();
+            }
+        } catch (e) {
+            return router.back()
+        }
+        ;
+    }
+
     if (to.meta.disallowOwner) {
         const projectId = to.params.id;
         try {

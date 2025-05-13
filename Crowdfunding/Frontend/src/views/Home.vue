@@ -15,7 +15,7 @@
               <div class="card-body d-flex flex-column">
                 <h3 class="card-title h5">{{ project.name }}</h3>
                 <p class="text-muted mb-1">Categoría: {{ projectCategories.find(cat => cat.id === project.category)?.category }}</p>
-                <p class="card-text flex-grow-1">{{ project.description }}</p>
+                <p class="card-text flex-grow-1">{{ project.description.length > 140 ? project.description.slice(0, 140) + '...' : project.description }}</p>
                 <router-link
                   :to="`/projects/${project.id}`"
                   class="btn btn-success mt-3"

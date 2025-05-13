@@ -10,7 +10,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['category', 'is_active']
+    filterset_fields = ['category', 'is_active', 'owner']
     ordering_fields = ['start_date', 'goal']
     search_fields = ['name']
     permission_classes = [AllowAny, IsOwnerOrReadOnly]

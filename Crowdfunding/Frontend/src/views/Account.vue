@@ -46,9 +46,11 @@
   
             <!-- Opciones para el dueño -->
             <div v-if="isOwner" class="mt-4">
+              <router-link to="/user/edit" class="btn btn-primary me-2">Editar Usuario</router-link>
               <router-link to="/profile/edit" class="btn btn-success me-2">Editar Perfil</router-link>
               <router-link to="/payment-methods" class="btn btn-outline-success me-2">Métodos de Pago</router-link>
-              <router-link :to="`/profile/${auth.user?.id}/contributions`" class="btn btn-outline-success">Historial de contribuciones</router-link>
+              <router-link :to="`/profile/${auth.user?.id}/contributions`" class="btn btn-outline-success me-2">Historial de contribuciones</router-link>
+              <router-link v-if="auth.user?.is_founder" to="/projects/me" class="btn btn-outline-success">Mis proyectos</router-link>
             </div>
             
           </div>

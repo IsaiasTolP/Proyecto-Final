@@ -3,19 +3,24 @@
       <h2 class="mb-4 text-success">Contribuir al Proyecto</h2>
   
       <form @submit.prevent="submitContribution">
-        <div class="mb-3">
-          <label for="paymentMethod" class="form-label">Método de Pago</label>
-          <select
-            v-model="form.payment_method"
-            class="form-select"
-            id="paymentMethod"
-            required
-          >
-            <option disabled value="">Selecciona un método</option>
-            <option v-for="method in paymentMethods" :key="method.id" :value="method.id">
-              {{ method.holder_name }} - **** {{ method.card_last4 }}
-            </option>
-          </select>
+        <div class="mb-3 d-flex align-items-center">
+          <div class="flex-grow-1 me-2">
+            <label for="paymentMethod" class="form-label d-block">Método de Pago</label>
+            <div class="d-flex align-items-center">
+              <select
+                v-model="form.payment_method"
+                class="form-select me-2"
+                id="paymentMethod"
+                required
+              >
+                <option disabled value="">Selecciona un método</option>
+                <option v-for="method in paymentMethods" :key="method.id" :value="method.id">
+                {{ method.holder_name }} - **** {{ method.card_last4 }}
+                </option>
+              </select>
+                <router-link class="btn btn-outline-success" to="/payment-methods/add">Añadir</router-link>
+            </div>
+          </div>
         </div>
   
         <div class="mb-3">
