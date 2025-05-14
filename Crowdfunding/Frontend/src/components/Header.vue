@@ -12,6 +12,19 @@
       >
         <span class="navbar-toggler-icon"></span>
       </button>
+      <div class="d-flex align-items-center flex-grow-1 mx-4">
+          <input
+            v-model="searchQuery"
+            @keyup.enter="submitSearch"
+            class="form-control me-2"
+            type="search"
+            placeholder="Buscar proyectos..."
+            aria-label="Buscar"
+          />
+          <button class="btn btn-outline-light" @click="submitSearch">
+            🔍
+          </button>
+        </div>
       <div :class="['collapse', 'navbar-collapse', { show: isCollapsed }]" id="navbarNav">
         <ul class="navbar-nav ms-auto align-items-center">
           <li class="nav-item">
@@ -39,6 +52,14 @@ import { useAuthStore } from '@/stores/auth';
 
 	const isCollapsed = ref(false);
 	const router = useRouter();
+  const searchQuery = ref('');
+
+  function submitSearch() {
+    if (searchQuery.value.trim()) {
+      router.push({ name: 'ProjectSearch', query: { query: searchQuery.value.trim() } });
+      searchQuery.value = '';
+    }
+  }
 
 	function toggleNavbar() {
 		isCollapsed.value = !isCollapsed.value;
@@ -47,9 +68,7 @@ import { useAuthStore } from '@/stores/auth';
 	const auth = useAuthStore();
 
 	function logout() {
-	  // Clean up tokens and headers
 		auth.logout();
-	  // Redirect to login page
 		router.push({ name: 'Auth' });
 	}
 </script>

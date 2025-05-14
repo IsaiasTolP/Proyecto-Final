@@ -20,6 +20,7 @@ const routes = [
     { path: "/user/edit", name: "EditUser", component: () => import("@/views/EditUser.vue"), meta: { requiresAuth: true} },
     { path: "/projects/me", name: "MyProjects", component: () => import("@/views/MyProjects.vue"), meta: { requiresAuth: true, founderRequired: true} },
     { path: "/projects/edit/:id", name: "EditProject", component: () => import("@/views/EditProject.vue"), meta: { requiresAuth: true, onlyProjectOwner: true} },
+    { path: "/projects/search", name: "ProjectSearch", component: () => import("@/views/ProjectSearch.vue"), meta: { requiresAuth: true} },
 ]
 
 const router = createRouter({
