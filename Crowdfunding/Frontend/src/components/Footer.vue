@@ -11,7 +11,7 @@
           <div class="col-md-4 mb-3">
             <h5>Enlaces Útiles</h5>
             <ul class="list-unstyled">
-              <li><a href="#" class="text-white text-decoration-none">Inicio</a></li>
+              <li><router-link :to="{ name: 'Home' }" class="text-white text-decoration-none">Inicio</router-link></li>
               <li><a href="#" class="text-white text-decoration-none">Proyectos</a></li>
               <li><a href="#" class="text-white text-decoration-none">Contacto</a></li>
               <li><a href="#" class="text-white text-decoration-none">Política de Privacidad</a></li>

@@ -39,10 +39,9 @@
             <div>www.crowdfundme.com</div>
         </div>
         <div class="col-6 text-end">
-            <h5>Factura</h5>
+            <h5>Recibo</h5>
             <p>Fecha de emisión: <strong>{{ issue_date }}</strong></p>
-            <p>ID Factura: <strong>#{{ invoice_number }}</strong></p>
-            <p>Usuario: <strong>{{ user_name }}</strong></p>
+            <p>ID Recibo: <strong>#{{ invoice_number }}</strong></p>
         </div>
     </div>
 
@@ -59,18 +58,14 @@
                 <th scope="row">Monto</th>
                 <td>{{ amount }} €</td>
             </tr>
-            <tr>
-                <th scope="row">Correo del usuario</th>
-                <td>{{ user_email }}</td>
-            </tr>
         </tbody>
     </table>
 
-    <p class="mt-4">Gracias por apoyar este proyecto. Su contribución ayuda a que las ideas cobren vida.</p>
+    <p class="mt-4">¡Te damos la enhorabuena por esta contribución que has recibido! Estamos seguros de que todos tus sueños se cumplirán</p>
 </div>
 
 <div class="footer">
-    Factura generada automáticamente por CrowdFundMe · No requiere firma
+    Recibo generado automáticamente por CrowdFundMe · No requiere firma
 </div>
 
 </body>

@@ -28,6 +28,20 @@ class UserSerializer(serializers.ModelSerializer):
 
         return user
     
+    def update(self, instance, validated_data):
+        password = validated_data.pop('password', None)
+
+        # Update other fields normally
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        # Set password properly if it was included
+        if password:
+            instance.set_password(password)
+
+        instance.save()
+        return instance
+    
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         try:

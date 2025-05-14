@@ -154,7 +154,7 @@
   }
 
   function goBack() {
-    router.push({ name: 'Home' });
+    router.back();
   }
 
   onMounted(fetchProject);

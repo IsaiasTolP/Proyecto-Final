@@ -23,6 +23,7 @@ class ContributionViewSet(viewsets.ModelViewSet):
 
         send_receipt_email.delay(
             user_email=self.request.user.email,
+            user_name=self.request.user.username,
             project_name=contribution.project.name,
             amount=contribution.amount
         )

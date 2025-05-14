@@ -1,5 +1,5 @@
 from rest_framework import status
-from rest_framework.generics import RetrieveAPIView
+from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -11,7 +11,7 @@ from rest_framework.permissions import AllowAny
 from django.contrib.auth.models import User
 import django_rq
 from .tasks import send_welcome_email
-
+from .permissions import IsSelfOrReadOnly
 
 class RegisterUserAPIView(APIView):
     def post(self, request, *args, **kwargs):
@@ -52,10 +52,11 @@ class LoginAPIView(APIView):
         return Response({"detail": "Invalid credentials."}, status=status.HTTP_401_UNAUTHORIZED)
 
 
-class UserDetailView(RetrieveAPIView):
+class UserDetailView(RetrieveUpdateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     lookup_field = 'id'
+    permission_classes = [IsAuthenticated, IsSelfOrReadOnly]
 
 class UserMeView(APIView):
     permission_classes = [IsAuthenticated]
