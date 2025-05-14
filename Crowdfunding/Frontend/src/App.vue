@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex flex-column min-vh-100 bg-light">
-    <Header />
+    <Header v-if="!$route.meta.hideHeader" />
     <main class="flex-grow-1">
       <router-view/>
     </main>

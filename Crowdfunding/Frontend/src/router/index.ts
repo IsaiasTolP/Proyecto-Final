@@ -5,8 +5,9 @@ import type { Project } from '@/interfaces/Project';
 import type { ProfileData } from "@/interfaces/Account";
 
 const routes = [
-    { path: "/", name: "Home", component: () => import("@/views/Home.vue") },
+    { path: "/", name: "Home", component: () => import("@/views/Home.vue"), meta: {hideHeader: true} },
     { path: "/auth", name: "Auth", component: () => import("@/components/Auth.vue"), meta: { requiresUnauth: true } },
+    { path: "/projects", name: "Projects", component: () => import("@/views/Projects.vue") },
     { path: "/projects/:id", name: "ProjectDetails", component: () => import("@/views/ProjectDetail.vue"), props: true },
     { path: "/profile/:id", name: "Account", component: () => import("@/views/Account.vue"), meta: { requiresAuth: true} },
     { path: "/profile/edit", name: "EditProfile", component: () => import("@/views/EditProfile.vue"), meta: { requiresAuth: true} },

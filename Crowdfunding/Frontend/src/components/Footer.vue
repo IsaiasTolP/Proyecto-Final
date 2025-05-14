@@ -12,7 +12,7 @@
             <h5>Enlaces Útiles</h5>
             <ul class="list-unstyled">
               <li><router-link :to="{ name: 'Home' }" class="text-white text-decoration-none">Inicio</router-link></li>
-              <li><a href="#" class="text-white text-decoration-none">Proyectos</a></li>
+              <li><router-link :to="{ name: 'Projects' }" class="text-white text-decoration-none">Proyectos</router-link></li>
               <li><a href="#" class="text-white text-decoration-none">Contacto</a></li>
               <li><a href="#" class="text-white text-decoration-none">Política de Privacidad</a></li>
             </ul>

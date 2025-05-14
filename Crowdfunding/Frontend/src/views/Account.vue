@@ -83,7 +83,7 @@
   const isOwner = computed(() => !!currentUser && currentUser.id === profile.value.user?.id);
   
   function goBack() {
-    router.push({ name: 'Home' });
+    router.back();
   }
   
   async function fetchProfile() {
