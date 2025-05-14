@@ -8,7 +8,7 @@
 		<main class="main-left w-100">
       <h1>¡Bienvenido a<br/>CrowdFundMe!</h1>
       <p>Descubre y apoya nuevos proyectos.</p>
-      <button type="button" class="btn-explorar">Explorar</button>
+      <button type="button" class="btn-explorar" @click="goTo('Projects')">Explorar</button>
 		</main>
     </div>
     <div class="col-12 col-md-6 right-side">
@@ -18,6 +18,15 @@
 	</div>
   </div>
 </template>
+
+<script setup lang="ts">
+import { useRouter } from 'vue-router';
+const router = useRouter();
+
+function goTo(name: string, params = {}) {
+	router.push({ name: name, params: params});
+}
+</script>
 
 <style scoped>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');

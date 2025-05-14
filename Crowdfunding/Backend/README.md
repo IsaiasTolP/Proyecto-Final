@@ -41,3 +41,5 @@ class SimpleWorker(Worker):
 ## Luego descomentar la configuración de RQ en las settings
 
 # Importante para Windows: Es necesario tener unos contenedores de Docker con Django, Redis, Base de datos PostgreSQL, para funcionar en desarrollo.
+
+## Comando para borrado de tareas encoladas en el worker --> rq empty default --url redis://redis:6379/0

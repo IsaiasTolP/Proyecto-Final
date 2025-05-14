@@ -27,6 +27,35 @@
                 :alt="`Imagen adicional de ${project.name}`"
               />
             </div>
+            <!-- Lista de contribuciones -->
+            <section v-if="contributions && contributions.length" class="container pb-5">
+              <h3 class="mt-5 mb-4 text-success">Contribuciones al proyecto</h3>
+              <ul class="list-group">
+                <li
+                  v-for="contribution in contributions"
+                  :key="contribution.id"
+                  class="list-group-item d-flex justify-content-between align-items-start flex-column flex-md-row mb-2"
+                >
+                  <div class="flex-grow-1">
+                    <p class="mb-1">
+                      <strong>Contribuidor:</strong>
+                      {{ contribution.contributor?.username || 'Anónimo' }}
+                    </p>
+                    <p class="mb-1"><strong>Mensaje:</strong> {{ contribution.message || 'Sin mensaje' }}</p>
+                    <p class="mb-0 text-muted"><small>Fecha: {{ formatDate(contribution.date) }}</small></p>
+                  </div>
+                  <div class="text-md-end">
+                    <span class="badge bg-success fs-5">
+                      +{{ contribution.amount }} €
+                    </span>
+                  </div>
+                </li>
+              </ul>
+            </section>
+            <section v-else class="container pb-5">
+              <h3 class="mt-5 mb-4 text-success">Contribuciones al proyecto</h3>
+              <p class="text-muted">Aún no hay contribuciones.</p>
+            </section>
           </div>
   
           <!-- Detalles -->
@@ -34,7 +63,52 @@
             <h1 class="mb-3">{{ project.name }}</h1>
             <p class="text-muted mb-1">Categoría: {{ projectCategory.category }}</p>
             <p class="text-muted mb-3">Propietario: {{ owner.username }}</p>
-            <p class="mb-4">{{ project.description }}</p>
+            <p class="mb-4">
+              {{ truncatedDescription }}
+              <span v-if="isTruncated">...</span>
+            </p>
+            <button
+              v-if="isTruncated"
+              class="btn btn-link p-0"
+              data-bs-toggle="modal"
+              data-bs-target="#descriptionModal"
+            >
+              Ver más
+            </button>
+            <!-- Modal para la descripción completa -->
+            <div
+              class="modal fade"
+              id="descriptionModal"
+              tabindex="-1"
+              aria-labelledby="descriptionModalLabel"
+              aria-hidden="true"
+              >
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="descriptionModalLabel">Descripción completa</h5>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Cerrar"
+                    ></button>
+                  </div>
+                  <div class="modal-body">
+                    {{ project.description }}
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      Cerrar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
   
             <ul class="list-unstyled">
               <li><strong>Meta:</strong> {{ project.goal }} €</li>
@@ -104,7 +178,7 @@
   import { useAuthStore } from '@/stores/auth';
   import type { ProjectCategory, Project } from '@/interfaces/Project';
   import type { User } from '@/interfaces/Account';
-
+  import type { Contribution } from '@/interfaces/Contribution';
 
   const route = useRoute();
   const router = useRouter();
@@ -113,6 +187,7 @@
   const project = ref<Project>({} as Project);
   const projectCategory = ref<ProjectCategory>({} as ProjectCategory);
   const owner = ref<User>({} as User);
+  const contributions = ref<Contribution[]>([] as Contribution[]);
   const loading = ref(true);
   const error = ref('');
 
@@ -138,7 +213,8 @@
     } catch (err: any) {
       error.value = 'Error al cargar el proyecto.';
     } finally {
-      await fetchOwner()
+      await fetchOwner();
+      await fetchContributions();
       loading.value = false;
     }
   }
@@ -153,9 +229,44 @@
     }
   }
 
+  async function fetchContributions() {
+    try {
+      const contributionsData = await api.get<Contribution[]>(`/contributions/`, {
+        params: {
+          project: project.value.id,
+          ordering: '-date',
+        }
+      });
+      contributions.value = contributionsData.data;
+    } catch (err: any) {
+      error.value = 'Error al cargar las contribuciones del proyecto.';
+    }
+  }
+
   function goBack() {
     router.back();
   }
+
+  function formatDate(dateStr: string): string {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('es-ES', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+  });
+}
+
+  const limit = 2000
+  const isTruncated = computed(() => {
+    return project.value.description.length > limit
+  })
+
+  const truncatedDescription = computed(() => {
+    return isTruncated.value
+      ? project.value.description.slice(0, limit)
+      : project.value.description
+  });
+
 
   onMounted(fetchProject);
 </script>
