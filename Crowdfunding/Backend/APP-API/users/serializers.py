@@ -50,6 +50,21 @@ class UserSerializer(serializers.ModelSerializer):
             representation['is_founder'] = False
         return representation
 
+class SimpleUserSerializer(serializers.ModelSerializer):
+    is_founder = serializers.BooleanField(default=False)
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'is_founder']
+    
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        try:
+            representation['is_founder'] = instance.profile.is_founder
+        except Profile.DoesNotExist:
+            representation['is_founder'] = False
+        return representation
+
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):

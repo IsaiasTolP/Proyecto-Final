@@ -51,7 +51,6 @@
     description: '',
     goal: '',
     category: 0,
-		images: '',
   });
   const images = ref<File[]>([]);
   const categories = ref<ProjectCategory[]>([]);
@@ -99,6 +98,12 @@
           });
         });
         await Promise.all(uploads);
+      } else {
+        const imgData = new FormData();
+        imgData.append('project', String(projectId));
+        return api.post('/projects/project-images/', imgData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+          });
       }
     } catch (e: any) {
       error.value = `Error al subir imágenes. Revisa tu proyecto y los formatos de las imágenes`;
