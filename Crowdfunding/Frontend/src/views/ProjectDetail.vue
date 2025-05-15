@@ -35,16 +35,21 @@
                   v-for="contribution in contributions"
                   :key="contribution.id"
                   class="list-group-item d-flex justify-content-between align-items-start flex-column flex-md-row mb-2"
+                  style="word-wrap: break-word; word-break: break-word; overflow-wrap: break-word;"
                 >
-                  <div class="flex-grow-1">
+                  <div class="flex-grow-1 w-100">
                     <p class="mb-1">
                       <strong>Contribuidor:</strong>
                       {{ contribution.contributor?.username || 'Anónimo' }}
                     </p>
-                    <p class="mb-1"><strong>Mensaje:</strong> {{ contribution.message || 'Sin mensaje' }}</p>
-                    <p class="mb-0 text-muted"><small>Fecha: {{ formatDate(contribution.date) }}</small></p>
+                    <p class="mb-1 message-text">
+                      <strong>Mensaje:</strong> {{ contribution.message || 'Sin mensaje' }}
+                    </p>
+                    <p class="mb-0 text-muted">
+                      <small>Fecha: {{ formatDate(contribution.date) }}</small>
+                    </p>
                   </div>
-                  <div class="text-md-end">
+                  <div class="text-md-end mt-2 mt-md-0">
                     <span class="badge bg-success fs-5">
                       +{{ contribution.amount }} €
                     </span>
@@ -52,6 +57,7 @@
                 </li>
               </ul>
             </section>
+
             <section v-else class="container pb-5">
               <h3 class="mt-5 mb-4 text-success">Contribuciones al proyecto</h3>
               <p class="text-muted">Aún no hay contribuciones.</p>
@@ -272,6 +278,11 @@
 </script>
 
 <style scoped>
+  .message-text {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
   .btn-link {
     text-decoration: none;
   }

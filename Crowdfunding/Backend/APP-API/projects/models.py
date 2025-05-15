@@ -42,7 +42,7 @@ class ProjectImage(models.Model):
         processors=[ResizeToFill(800, 600)],
         format='JPEG',
         options={'quality': 90},
-        default='default.jpg'
+        default='project_images/default.jpg'
     )
 
     def __str__(self):

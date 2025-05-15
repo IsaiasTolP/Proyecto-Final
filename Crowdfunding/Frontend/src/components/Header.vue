@@ -56,7 +56,7 @@ import { useAuthStore } from '@/stores/auth';
 
   function submitSearch() {
     if (searchQuery.value.trim()) {
-      router.push({ name: 'ProjectSearch', query: { query: searchQuery.value.trim() } });
+      window.location.href = `/projects/search?query=${encodeURIComponent(searchQuery.value.trim())}`;
       searchQuery.value = '';
     }
   }

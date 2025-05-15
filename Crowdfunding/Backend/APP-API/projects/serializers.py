@@ -29,6 +29,16 @@ class ProjectSerializer(serializers.ModelSerializer):
         )
         read_only_fields = ['start_date']
 
+    def create(self, validated_data):
+        images_data = validated_data.pop('project_images', [])
+        project = Project.objects.create(**validated_data)
+        if images_data:
+            for image_data in images_data:
+                ProjectImage.objects.create(project=project, **image_data)
+        else:
+            ProjectImage.objects.create(project=project)
+        return project
+
 class SimpleProjectSerializer(serializers.ModelSerializer):
     owner = UserSerializer(read_only=True)
     class Meta:
