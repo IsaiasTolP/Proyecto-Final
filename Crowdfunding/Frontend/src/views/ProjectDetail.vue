@@ -122,7 +122,7 @@
               <li>
                 <strong>Estado: </strong>
                 <span :class="project.is_active ? 'text-success' : 'text-danger'">
-                  {{ project.is_active ? 'Activo' : 'No activo' }}
+                  {{ project.is_active ? 'Activo' : 'Cerrado' }}
                 </span>
               </li>
             </ul>
@@ -156,6 +156,14 @@
                   class="btn btn-outline-success mt-3"
                 >Comprueba las contribuciones recibidas
                 </router-link>
+                <button
+                  v-if="project.is_active" 
+                  class="btn btn-outline-danger mt-3 ms-2"
+                  type="button"
+                  data-bs-toggle="modal"
+                  data-bs-target="#closeModal"
+                  >Cerrar proyecto
+                </button>
                 <router-link
         	          :to="`/projects/edit/${project.id}`"
         	          class="btn btn-outline-secondary mt-3 ms-2"
@@ -174,6 +182,23 @@
           </div>
         </div>
       </section>
+    </div>
+    <div class="modal fade" id="closeModal" tabindex="-1" aria-labelledby="closeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="closeModalLabel">Cerrar Proyecto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>¿Estás seguro de que deseas cerrar este proyecto? Esta acción no se puede deshacer.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-danger" @click="closeProject">Cerrar proyecto</button>
+        </div>
+      </div>
+    </div>
     </div>
 </template>
 
@@ -196,6 +221,7 @@
   const contributions = ref<Contribution[]>([] as Contribution[]);
   const loading = ref(true);
   const error = ref('');
+  const showConfirmDialog = ref(false);
 
   const currentUser = auth.user
   const isAuthenticated = computed(() => auth.isAuthenticated);
@@ -248,6 +274,19 @@
       error.value = 'Error al cargar las contribuciones del proyecto.';
     }
   }
+
+  async function closeProject() {
+    try {
+      showConfirmDialog.value = false;
+      await api.patch(`/projects/list/${project.value.id}/`, {
+        is_active: false,
+      });
+      window.location.reload();
+    } catch (err: any) {
+      error.value = 'Error al cerrar el proyecto.';
+    }
+  }
+
 
   function goBack() {
     router.back();

@@ -18,7 +18,7 @@
                 {{ method.holder_name }} - **** {{ method.card_last4 }}
                 </option>
               </select>
-                <router-link class="btn btn-outline-success" to="/payment-methods/add">Añadir</router-link>
+                <router-link class="btn btn-outline-success" :to="{ name: 'AddPaymentMethod', query: { back: 'true' }}">Añadir</router-link>
             </div>
           </div>
         </div>

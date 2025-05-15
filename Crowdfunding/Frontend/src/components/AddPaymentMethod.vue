@@ -64,11 +64,12 @@
 
 <script setup lang="ts">
   import { ref } from 'vue';
-  import { useRouter } from 'vue-router';
+  import { useRoute, useRouter } from 'vue-router';
   import api from '@/services/api';
 	import { useMessageStore } from '@/stores/message';
   
   const router = useRouter();
+  const route = useRoute();
 	const messageStore = useMessageStore();
   
   const form = ref({
@@ -83,7 +84,11 @@
   async function submitPaymentMethod() {
     try {
       await api.post('/payment-methods/payment-methods/', form.value);
-      router.push({ name: 'PaymentMethods' });
+      if (route.query.back === 'true') {
+        router.back();
+      } else {
+        router.push({ name: 'PaymentMethods' });
+      }
     } catch (err: any) {
       error.value = err?.response?.data?.detail || 'Error al guardar el método de pago.';
 			messageStore.setMessage(error.value, 'error');
