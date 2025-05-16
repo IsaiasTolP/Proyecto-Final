@@ -27,8 +27,38 @@
       </div>
 
       <div class="mb-3">
-        <label for="images" class="form-label">Añadir Imágenes Nuevas</label>
-        <input type="file" id="images" class="form-control" multiple @change="handleImageUpload" />
+        <label class="form-label">Añadir Imágenes Nuevas</label>
+
+        <div class="d-flex flex-column gap-2">
+          <button type="button" class="btn btn-outline-primary w-fit" @click="fileInput?.click()">
+            Seleccionar imágenes
+          </button>
+          <input
+            ref="fileInput"
+            type="file"
+            accept="image/*"
+            class="d-none"
+            @change="handleImageUpload"
+          />
+        </div>
+      
+        <ul class="list-group mt-3" v-if="images.length">
+          <li v-for="(img, index) in images" :key="index" class="list-group-item d-flex justify-content-between align-items-center">
+            {{ img.name }}
+            <button type="button" class="btn btn-sm btn-danger" @click="removeImage(index)">Quitar</button>
+          </li>
+        </ul>
+
+
+        <div class="mb-3" v-if="existingImages.length">
+          <label class="form-label">Imágenes Actuales</label>
+          <ul class="list-group">
+            <li v-for="img in existingImages" :key="img.id" class="list-group-item d-flex justify-content-between align-items-center">
+              <img :src="img.image" alt="Imagen del proyecto" class="img-thumbnail" style="max-height: 80px;" />
+              <button type="button" class="btn btn-sm btn-danger" @click="deleteImage(img.id)">Eliminar</button>
+            </li>
+          </ul>
+        </div>
       </div>
 
       <div v-if="error" class="alert alert-danger">{{ error }}</div>
@@ -49,6 +79,7 @@ const route = useRoute();
 const router = useRouter();
 const projectId = Number(route.params.id);
 const messageStore = useMessageStore();
+const fileInput = ref<HTMLInputElement | null>(null);
 
 const form = ref({
   name: '',
@@ -59,13 +90,15 @@ const form = ref({
 
 const images = ref<File[]>([]);
 const categories = ref<ProjectCategory[]>([]);
+const existingImages = ref<{ id: number; image: string }[]>([]);
 const error = ref('');
 
 onMounted(async () => {
   try {
-    const [{ data: project }, { data: catData }] = await Promise.all([
+    const [{ data: project }, { data: catData }, { data: projectImages }] = await Promise.all([
       api.get(`/projects/list/${projectId}/`),
-      api.get('/projects/categories/')
+      api.get('/projects/categories/'),
+      api.get(`/projects/project-images/?project=${projectId}`)
     ]);
 
     form.value = {
@@ -75,6 +108,7 @@ onMounted(async () => {
       category: project.category,
     };
 
+    existingImages.value = projectImages;
     categories.value = catData;
   } catch (e) {
     error.value = 'Error al cargar el proyecto o las categorías.';
@@ -85,7 +119,24 @@ onMounted(async () => {
 function handleImageUpload(event: Event) {
   const target = event.target as HTMLInputElement;
   if (target.files) {
-    images.value = Array.from(target.files);
+    // Añadir nuevas imágenes a las ya seleccionadas
+    images.value.push(...Array.from(target.files));
+    // Reset del input para permitir volver a seleccionar los mismos archivos si se desea
+    target.value = '';
+  }
+}
+
+function removeImage(index: number) {
+  images.value.splice(index, 1);
+}
+
+async function deleteImage(imageId: number) {
+  try {
+    await api.delete(`/projects/project-images/${imageId}/`);
+    existingImages.value = existingImages.value.filter(img => img.id !== imageId);
+  } catch (e) {
+    error.value = 'No se pudo eliminar la imagen.';
+    console.error(e);
   }
 }
 

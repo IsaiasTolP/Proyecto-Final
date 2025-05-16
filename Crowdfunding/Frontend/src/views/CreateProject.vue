@@ -27,8 +27,41 @@
         </div>
   
         <div class="mb-3">
-          <label for="images" class="form-label">Imágenes (PNG, JPG/JPEG, WEBP)</label>
-          <input type="file" id="images" class="form-control" multiple @change="handleImageUpload" />
+          <label class="form-label">Imágenes (PNG, JPG/JPEG, WEBP)</label>
+
+          <div
+            class="border border-success rounded p-3 text-center cursor-pointer"
+            style="background-color: #f8f9fa;"
+            @click="fileInput?.click()"
+          >
+            <p class="text-muted mb-0">Haz clic aquí para añadir imágenes</p>
+            <small>(Puedes seleccionar varias)</small>
+          </div>
+        
+          <input
+            ref="fileInput"
+            type="file"
+            class="d-none"
+            accept="image/*"
+            @change="handleImageUpload"
+          />
+        </div>
+
+        <div v-if="previewImages.length" class="mb-3">
+          <h5 class="form-label">Imágenes seleccionadas:</h5>
+          <ul class="list-group">
+            <li
+              v-for="(img, index) in previewImages"
+              :key="index"
+              class="list-group-item d-flex justify-content-between align-items-center"
+            >
+              <div class="d-flex align-items-center gap-3">
+                <img :src="img.url" alt="Previsualización" style="height: 60px; width: 60px; object-fit: cover;" />
+                <span>{{ img.file.name }}</span>
+              </div>
+              <button class="btn btn-sm btn-outline-danger" @click="removeImage(index)">Quitar</button>
+            </li>
+          </ul>
         </div>
   
         <div v-if="error" class="alert alert-danger">{{ error }}</div>
@@ -39,7 +72,7 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, onMounted } from 'vue';
+  import { ref, onMounted, onBeforeUnmount } from 'vue';
   import { useRouter } from 'vue-router';
   import api from '@/services/api';
   import type { ProjectCategory } from '@/interfaces/Project';
@@ -56,6 +89,8 @@
   const categories = ref<ProjectCategory[]>([]);
   const error = ref('');
   const messageStore = useMessageStore();
+  const fileInput = ref<HTMLInputElement | null>(null);
+  const previewImages = ref<{ file: File; url: string }[]>([]);
   
   onMounted(async () => {
     try {
@@ -65,12 +100,35 @@
       error.value = 'No se pudieron cargar las categorías.';
     }
   });
+
+  onBeforeUnmount(() => {
+    previewImages.value.forEach(img => URL.revokeObjectURL(img.url));
+  });
   
   function handleImageUpload(event: Event) {
     const target = event.target as HTMLInputElement;
     if (target.files) {
-      images.value = Array.from(target.files);
+      const newFiles = Array.from(target.files);
+
+      newFiles.forEach(file => {
+        if (!images.value.find(existing => existing.name === file.name)) {
+          images.value.push(file);
+          previewImages.value.push({
+            file,
+            url: URL.createObjectURL(file),
+          });
+        }
+      });
+
+      // Limpiar el input para poder volver a seleccionar el mismo archivo si se quiere
+      target.value = '';
     }
+  }
+
+  function removeImage(index: number) {
+    URL.revokeObjectURL(previewImages.value[index].url);
+    previewImages.value.splice(index, 1);
+    images.value.splice(index, 1);
   }
   
   async function createProject() {

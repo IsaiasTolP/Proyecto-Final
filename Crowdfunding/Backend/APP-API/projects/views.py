@@ -25,6 +25,10 @@ class ProjectCategoryViewSet(viewsets.ModelViewSet):
 class ProjectImageViewSet(viewsets.ModelViewSet):
     queryset = ProjectImage.objects.all()
     serializer_class = ProjectImageSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = {
+        'project': ['exact'],
+    }
 
 class SimpleProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
