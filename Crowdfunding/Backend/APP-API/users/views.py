@@ -9,7 +9,6 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth import authenticate
 from rest_framework.permissions import AllowAny
 from django.contrib.auth.models import User
-import django_rq
 from .tasks import send_welcome_email
 from .permissions import IsSelfOrReadOnly
 

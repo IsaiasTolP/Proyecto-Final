@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Project, ProjectCategory, ProjectImage
-from users.serializers import UserSerializer
+from users.serializers import SimpleUserSerializer
 
 class ProjectCategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -30,7 +30,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         read_only_fields = ['start_date']
 
 class SimpleProjectSerializer(serializers.ModelSerializer):
-    owner = UserSerializer(read_only=True)
+    owner = SimpleUserSerializer(read_only=True)
     class Meta:
         model = Project
         fields = ('id', 'name', 'description', 'owner')
