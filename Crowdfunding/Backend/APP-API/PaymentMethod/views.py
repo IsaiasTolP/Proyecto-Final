@@ -1,11 +1,13 @@
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 from .models import PaymentMethod
 from .serializers import PaymentMethodSerializer
+from .permissions import IsOwnerOrNotAllowed
 
 class PaymentMethodViewSet(viewsets.ModelViewSet):
     queryset = PaymentMethod.objects.all()
     serializer_class = PaymentMethodSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = (IsAuthenticated, IsOwnerOrNotAllowed)
 
     def get_queryset(self):
         return PaymentMethod.objects.filter(user=self.request.user)

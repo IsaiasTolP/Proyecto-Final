@@ -47,6 +47,11 @@
           ></textarea>
         </div>
   
+        <div v-if="messageStore.message">
+          <div class="alert alert-danger" role="alert">
+            {{ messageStore.message }}
+          </div>
+        </div>
         <button type="submit" class="btn btn-success" :disabled="loading">
           {{ loading ? 'Enviando...' : 'Contribuir' }}
         </button>
@@ -58,9 +63,12 @@
   import { ref, onMounted } from 'vue';
   import { useRoute, useRouter } from 'vue-router';
   import api from '@/services/api';
+  import { useMessageStore } from '@/stores/message';
+import axios from 'axios';
   
   const route = useRoute();
   const router = useRouter();
+  const messageStore = useMessageStore();
   
   const projectId = Number(route.params.id);
   const form = ref({
@@ -92,7 +100,13 @@
       await api.post('/contributions/', form.value);
       router.push({ name: 'ProjectDetails', params: { projectId } });
     } catch (error: any) {
-      console.error('Error al enviar contribución:', error.response?.data || error);
+      if (axios.isAxiosError(error) && error.response) {
+        const errors = error.response.data;
+        if (errors.payment_method) {
+          messageStore.setMessage(`Error al enviar la contribución. ${errors.payment_method[0]}`, 'error');
+        }
+      }
+      
     } finally {
       loading.value = false;
     }

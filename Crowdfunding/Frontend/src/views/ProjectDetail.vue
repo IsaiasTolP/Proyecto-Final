@@ -146,7 +146,7 @@
             </div>
             <div>
               <router-link
-                v-if="isAuthenticated && !isOwner"
+                v-if="isAuthenticated && !isOwner && project.is_active"
                 class="btn btn-success mt-3"
                 :to="`/projects/${project.id}/contribute`"
               >Contribuir</router-link>
@@ -173,11 +173,12 @@
               </div>
               
               <router-link 
-                v-else
+                v-else-if="!isAuthenticated && project.is_active"
                 to="/auth"
                 class="btn btn-outline-success mt-3"
                 >Inicia sesión para contribuir
               </router-link>
+              <p v-else>El proyecto ya no está disponible ¡Gracias por el apoyo!</p>
             </div>
           </div>
         </div>
