@@ -26,6 +26,8 @@ onBeforeMount(async () => {
   if (auth.isAuthenticated && !auth.user) {
     await auth.fetchUser();
     loading.value = false;
+  } else {
+    loading.value = false;
   }
 })
 

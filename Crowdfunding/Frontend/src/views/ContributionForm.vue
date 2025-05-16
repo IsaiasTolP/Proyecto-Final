@@ -97,7 +97,7 @@ import axios from 'axios';
   async function submitContribution() {
     try {
       loading.value = true;
-      await api.post('/contributions/', form.value);
+      await api.post('/contributions/list/', form.value);
       router.push({ name: 'ProjectDetails', params: { projectId } });
     } catch (error: any) {
       if (axios.isAxiosError(error) && error.response) {

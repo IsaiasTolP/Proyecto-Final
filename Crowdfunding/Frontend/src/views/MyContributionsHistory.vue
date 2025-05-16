@@ -45,7 +45,7 @@
   
   async function fetchContributions() {
     try {
-      const { data: contribution } = await api.get('/contributions/', {
+      const { data: contribution } = await api.get('/contributions/list/', {
         params: {
           contributor: String(userId),
           ordering: '-date',

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Contribution
-from users.serializers import UserSerializer
+from users.serializers import UserSerializer, SimpleUserSerializer
 from PaymentMethod.models import PaymentMethod
 from projects.models import Project
 
@@ -21,3 +21,12 @@ class ContributionSerializer(serializers.ModelSerializer):
         if not value.is_active:
             raise serializers.ValidationError("Project is already closed.")
         return value
+
+
+class SimpleContributionSerializer(serializers.ModelSerializer):
+    contributor = SimpleUserSerializer(read_only=True)
+
+    class Meta:
+        model = Contribution
+        fields = ['id', 'amount', 'date', 'message', 'project', 'contributor']
+        read_only_fields = fields

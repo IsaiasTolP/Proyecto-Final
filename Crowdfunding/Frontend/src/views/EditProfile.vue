@@ -18,19 +18,19 @@
         <!-- Localización -->
         <div class="mb-3">
           <label for="location" class="form-label">Ubicación</label>
-          <input id="location" v-model="form.location" type="text" class="form-control" />
+          <input id="location" v-model="form.location" type="text" class="form-control" maxlength="100" />
         </div>
   
         <!-- Campos adicionales para Fundadores -->
         <div v-if="form.is_founder">
           <div class="mb-3">
             <label for="website" class="form-label">Sitio Web</label>
-            <input id="website" v-model="form.website" type="url" class="form-control" />
+            <input id="website" v-model="form.website" type="url" class="form-control" maxlength="200"/>
           </div>
   
           <div class="mb-3">
             <label for="contactEmail" class="form-label">Email de Contacto</label>
-            <input id="contactEmail" v-model="form.contact_email" type="email" class="form-control" />
+            <input id="contactEmail" v-model="form.contact_email" type="email" class="form-control" maxlength="100"/>
           </div>
   
           <div class="mb-3">

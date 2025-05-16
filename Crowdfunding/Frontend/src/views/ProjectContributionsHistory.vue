@@ -58,7 +58,7 @@
   
   async function fetchContributions() {
     try {
-      const { data: contribution } = await api.get<Contribution[]>('/contributions/', {
+      const { data: contribution } = await api.get<Contribution[]>('/contributions/simple/', {
         params: {
           project: String(projectId),
           ordering: '-date',

@@ -264,7 +264,7 @@
 
   async function fetchContributions() {
     try {
-      const contributionsData = await api.get<Contribution[]>(`/contributions/`, {
+      const contributionsData = await api.get<Contribution[]>(`/contributions/simple/`, {
         params: {
           project: project.value.id,
           ordering: '-date',

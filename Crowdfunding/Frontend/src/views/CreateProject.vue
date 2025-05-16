@@ -5,7 +5,7 @@
       <form @submit.prevent="submitProject" enctype="multipart/form-data">
         <div class="mb-3">
           <label for="name" class="form-label">Nombre del Proyecto</label>
-          <input v-model="form.name" type="text" id="name" class="form-control" required />
+          <input v-model="form.name" type="text" id="name" class="form-control" required maxlength="75"/>
         </div>
   
         <div class="mb-3">
