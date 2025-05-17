@@ -215,6 +215,7 @@
   const route = useRoute();
   const router = useRouter();
   const auth = useAuthStore();
+  defineProps<{ id: string | number }>();
   
   const project = ref<Project>({} as Project);
   const projectCategory = ref<ProjectCategory>({} as ProjectCategory);

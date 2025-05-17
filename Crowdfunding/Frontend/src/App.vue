@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex flex-column min-vh-100 bg-light">
-    <Header v-if="!$route.meta.hideHeader" />
+    <Header />
     <main class="flex-grow-1">
       <div v-if="loading" class="d-flex justify-content-center align-items-center vh-100">
         <div class="spinner-border" role="status">

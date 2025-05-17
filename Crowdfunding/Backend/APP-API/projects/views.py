@@ -5,6 +5,8 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from .models import Project, ProjectCategory, ProjectImage
 from .serializers import ProjectSerializer, ProjectCategorySerializer, ProjectImageSerializer, SimpleProjectSerializer
 from .permissions import IsOwnerOrReadOnly
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
 class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
@@ -17,6 +19,12 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+    @action(detail=False, methods=['get'])
+    def latest(self, request):
+        latest_projects = self.queryset.order_by('-start_date')[:3]
+        serializer = self.get_serializer(latest_projects, many=True)
+        return Response(serializer.data)
 
 class ProjectCategoryViewSet(viewsets.ModelViewSet):
     queryset = ProjectCategory.objects.all()

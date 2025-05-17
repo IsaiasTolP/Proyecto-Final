@@ -1,37 +1,19 @@
 <template>
-  <div class="container-fluid p-0">
-  <div class="row g-0">
-    <div class="col-12 col-md-6 left-side d-flex flex-column justify-content-center px-3">
-			<header class="header-left">
-      CrowdFundMe
-			</header>
-		<main class="main-left w-100">
-      <h1>¡Bienvenido a<br/>CrowdFundMe!</h1>
-      <p>Descubre y apoya nuevos proyectos.</p>
-      <button type="button" class="btn-explorar" @click="goTo('Projects')">Explorar</button>
-		</main>
-    </div>
-    <div class="col-12 col-md-6 right-side">
-			<img alt="Close-up of tablet screen showing crowdfunding app with green bars and orange background" class="img-right" src="https://storage.googleapis.com/a1aa/image/14336273-efa4-48c1-2d2b-ad253248ee97.jpg"/>
-			<button type="button" class="btn-menu">Menu</button>
-    </div>
-	</div>
-  </div>
+  <Hero />
+  <Featured />
+  <HowItWorks />
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
-const router = useRouter();
-
-function goTo(name: string, params = {}) {
-	router.push({ name: name, params: params});
-}
+import Hero from '@/components/Hero.vue';
+import Featured from '@/components/Featured.vue';
+import HowItWorks from '@/components/HowItWorks.vue';
 </script>
 
 <style scoped>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
-			body, h1, p, button {
-			font-family: 'Poppins', sans-serif;
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
+		body, h1, p, button {
+		font-family: 'Poppins', sans-serif;
   }
   .left-side {
     background-color: #E9F97A;
