@@ -17,7 +17,7 @@ Este repositorio corresponde al proyecto final de 2º DAW
 3. Módulo DEW: Vue.js
 - Interfaz dinámica y reactiva para la aplicación.
 - Modularidad: División de la aplicación en componentes (Menús, Proyectos, Estadísticas, etc)
-- Gestión de comunicación con Backend: Uso de Vuex o fetch/axios
+- Gestión de comunicación con Backend: Uso de axios
 
 4. Módulo DOR: Diseño con Bootstrap
 - Uso de Bootstrap para su uso multiplataforma entre dispositivos
@@ -29,13 +29,13 @@ Este repositorio corresponde al proyecto final de 2º DAW
 - Modelos y ORM: Define modelos para los proyectos, comentarios, perfiles, etc.
 - API REST: Creación de endpoints para registro de proyectos, pagos, envio de respuestas, etc.
 - Autenticación: Uso de Django Rest Framework (DRF) para manejo de sesiones seguras.
-- Tareas desacopladas: Sistema de progreso de objetivos global calculada en segundo plano mediante Celery y Redis
+- Tareas desacopladas: Sistema de progreso de objetivos global calculada en segundo plano mediante Redis y Django-rq.
 
 ## Tecnologías
 
 - Frontend: Vue.ts + Bootstrap
 - Backend: Django + DRF
-- Tareas asíncronas: Celery + Redis
+- Tareas asíncronas: Redis + Django-rq
 - Base de Datos: PostgreSQL (SQLite durante desarrollo)
 - Pruebas: Vite + @vue/test-utils + @testing-library/vue
 - Control de versiones: Git + Github
