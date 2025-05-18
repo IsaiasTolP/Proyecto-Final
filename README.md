@@ -29,7 +29,7 @@ Este repositorio corresponde al proyecto final de 2º DAW
 - Modelos y ORM: Define modelos para los proyectos, comentarios, perfiles, etc.
 - API REST: Creación de endpoints para registro de proyectos, pagos, envio de respuestas, etc.
 - Autenticación: Uso de Django Rest Framework (DRF) para manejo de sesiones seguras.
-- Tareas desacopladas: Sistema de progreso de objetivos global calculada en segundo plano mediante Redis y Django-rq.
+- Tareas desacopladas: Sistema de envío de correos en segundo plano mediante Redis y Django-rq.
 
 ## Tecnologías
 
