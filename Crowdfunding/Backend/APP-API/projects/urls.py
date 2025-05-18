@@ -12,4 +12,5 @@ router.register(r'project-images', views.ProjectImageViewSet, basename='project-
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('stats/', views.ProjectStatsView.as_view(), name='project-stats'),
 ]

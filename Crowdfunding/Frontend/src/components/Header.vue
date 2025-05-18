@@ -34,6 +34,9 @@
         <li class="nav-item">
           <router-link to="/" class="nav-link">Inicio</router-link>
         </li>
+        <li class="nav-item">
+          <router-link to="/projects" class="nav-link">Proyectos</router-link>
+        </li>
         <li class="nav-item" v-if="auth.isAuthenticated">
           <router-link
             :to="`/profile/${auth.user?.id}`"

@@ -1,7 +1,7 @@
 import type { User } from "./Account";
 
 interface ProjectImage { id: number; image: string; }
-interface ProjectCategory { id: number; category: string; }
+interface ProjectCategory { id: number; category: string; icon: string; num_projects: number; color: string; }
 interface Project {
     id: number;
     name: string;
@@ -22,4 +22,12 @@ interface SimpleProject {
     owner: User;
 }
 
-export type { Project, ProjectImage, ProjectCategory, SimpleProject};
+interface ProjectStats {
+    total_projects: number;
+    total_donated: number;
+    active_projects: number;
+    completed_projects: number;
+    users: number;
+}
+
+export type { Project, ProjectImage, ProjectCategory, SimpleProject, ProjectStats};

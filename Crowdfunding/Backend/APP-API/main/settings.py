@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'imagekit',
     'django_filters',
     'django_rq',
+    'colorfield',
     'accounts.apps.AccountsConfig',
     'contributions.apps.ContributionsConfig',
     'PaymentMethod.apps.PaymentmethodConfig',

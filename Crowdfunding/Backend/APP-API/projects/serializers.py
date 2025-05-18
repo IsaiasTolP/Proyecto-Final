@@ -3,10 +3,12 @@ from .models import Project, ProjectCategory, ProjectImage
 from users.serializers import SimpleUserSerializer
 
 class ProjectCategorySerializer(serializers.ModelSerializer):
+    num_projects = serializers.IntegerField(read_only=True)
+
     class Meta:
         model = ProjectCategory
-        fields = '__all__'
-        read_only_fields = ['owner']
+        fields = ['id', 'category', 'icon', 'color', 'num_projects']
+
 
 class ProjectImageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -26,6 +28,7 @@ class ProjectSerializer(serializers.ModelSerializer):
             'start_date', 'is_active',
             'category', 'owner', 'project_images',
             'total_donated', 'percent_completed',
+            'featured',
         )
         read_only_fields = ['start_date']
 

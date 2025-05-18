@@ -4,10 +4,14 @@ from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFill
 from django.db.models import Sum
 from shared.utils import unique_project_image_upload_path
+from colorfield.fields import ColorField
 
 
 class ProjectCategory(models.Model):
     category = models.CharField(max_length=50, unique=True)
+    icon = models.CharField(max_length=50, default='fa-solid fa-question')
+    color = ColorField(default='#7c3aed')
+
 
     def __str__(self):
         return self.category
@@ -20,6 +24,7 @@ class Project(models.Model):
     is_active = models.BooleanField(default=True)
     category = models.ForeignKey(ProjectCategory, related_name='category_projects', on_delete=models.PROTECT)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='user_projects', on_delete=models.CASCADE, null=True)
+    featured = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -34,6 +39,10 @@ class Project(models.Model):
         if self.goal > 0:
             return round((float(self.total_donated) / float(self.goal)) * 100, 2)
         return 0
+    
+    @property
+    def is_completed(self):
+        return self.percent_completed >= 100
 
 class ProjectImage(models.Model):
     project = models.ForeignKey(Project, related_name='project_images', on_delete=models.CASCADE)

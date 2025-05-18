@@ -22,10 +22,8 @@
           <div class="me-5 mb-4">
             <h3 class="footer-title">Nosotros</h3>
             <nav class="nav flex-column">
-              <a class="nav-link px-0 py-1" href="#">Our Story</a>
-              <a class="nav-link px-0 py-1" href="#">How It Works</a>
-              <a class="nav-link px-0 py-1" href="#">Careers</a>
-              <a class="nav-link px-0 py-1" href="#">Press</a>
+              <a class="nav-link px-0 py-1" href="#">Nuestra Historia</a>
+              <a class="nav-link px-0 py-1" href="#">Cómo funciona</a>
               <a class="nav-link px-0 py-1" href="#">Blog</a>
             </nav>
           </div>
@@ -33,11 +31,10 @@
           <div class="me-5 mb-4">
             <h3 class="footer-title">Recursos</h3>
             <nav class="nav flex-column">
-              <a class="nav-link px-0 py-1" href="#">Help Center</a>
-              <a class="nav-link px-0 py-1" href="#">Creator Handbook</a>
-              <a class="nav-link px-0 py-1" href="#">Success Stories</a>
-              <a class="nav-link px-0 py-1" href="#">Fees & Payments</a>
-              <a class="nav-link px-0 py-1" href="#">Trust & Safety</a>
+              <a class="nav-link px-0 py-1" href="#">Centro de Ayuda</a>
+              <a class="nav-link px-0 py-1" href="#">Manual del Creador</a>
+              <a class="nav-link px-0 py-1" href="#">Tasas y Pagos</a>
+              <a class="nav-link px-0 py-1" href="#">Confianza y Seguridad</a>
             </nav>
           </div>
 

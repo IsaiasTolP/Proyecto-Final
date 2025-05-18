@@ -11,7 +11,7 @@
 				Únete a nuestra comunidad de patrocinadores que están marcando la diferencia.
       </p>
       <div class="d-flex gap-3">
-        <button type="button" class="btn btn-purple" @click="router.push('/project/create')">
+        <button v-if="auth.user?.is_founder" type="button" class="btn btn-purple" @click="router.push('/project/create')">
 					Comienza un Proyecto
         </button>
         <button type="button" class="btn btn-outline-dark" @click="router.push('/projects')">
@@ -37,6 +37,9 @@
 
 <script setup lang="ts">
 import router from '@/router';
+import { useAuthStore } from '@/stores/auth';
+
+const auth = useAuthStore();
 
 </script>
 

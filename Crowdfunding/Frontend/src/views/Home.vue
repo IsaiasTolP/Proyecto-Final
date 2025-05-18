@@ -1,17 +1,33 @@
 <template>
   <Hero />
-  <Featured />
+  <Featured :projectCategories="projectCategories"/>
+  <Latest :projectCategories="projectCategories"/>
   <HowItWorks />
-  <SearchByCategories />
+  <SearchByCategories :projectCategories="projectCategories"/>
   <Impact />
 </template>
 
 <script setup lang="ts">
 import Hero from '@/components/Hero.vue';
 import Featured from '@/components/Featured.vue';
+import Latest from '@/components/Latest.vue';
 import HowItWorks from '@/components/HowItWorks.vue';
 import SearchByCategories from '@/components/SearchByCategories.vue';
 import Impact from '@/components/Impact.vue';
+import { onMounted, ref } from 'vue';
+import api from '@/services/api';
+import type { ProjectCategory } from '@/interfaces/Project';
+
+  const projectCategories = ref<ProjectCategory[]>([]);
+
+	onMounted(async () => {
+		try {
+			const { data: categories } = await api.get('/projects/categories/');
+			projectCategories.value = categories;
+		} catch (error: any) {
+			console.log('Error al cargar las categorías:', error);
+		}
+	});
 </script>
 
 <style scoped>

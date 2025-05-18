@@ -13,13 +13,13 @@ const routes = [
     { path: "/profile/edit", name: "EditProfile", component: () => import("@/views/EditProfile.vue"), meta: { requiresAuth: true} },
     { path: "/payment-methods", name: "PaymentMethods", component: () => import("@/views/PaymentMethods.vue"), meta: { requiresAuth: true} },
     { path: "/payment-methods/add", name: "AddPaymentMethod", component: () => import("@/components/AddPaymentMethod.vue"), meta: { requiresAuth: true} },
-    { path: "/project/create", name: "CreateProject", component: () => import("@/views/CreateProject.vue"), meta: {requiresAuth: true}},
+    { path: "/project/create", name: "CreateProject", component: () => import("@/views/CreateProject.vue"), meta: {requiresAuth: true, founderRequired: true} },
     { path: "/projects/:id/contribute", name: "Contribute", component: () => import("@/views/ContributionForm.vue"), meta: {requiresAuth: true, disallowOwner: true}},
     { path: "/profile/:id/contributions", name: "MyContributionsHistory", component: () => import("@/views/MyContributionsHistory.vue"), meta: { requiresAuth: true, onlyProfileOwner: true}},
     { path: "/projects/:id/contributions", name: "ProjectContributionsHistory", component: () => import("@/views/ProjectContributionsHistory.vue"), meta: { requiresAuth: true, onlyProjectOwner: true}},
     { path: "/user/edit", name: "EditUser", component: () => import("@/views/EditUser.vue"), meta: { requiresAuth: true} },
     { path: "/projects/me", name: "MyProjects", component: () => import("@/views/MyProjects.vue"), meta: { requiresAuth: true, founderRequired: true} },
-    { path: "/projects/edit/:id", name: "EditProject", component: () => import("@/views/EditProject.vue"), meta: { requiresAuth: true, onlyProjectOwner: true} },
+    { path: "/projects/edit/:id", name: "EditProject", component: () => import("@/views/EditProject.vue"), meta: { requiresAuth: true, founderRequired: true, onlyProjectOwner: true} },
     { path: "/projects/search", name: "ProjectSearch", component: () => import("@/views/ProjectSearch.vue"), meta: { requiresAuth: true} },
 ]
 
@@ -42,7 +42,7 @@ router.beforeEach(async (to, _from, next) => {
         try {
             const { data: profile } = await api.get<ProfileData>(`/accounts/profiles/me/`);
             if (!profile.is_founder) {
-                return router.back();
+                return next({ name: "Home" });
             }
         } catch (e) {
             return router.back()

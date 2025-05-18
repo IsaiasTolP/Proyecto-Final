@@ -40,12 +40,18 @@
         </div>
       </div>
     </div>
-    <button type="button" class="btn btn-purple">
+    <button v-if="auth.user?.is_founder" type="button" class="btn btn-purple">
       Comienza con tu proyecto ahora mismo
     </button>
   </section>
 </body>
 </template>
+
+<script setup lang="ts">
+  import { useAuthStore } from '@/stores/auth';
+
+  const auth = useAuthStore();
+</script>
 
 <style scoped>
 body {
