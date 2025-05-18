@@ -2,12 +2,16 @@
   <Hero />
   <Featured />
   <HowItWorks />
+  <SearchByCategories />
+  <Impact />
 </template>
 
 <script setup lang="ts">
 import Hero from '@/components/Hero.vue';
 import Featured from '@/components/Featured.vue';
 import HowItWorks from '@/components/HowItWorks.vue';
+import SearchByCategories from '@/components/SearchByCategories.vue';
+import Impact from '@/components/Impact.vue';
 </script>
 
 <style scoped>

@@ -1,42 +1,156 @@
 <template>
-    <footer class="bg-success text-white mt-5 py-4">
-      <div class="container">
-        <div class="row text-center text-md-start">
-          <div class="col-md-4 mb-3">
-            <h5>Sobre Nosotros</h5>
-            <p>
-              CrowdFundMe una plataforma de crowdfunding dedicada a impulsar proyectos innovadores y sociales.
-            </p>
+<body>
+  <footer class="footer-bg py-5">
+    <div class="container">
+      <div class="row gy-4 gy-md-0">
+        <div class="col-md-3 d-flex flex-column">
+          <div class="d-flex align-items-center mb-3">
+            <div class="circle-cf me-2">CF</div>
+            <span class="fw-semibold fs-5 text-white">CrowdFundMe</span>
           </div>
-          <div class="col-md-4 mb-3">
-            <h5>Enlaces Útiles</h5>
-            <ul class="list-unstyled">
-              <li><router-link :to="{ name: 'Home' }" class="text-white text-decoration-none">Inicio</router-link></li>
-              <li><router-link :to="{ name: 'Projects' }" class="text-white text-decoration-none">Proyectos</router-link></li>
-              <li><a href="#" class="text-white text-decoration-none">Contacto</a></li>
-              <li><a href="#" class="text-white text-decoration-none">Política de Privacidad</a></li>
-            </ul>
-          </div>
-          <div class="col-md-4 mb-3">
-            <h5>Contacto</h5>
-            <address>
-              <strong>Email:</strong> <a href="mailto:info@crowdfund.com" class="text-white">info@crowdfundme.com</a><br />
-              <strong>Tel:</strong> +34 600 123 456
-            </address>
+          <p class="mb-3" style="max-width: 220px; line-height: 1.4;">
+            Impulsando a los creadores a realizar proyectos innovadores a través del apoyo de la comunidad.
+          </p>
+          <div class="social-icons d-flex">
+            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
           </div>
         </div>
-  
-        <hr class="border-white opacity-50" />
-  
-        <div class="text-center">
-          <p class="mb-0">&copy; {{ new Date().getFullYear() }} CrowdFundMe. Todos los derechos reservados.</p>
+
+        <div class="col-md-4 d-flex flex-wrap">
+          <div class="me-5 mb-4">
+            <h3 class="footer-title">Nosotros</h3>
+            <nav class="nav flex-column">
+              <a class="nav-link px-0 py-1" href="#">Our Story</a>
+              <a class="nav-link px-0 py-1" href="#">How It Works</a>
+              <a class="nav-link px-0 py-1" href="#">Careers</a>
+              <a class="nav-link px-0 py-1" href="#">Press</a>
+              <a class="nav-link px-0 py-1" href="#">Blog</a>
+            </nav>
+          </div>
+
+          <div class="me-5 mb-4">
+            <h3 class="footer-title">Recursos</h3>
+            <nav class="nav flex-column">
+              <a class="nav-link px-0 py-1" href="#">Help Center</a>
+              <a class="nav-link px-0 py-1" href="#">Creator Handbook</a>
+              <a class="nav-link px-0 py-1" href="#">Success Stories</a>
+              <a class="nav-link px-0 py-1" href="#">Fees & Payments</a>
+              <a class="nav-link px-0 py-1" href="#">Trust & Safety</a>
+            </nav>
+          </div>
+
+          
+        </div>
+
+        <div class="col-md-5 d-flex flex-wrap">
+          <div class="mb-4" style="min-width: 250px;">
+            <h3 class="footer-title">Subscribirse</h3>
+            <p class="mb-2" style="line-height: 1.4;">
+              Recibe las últimas noticias y actualizaciones en tu bandeja de entrada.
+            </p>
+            <form class="d-flex" role="form" novalidate>
+              <input
+                type="email"
+                class="form-control input-subscribe"
+                placeholder="Tu correo electrónico"
+                aria-label="Tu correo electrónico"
+                required
+              />
+              <button type="submit" class="btn btn-subscribe">
+                Subscribe
+              </button>
+            </form>
+          </div>
         </div>
       </div>
-    </footer>
+
+      <div class="footer-border mt-5 pt-3 d-flex flex-column flex-sm-row justify-content-between align-items-center text-secondary small">
+        <div>© 2025 CrowdFundMe. Todos los derechos reservados.</div>
+        <div class="mt-3 mt-sm-0">
+          <a href="#" class="me-4">Términos de Servicio</a>
+          <a href="#" class="me-4">Política de Privacidad</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
 </template>
 
 <style scoped>
-  footer a:hover {
-    text-decoration: underline;
-  }
+  body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0D1126;
+      color: #A3AED0;
+    }
+    a {
+      color: #A3AED0;
+      text-decoration: none;
+    }
+    a:hover {
+      color: #fff;
+      text-decoration: none;
+    }
+    .footer-bg {
+      background-color: #0D1126;
+    }
+    .footer-border {
+      border-top: 1px solid #1E2139;
+    }
+    .btn-subscribe {
+      background-color: #7C4DFF;
+      color: white;
+      border-radius: 0 0.375rem 0.375rem 0;
+      border: none;
+      transition: background-color 0.2s ease;
+    }
+    .btn-subscribe:hover {
+      background-color: #6939e0;
+      color: white;
+    }
+    .input-subscribe {
+      background-color: #1E2139;
+      border: none;
+      color: #A3AED0;
+      border-radius: 0.375rem 0 0 0.375rem;
+    }
+    .input-subscribe::placeholder {
+      color: #6B7280;
+    }
+    .input-subscribe:focus {
+      box-shadow: none;
+      background-color: #1E2139;
+      color: #A3AED0;
+    }
+    .circle-cf {
+      width: 2rem;
+      height: 2rem;
+      background-color: #7C4DFF;
+      border-radius: 50%;
+      color: white;
+      font-weight: 700;
+      font-size: 0.875rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+    }
+    .footer-title {
+      color: white;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    .social-icons a {
+      font-size: 1.25rem;
+      margin-right: 1.5rem;
+      color: #A3AED0;
+      transition: color 0.2s ease;
+    }
+    .social-icons a:last-child {
+      margin-right: 0;
+    }
+    .social-icons a:hover {
+      color: white;
+    }
 </style>
