@@ -12,7 +12,8 @@
             <i class="fas fa-users fa-lg"></i>
           </div>
           <div class="fw-bold fs-3">{{ projectStats?.users }}</div>
-          <div>Usuarios</div>
+          <div v-if="projectStats?.users === 1">Usuario</div>
+          <div v-else>Usuarios</div>
         </div>
         <div class="col-8 col-sm-4 d-flex flex-column align-items-center">
           <div class="icon-circle">

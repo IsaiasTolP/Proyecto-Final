@@ -1,29 +1,34 @@
 <template>
-  <div class="container py-5">
-    <h2 class="mb-4 text-success">Resultados de búsqueda</h2>
+  <div class="container py-5" style="max-width: 768px;">
+    <h2 class="mb-4 fw-semibold text-dark fs-5">Resultados de búsqueda</h2>
 
-    <div v-if="loading" class="text-center">Buscando proyectos...</div>
-    <div v-else-if="error" class="alert alert-danger">{{ error }}</div>
-    <div v-else-if="projects.length === 0" class="alert alert-info">
-      No se encontraron proyectos para "{{ query }}".
+    <div v-if="loading" class="text-center text-secondary small">Buscando proyectos...</div>
+
+    <div v-else-if="error" class="alert alert-danger text-sm">
+      {{ error }}
     </div>
 
-    <div class="row" v-else>
-      <div v-for="project in projects" :key="project.id" class="col-12 mb-3">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">{{ project.name }}</h5>
-            <p class="card-text">{{ project.description.slice(0, 100) }}...</p>
-            <router-link :to="`/projects/${project.id}`" class="btn btn-success">
-              Ver más
-            </router-link>
-          </div>
-        </div>
+    <div v-else-if="projects.length === 0" class="alert alert-light border text-secondary text-sm">
+      No se encontraron proyectos para <strong>"{{ query }}"</strong>.
+    </div>
+
+    <div v-else class="d-flex flex-column gap-3">
+      <div v-for="project in projects" :key="project.id" class="project-card p-3">
+        <h5 class="fw-semibold text-dark mb-1">{{ project.name }}</h5>
+        <p class="text-secondary small mb-2" style="line-height: 1.4;">
+          {{ project.description.slice(0, 100) }}...
+        </p>
+        <router-link
+          :to="`/projects/${project.id}`"
+          class="btn-outline-secondary-custom d-inline-flex align-items-center"
+          :aria-label="`Ver más sobre ${project.name}`"
+        >
+          Ver más
+        </router-link>
       </div>
     </div>
   </div>
 </template>
-
 
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue';
@@ -53,3 +58,41 @@ import type { Project } from '@/interfaces/Project';
 	  }
 	});
 </script>
+
+<style scoped>
+.project-card {
+  background-color: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.2s ease;
+}
+
+.project-card:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.btn-outline-secondary-custom {
+  background: linear-gradient(90deg, #7c3aed 0%, #a78bfa 100%);
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.5rem 1.25rem;
+  border-radius: 0.5rem;
+  border: none;
+  box-shadow: 0 4px 8px rgba(124, 58, 237, 0.3);
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-outline-secondary-custom:hover,
+.btn-outline-secondary-custom:focus {
+  box-shadow: 0 6px 12px rgba(124, 58, 237, 0.5);
+  transform: translateY(-2px);
+  outline: none;
+  color: white;
+  text-decoration: none;
+}
+</style>
+

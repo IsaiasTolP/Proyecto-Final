@@ -15,7 +15,9 @@ interface ProfileData {
 }
 
 interface SocialMedia {
-    [key: string]: string;
+    twitter: string,
+    instagram: string,
+    linkedin: string
 }
 
 interface FounderProfileData extends ProfileData {

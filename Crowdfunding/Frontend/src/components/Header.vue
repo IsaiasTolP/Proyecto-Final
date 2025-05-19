@@ -38,10 +38,10 @@
           <router-link to="/projects" class="nav-link">Proyectos</router-link>
         </li>
         <li class="nav-item" v-if="auth.isAuthenticated">
-          <router-link
-            :to="`/profile/${auth.user?.id}`"
+          <a
+            :href="`/profile/${auth.user?.id}`"
             class="nav-link"
-          >Cuenta</router-link>
+          >Cuenta</a>
         </li>
         <li class="nav-item" v-if="!auth.isAuthenticated">
           <router-link to="/auth" class="nav-link btn-signup" style="color: white !important;">Login</router-link>
@@ -158,7 +158,7 @@ const isMobileMenuOpen = ref(false);
   transform: translateY(-10px);
 }
 
-/* estilos generales (igual que antes) */
+/* estilos generales */
 nav {
   font-family: 'Inter', sans-serif;
   position: relative;
@@ -256,13 +256,11 @@ nav {
   justify-content: center;
 }
 
-/* ajusta el tamaño del input para que no sea muy grande */
 .search-center .form-control {
   width: 100%;
   max-width: 300px;
 }
 
-/* margen lateral para que quede centrado */
 .search-center .search-btn {
   margin-left: 0.5rem;
 }

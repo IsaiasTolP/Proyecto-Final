@@ -22,7 +22,7 @@
           <div class="me-5 mb-4">
             <h3 class="footer-title">Nosotros</h3>
             <nav class="nav flex-column">
-              <a class="nav-link px-0 py-1" href="#">Nuestra Historia</a>
+              <router-link to="/story" class="nav-link px-0 py-1" href="#">Nuestra Historia</router-link>
               <a class="nav-link px-0 py-1" href="#">Cómo funciona</a>
               <a class="nav-link px-0 py-1" href="#">Blog</a>
             </nav>
