@@ -13,8 +13,15 @@ class ContributionSerializer(serializers.ModelSerializer):
         read_only_fields = ['date']
 
     def validate_payment_method(self, value: PaymentMethod):
+        request = self.context.get('request')
+        user = request.user if request else None
+
         if value.is_expired():
             raise serializers.ValidationError("Payment method is expired.")
+
+        if value.user != user:
+            raise serializers.ValidationError("This payment method does not belong to you")
+
         return value
     
     def validate_project(self, value: Project):
