@@ -168,3 +168,11 @@ npm run build
 ## **11. Convenciones**
 **TypeScript**: Interfaces para props/API responses.
 **Linting**: ESLint + Prettier (configuración recomendada).
+
+### **Notas adicionales**
+- **Accesibilidad**: Uso de `aria-label` en botones y modales.
+- **Easter Egg**: El nombre "Bannerlord Commander" en el package.json es un guiño oculto 🎮.
+
+
+¡Listo para financiar proyectos! 💰  
+**Equipo de desarrollo**, es decir, Isaías - 2025
