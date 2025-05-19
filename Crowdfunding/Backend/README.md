@@ -336,6 +336,14 @@ Devuelve estadísticas globales:
 - Obtiene/actualiza usuario
 - Permisos: solo propio usuario
 
-# Importante para Windows: Es necesario tener unos contenedores de Docker con Django, Redis, Base de datos PostgreSQL, para funcionar en desarrollo.
+# Importante para Windows: Es necesario tener unos contenedores de Docker con Django, Redis, Base de datos PostgreSQL(Se puede usar sqlite) para funcionar en desarrollo.
+- Una vez están todos los requisitos creados:
+    - Generación de clave secret.key
+    - Creación de variables de entorno en secret.key
+    - Entorno virtual creado, no es 100% necesario pero es recomendable tener instalado en él lo mismo que se instalará en el docker.
+- Crear los contenedores necesarios:
+    - `docker-compose build` --> Si no tienes permisos usa sudo o tira la terminal en administrador en windows.
+    - `docker-compose up` --> Vuelve a usar permisos de administrador si es necesario.
+- Alternativamente podemos usar la interfaz con docker desktop.
 
 ## Comando para borrado de tareas encoladas en el worker (Se puede usar en el contenedor de desarrollo para impedir que se vayan acumulando tareas que no vamos a necesitar) --> rq empty default --url redis://redis:6379/0
