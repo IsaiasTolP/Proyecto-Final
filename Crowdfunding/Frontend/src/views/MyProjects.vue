@@ -138,15 +138,108 @@ async function deleteProject() {
 
 <style scoped>
 .card {
-  transition: all 0.2s ease-in-out;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  background-color: #ffffff;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
 }
+
 .card:hover {
-  transform: scale(1.01);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
+
+.card h5 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 0.5rem;
+}
+
+.text-muted {
+  font-size: 0.95rem;
+  color: #6b7280 !important;
+}
+
+.btn {
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 0.375rem;
+}
+
+.btn-outline-primary {
+  border-color: #6366f1;
+  color: #6366f1;
+}
+
+.btn-outline-primary:hover {
+  background-color: #6366f1;
+  color: white;
+}
+
+.btn-outline-secondary {
+  border-color: #9ca3af;
+  color: #4b5563;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #9ca3af;
+  color: white;
+}
+
+.btn-outline-danger {
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.btn-outline-danger:hover {
+  background-color: #ef4444;
+  color: white;
+}
+
 .modal {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
 }
-.modal .modal-dialog {
-  max-width: 400px;
+
+.modal-dialog {
+  max-width: 420px;
+  border-radius: 0.75rem;
+  background-color: white;
+  padding: 1.5rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
+
+.modal-content {
+  border: none;
+  border-radius: 0.75rem;
+}
+
+.modal-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.modal-body p {
+  font-size: 0.95rem;
+  color: #374151;
+  margin-bottom: 0;
+}
+
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  color: #6b7280;
+}
+
+.btn-close:hover {
+  color: #111827;
+}
+
 </style>

@@ -46,7 +46,7 @@
         />
       </div>
 
-      <div class="d-flex justify-content-end">
+      <div class="d-flex justify-content-center">
         <button type="submit" class="btn btn-success">Guardar Cambios</button>
       </div>
     </form>
@@ -85,3 +85,69 @@
     emit('update', { ...localForm.value });
   }
 </script>
+
+<style scoped>
+form {
+  max-width: 400px;
+  margin: 0 auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.mb-3 {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #1e3a8a; /* azul oscuro */
+  user-select: none;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.55rem 1rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1.5px solid #94a3b8; /* azul grisáceo */
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  font-family: inherit;
+}
+
+.form-control::placeholder {
+  color: #64748b; /* gris azulado */
+  font-style: italic;
+}
+
+.form-control:focus {
+  border-color: #2563eb; /* azul vivo */
+  box-shadow: 0 0 6px rgba(37, 99, 235, 0.5);
+  outline: none;
+}
+
+.d-flex {
+  display: flex !important;
+}
+
+.justify-content-end {
+  justify-content: flex-end !important;
+  margin-top: 1.2rem;
+}
+
+.btn-success {
+  background-color: #22c55e; /* verde suave */
+  border: none;
+  padding: 0.6rem 1.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  user-select: none;
+}
+
+.btn-success:hover {
+  background-color: #16a34a; /* verde más oscuro */
+}
+</style>

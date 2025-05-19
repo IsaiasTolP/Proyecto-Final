@@ -85,10 +85,60 @@
       minute: '2-digit',
     });
   }
-  </script>
-  
-  <style scoped>
-  .card img {
-    object-fit: cover;
-  }
+</script>
+
+<style scoped>
+  .card {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  background-color: #ffffff;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.card .flex-grow-1 {
+  font-size: 0.95rem;
+  color: #374151;
+}
+
+.card .fw-semibold {
+  color: #16a34a;
+}
+
+.card small.text-muted {
+  font-size: 0.8rem;
+  color: #6b7280 !important;
+}
+
+.card q {
+  display: block;
+  font-style: italic;
+  color: #4b5563;
+  font-size: 0.92rem;
+  margin-top: 0.5rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+h3 {
+  color: #111827;
+  font-weight: 600;
+}
+
+.router-link-active,
+a {
+  text-decoration: none;
+  color: #6366f1;
+  font-weight: 500;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
 </style>

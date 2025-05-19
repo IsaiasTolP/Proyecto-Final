@@ -67,7 +67,7 @@
             Métodos de Pago
           </button>
           <button type="button" class="btn btn-outline-secondary btn-sm text-dark fw-semibold" style="font-size: 0.75rem; padding: 0.375rem 1rem;" @click="router.push(`/profile/${auth.user?.id}/contributions`)">
-            Transacciones
+            Contribuciones
           </button>
           <button v-if="auth.user?.is_founder" type="button" class="btn btn-outline-secondary btn-sm text-dark fw-semibold" style="font-size: 0.75rem; padding: 0.375rem 1rem;"  @click="router.push('/projects/me')">
             Mis Proyectos

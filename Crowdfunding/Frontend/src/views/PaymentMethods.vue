@@ -50,7 +50,7 @@
             :paymentMethod="editMethod"
             @update="handleUpdateMethod"
           />
-          <div class="d-flex justify-content-end mt-3">
+          <div class="d-flex justify-content-center mt-3">
             <button class="btn btn-secondary" @click="editMethod = null">Cancelar</button>
           </div>
         </div>
@@ -124,22 +124,104 @@ function formatDate(dateStr: string) {
 </script>
 
 <style scoped>
+.card {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  background-color: #ffffff;
+  transition: box-shadow 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.card h5 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.card p {
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+  color: #374151;
+}
+
+.card small {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.btn {
+  font-weight: 500;
+}
+
+.btn-outline-primary {
+  border-color: #6366f1;
+  color: #6366f1;
+}
+
+.btn-outline-primary:hover {
+  background-color: #6366f1;
+  color: white;
+}
+
+.btn-outline-danger {
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.btn-outline-danger:hover {
+  background-color: #ef4444;
+  color: white;
+}
+
+.btn-success {
+  background-color: #16a34a;
+  border-color: #16a34a;
+}
+
+.btn-success:hover {
+  background-color: #15803d;
+  border-color: #15803d;
+}
+
 .modal-backdrop {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1050;
 }
+
 .modal-dialog {
-  background: white;
-  border-radius: 8px;
-  max-width: 500px;
+  background: #fff;
+  border-radius: 0.75rem;
+  max-width: 480px;
   width: 100%;
+  padding: 1.5rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
+
+.modal-content h5 {
+  font-weight: 600;
+  font-size: 1.125rem;
+  color: #1f2937;
+}
+
+.modal-content .btn-secondary {
+  background-color: #e5e7eb;
+  border: none;
+  color: #374151;
+}
+
+.modal-content .btn-secondary:hover {
+  background-color: #d1d5db;
+}
+
 </style>

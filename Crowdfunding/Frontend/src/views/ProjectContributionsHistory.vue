@@ -21,7 +21,7 @@
           <div class="flex-grow-1">
             <router-link
               :to="`/profile/${contribution.contributor.id}`"
-              class="text-decoration-none fw-bold"
+              class="username-link"
             >
               {{ contribution.contributor.username }}
             </router-link>
@@ -32,8 +32,8 @@
               <span class="fw-semibold text-success">Contribuyó con</span>
               {{ contribution.amount }} €
             </div>
-            <div v-if="contribution.message" class="mt-2">
-              <q>{{ contribution.message }}</q>
+            <div v-if="contribution.message" class="message">
+              {{ contribution.message }}
             </div>
           </div>
         </div>
@@ -100,8 +100,57 @@
   }
   </script>
   
-  <style scoped>
-  .card img {
-    object-fit: cover;
-  }
+<style scoped>
+  .card {
+  border: none;
+  border-radius: 1rem;
+  background: #fff;
+  padding: 1.25rem;
+  transition: box-shadow 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.card:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.card img {
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #e5e7eb;
+  width: 60px;
+  height: 60px;
+}
+
+.card .username-link {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f2937;
+  text-decoration: none;
+}
+
+.card .username-link:hover {
+  text-decoration: underline;
+}
+
+.card .contribution-amount {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.message {
+  background: #f9fafb;
+  border-left: 4px solid #d1d5db;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  font-style: italic;
+  color: #374151;
+  margin-top: 0.75rem;
+
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+
 </style>

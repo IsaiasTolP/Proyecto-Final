@@ -1,67 +1,102 @@
 <template>
-  <div class="container py-5">
-    <h2 class="mb-4 text-success">Editar Perfil</h2>
+  <div class="profile-edit-container">
+    <h2 class="title text-success mb-4">Editar Perfil</h2>
 
-    <form @submit.prevent="submitProfile" enctype="multipart/form-data">
+    <form @submit.prevent="submitProfile" enctype="multipart/form-data" class="profile-form">
+
       <!-- Imagen -->
-      <div class="mb-3">
+      <div class="form-group">
         <label for="pfp" class="form-label">Foto de Perfil</label>
-        <input type="file" class="form-control" id="pfp" @change="handleFileUpload" />
+        <input
+          type="file"
+          id="pfp"
+          class="form-control"
+          @change="handleFileUpload"
+          accept="image/jpeg,image/jpg,image/png"
+        />
       </div>
 
       <!-- Bio -->
-      <div class="mb-3">
+      <div class="form-group">
         <label for="bio" class="form-label">Biografía</label>
-        <textarea id="bio" v-model="form.bio" class="form-control" rows="3" maxlength="250" />
+        <textarea
+          id="bio"
+          v-model="form.bio"
+          class="form-control"
+          rows="3"
+          maxlength="250"
+          placeholder="Cuéntanos sobre ti..."
+        ></textarea>
       </div>
 
       <!-- Localización -->
-      <div class="mb-3">
+      <div class="form-group">
         <label for="location" class="form-label">Ubicación</label>
-        <input id="location" v-model="form.location" type="text" class="form-control" maxlength="100" />
+        <input
+          id="location"
+          v-model="form.location"
+          type="text"
+          class="form-control"
+          maxlength="100"
+          placeholder="Ej. Madrid, España"
+        />
       </div>
 
-      <!-- Campos adicionales para Fundadores -->
-      <div v-if="form.is_founder">
-        <div class="mb-3">
+      <!-- Campos Fundador -->
+      <div v-if="form.is_founder" class="founder-fields">
+        <div class="form-group">
           <label for="website" class="form-label">Sitio Web</label>
-          <input id="website" v-model="form.website" type="url" class="form-control" maxlength="200"/>
+          <input
+            id="website"
+            v-model="form.website"
+            type="url"
+            class="form-control"
+            maxlength="200"
+            placeholder="https://tuweb.com"
+          />
         </div>
 
-        <div class="mb-3">
+        <div class="form-group">
           <label for="contactEmail" class="form-label">Email de Contacto</label>
-          <input id="contactEmail" v-model="form.contact_email" type="email" class="form-control" maxlength="100"/>
+          <input
+            id="contactEmail"
+            v-model="form.contact_email"
+            type="email"
+            class="form-control"
+            maxlength="100"
+            placeholder="contacto@tuemail.com"
+          />
         </div>
 
-        <div class="mb-3">
-          <h5 class="form-label">Redes Sociales</h5>
+        <div class="form-group social-media-section">
+          <h5 class="form-label mb-3">Redes Sociales</h5>
+
           <div
             v-for="(url, key) in form.social_media"
-            :key="String(key)"
-            class="d-flex align-items-center mb-2"
+            :key="key"
+            class="social-input d-flex align-items-center mb-2"
           >
+            <span class="social-icon">{{ getSocialIcon(key) }}</span>
             <input
               v-model="form.social_media[key]"
-              :placeholder="String(key)"
+              :placeholder="key.charAt(0).toUpperCase() + key.slice(1)"
               type="url"
               class="form-control me-2"
               required
             />
             <button
               type="button"
-              class="btn btn-outline-danger"
-              @click="removeSocial(String(key))"
+              class="btn btn-outline-danger btn-sm"
+              @click="removeSocial(key)"
+              aria-label="Eliminar red social"
             >
               ×
             </button>
           </div>
 
-          <!-- Nuevo par clave/valor -->
-          <div class="d-flex align-items-center mb-3">
-            <select
-              v-model="newSocial.name"
-              class="form-select me-2"
-            >
+          <!-- Añadir nueva red -->
+          <div class="d-flex align-items-center mt-3">
+            <select v-model="newSocial.name" class="form-select me-2" aria-label="Selecciona una red social">
               <option disabled value="">Selecciona una red</option>
               <option
                 v-for="network in allowedSocialKeys.filter(k => !(k in form.social_media))"
@@ -77,10 +112,11 @@
               placeholder="https://..."
               type="url"
               class="form-control me-2"
+              aria-label="URL de red social"
             />
             <button
               type="button"
-              class="btn btn-outline-primary"
+              class="btn btn-outline-primary btn-sm"
               @click="addSocial"
               :disabled="!newSocial.name || !newSocial.url"
             >
@@ -90,11 +126,15 @@
         </div>
       </div>
 
-      <!-- Error -->
-      <div v-if="messageStore.message" :class="['alert', 'alert-danger']">{{ messageStore.message }}</div>
+      <!-- Mensaje de error -->
+      <div v-if="messageStore.message" class="alert alert-danger mt-3" role="alert">
+        {{ messageStore.message }}
+      </div>
 
-      <button type="submit" class="btn btn-success">Guardar Cambios</button>
-      <router-link :to="`/profile/${auth.user?.id}`" class="mx-3 btn btn-outline-success">Cancelar</router-link>
+      <div class="form-actions mt-4 d-flex">
+        <button type="submit" class="btn btn-success me-3">Guardar Cambios</button>
+        <router-link :to="`/profile/${auth.user?.id}`" class="btn btn-outline-success">Cancelar</router-link>
+      </div>
     </form>
   </div>
 </template>
@@ -189,6 +229,15 @@ function removeSocial(key: string) {
   }
 }
 
+function getSocialIcon(network: string) {
+  const icons: Record<string, string> = {
+    twitter: '🐦',
+    instagram: '📸',
+    linkedin: '🔗',
+  };
+  return icons[network.toLowerCase()] || '🌐';
+}
+
 async function submitProfile() {
   try {
     const payload = new FormData();
@@ -237,7 +286,109 @@ async function submitProfile() {
 </script>
 
 <style scoped>
-input[type='file'] {
-  padding: 5px;
+.profile-edit-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  background: #fff;
+  border-radius: 14px;
+  padding: 2rem 2.5rem;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+
+.title {
+  font-weight: 700;
+  color: #2f855a;
+  text-align: center;
+}
+
+.profile-form .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #4a5568;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.form-control {
+  border: 1.8px solid #cbd5e0;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: #2f855a;
+  outline: none;
+  box-shadow: 0 0 6px #68d391aa;
+}
+
+textarea.form-control {
+  resize: vertical;
+}
+
+.founder-fields h5 {
+  color: #2d3748;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 0.3rem;
+}
+
+.social-media-section .social-input {
+  gap: 0.5rem;
+}
+
+.social-icon {
+  font-size: 1.3rem;
+  width: 28px;
+  text-align: center;
+  user-select: none;
+}
+
+.btn-outline-primary,
+.btn-outline-danger,
+.btn-success {
+  border-radius: 8px;
+  font-weight: 600;
+  padding: 0.4rem 1.1rem;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+  background-color: #2f855a;
+  color: white;
+  border-color: #2f855a;
+}
+
+.btn-outline-danger:hover {
+  background-color: #e53e3e;
+  color: white;
+  border-color: #e53e3e;
+}
+
+.btn-success {
+  background-color: #2f855a;
+  border: none;
+  color: white;
+}
+
+.btn-success:hover {
+  background-color: #276749;
+}
+
+.form-actions {
+  justify-content: flex-start;
+}
+
+.alert {
+  border-radius: 10px;
+  font-size: 0.95rem;
+  padding: 1rem 1.25rem;
+}
+
 </style>

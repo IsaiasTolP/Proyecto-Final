@@ -1,64 +1,64 @@
 <template>
-  <div class="d-flex justify-content-center align-items-center min-vh-100 bg-light">
-    <div class="card shadow-sm p-4" style="max-width: 400px; width: 100%;">
-      <h2 class="text-center mb-4 text-success">{{ isLogin ? 'Iniciar Sesión' : 'Registrarse' }}</h2>
+  <div class="auth-wrapper">
+    <div class="auth-card">
+      <h2 class="auth-title">{{ isLogin ? 'Iniciar Sesión' : 'Registrarse' }}</h2>
 
       <form @submit.prevent="handleSubmit" novalidate>
-        <!-- User -->
+        <!-- Usuario -->
         <div class="mb-3">
-          <label for="username" class="form-label">Usuario</label>
+          <label for="username" class="auth-label">Usuario</label>
           <input
             id="username"
             v-model="form.username"
             type="text"
-            class="form-control"
+            class="auth-input"
             required
             aria-required="true"
           />
         </div>
 
-        <!-- Email (only register) -->
+        <!-- Email (solo en registro) -->
         <div v-if="!isLogin" class="mb-3">
-          <label for="email" class="form-label">Email</label>
+          <label for="email" class="auth-label">Email</label>
           <input
             id="email"
             v-model="form.email"
             type="email"
-            class="form-control"
+            class="auth-input"
             required
             aria-required="true"
           />
         </div>
 
-        <!-- Password -->
+        <!-- Contraseña -->
         <div class="mb-3">
-          <label for="password" class="form-label">Contraseña</label>
+          <label for="password" class="auth-label">Contraseña</label>
           <input
             id="password"
             v-model="form.password"
             type="password"
-            class="form-control"
+            class="auth-input"
             required
             aria-required="true"
             minlength="8"
           />
         </div>
 
-        <!-- Confirm password (only register) -->
+        <!-- Confirmar contraseña -->
         <div v-if="!isLogin" class="mb-3">
-          <label for="confirmPassword" class="form-label">Confirmar Contraseña</label>
+          <label for="confirmPassword" class="auth-label">Confirmar Contraseña</label>
           <input
             id="confirmPassword"
             v-model="form.confirmPassword"
             type="password"
-            class="form-control"
+            class="auth-input"
             required
             aria-required="true"
             minlength="8"
           />
         </div>
 
-				<!-- Founder checkbox (only register) -->
+        <!-- Fundador checkbox -->
         <div v-if="!isLogin" class="form-check mb-3">
           <input
             id="isFounder"
@@ -66,26 +66,26 @@
             type="checkbox"
             class="form-check-input"
           />
-          <label for="isFounder" class="form-check-label">
-            ¿Eres fundador?
+          <label for="isFounder" class="form-check-label small text-secondary">
+            Quiero crear proyectos
           </label>
         </div>
 
-        <!-- Error message -->
-        <div v-if="errorMessage" class="alert alert-danger" role="alert">
+        <!-- Mensajes de error -->
+        <div v-if="errorMessage" class="auth-alert">
           {{ errorMessage }}
         </div>
-        <div v-if="messageStore.message" class="alert alert-danger" role="alert">
+        <div v-if="messageStore.message" class="auth-alert">
           {{ messageStore.message }}
         </div>
 
-        <button type="submit" class="btn btn-success w-100">
+        <button type="submit" class="btn-gradient w-100">
           {{ isLogin ? 'Entrar' : 'Registrarse' }}
         </button>
       </form>
 
       <p class="text-center mt-3">
-        <button @click="toggleMode" class="btn btn-link text-success">
+        <button @click="toggleMode" class="auth-toggle-link">
           {{ isLogin ? '¿No tienes cuenta? Regístrate' : '¿Ya tienes cuenta? Inicia sesión' }}
         </button>
       </p>
@@ -94,11 +94,11 @@
 </template>
 
 <script setup lang="ts">
-  import { computed, ref } from 'vue';
-  import { useRouter } from 'vue-router';
-  import { useAuthStore } from '@/stores/auth';
-  import type { AuthData } from '@/interfaces/Auth.ts';
-  import { useMessageStore } from '@/stores/message';
+import { ref, computed } from 'vue';
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/auth';
+import { useMessageStore } from '@/stores/message';
+import type { AuthData } from '@/interfaces/Auth.ts';
 
 const router = useRouter();
 const messageStore = useMessageStore();
@@ -110,7 +110,7 @@ const form = ref<AuthData>({
   email: '',
   password: '',
   confirmPassword: '',
-	isFounder: false,
+  isFounder: false,
 });
 
 const auth = useAuthStore();
@@ -143,12 +143,9 @@ async function handleSubmit() {
   }
   try {
     if (isLogin.value) {
-      // Login
       await auth.login(form.value.username, form.value.password);
-			// Redirect to home page after login
-			router.push({ name: 'Home' });
+      router.push({ name: 'Home' });
     } else {
-      // Register, cambiar a auth.ts
       if (form.value.password !== form.value.confirmPassword) {
         errorMessage.value = 'Las contraseñas no coinciden.';
         return;
@@ -159,7 +156,6 @@ async function handleSubmit() {
         form.value.password,
         form.value.isFounder
       );
-      // After register, change to login
       isLogin.value = true;
       errorMessage.value = 'Registro exitoso, por favor inicia sesión.';
       form.value.password = '';
@@ -176,13 +172,91 @@ async function handleSubmit() {
 </script>
 
 <style scoped>
-	.card {
-		border-radius: 0.5rem;
-	}
-	.btn-link {
-		text-decoration: none;
-	}
-	.btn-link:hover {
-		text-decoration: underline;
-	}
+.auth-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f9fafb;
+  font-family: 'Inter', sans-serif;
+}
+
+.auth-card {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  padding: 2rem;
+  width: 100%;
+  max-width: 400px;
+}
+
+.auth-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1e293b;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.auth-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.25rem;
+  display: block;
+}
+
+.auth-input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  transition: border-color 0.2s;
+}
+
+.auth-input:focus {
+  border-color: #7c3aed;
+  outline: none;
+  box-shadow: 0 0 0 1px #7c3aed33;
+}
+
+.auth-alert {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  font-size: 0.875rem;
+  padding: 0.75rem;
+  border-radius: 0.375rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.btn-gradient {
+  background: linear-gradient(90deg, #7c3aed 0%, #a78bfa 100%);
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.5rem;
+  border: none;
+  box-shadow: 0 4px 6px rgba(124, 58, 237, 0.2);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-gradient:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(124, 58, 237, 0.3);
+}
+
+.auth-toggle-link {
+  font-size: 0.875rem;
+  color: #7c3aed;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+}
 </style>

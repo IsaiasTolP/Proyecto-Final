@@ -57,7 +57,7 @@
             <h3 class="fs-5 fw-semibold text-dark mb-3">Contribuciones al proyecto</h3>
 
             <div v-if="contributions.length">
-              <ul>
+              <ul type="none" style="padding-left: 0px;">
                 <li
                   v-for="contribution in contributions"
                   :key="contribution.id"
@@ -158,7 +158,7 @@
               </router-link>
               <button
                 v-if="project.is_active"
-                class="btn btn-outline-danger mt-3 ms-2"
+                class="btn btn-outline-danger-custom mt-3 ms-2"
                 data-bs-toggle="modal"
                 data-bs-target="#closeModal"
               >
@@ -166,7 +166,7 @@
               </button>
               <router-link
                 :to="`/projects/edit/${project.id}`"
-                class="btn btn-outline-secondary mt-3 ms-2"
+                class="btn btn-outline-secondary text-dark fw-semibold mt-3 ms-2"
               >
                 Editar
               </router-link>
@@ -427,4 +427,30 @@
 .fade-leave-to {
   opacity: 0;
 }
+
+.btn-outline-danger-custom {
+  background: linear-gradient(90deg, #dc2626 0%, #f87171 100%);
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.5rem 1.25rem;
+  border-radius: 0.5rem;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 8px rgba(220, 38, 38, 0.3);
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+  text-decoration: none;
+}
+
+.btn-outline-danger-custom:hover,
+.btn-outline-danger-custom:focus {
+  box-shadow: 0 6px 12px rgba(220, 38, 38, 0.5);
+  transform: translateY(-2px);
+  color: white;
+  text-decoration: none;
+}
+
 </style>

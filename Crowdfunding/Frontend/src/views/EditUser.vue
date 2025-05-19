@@ -1,20 +1,35 @@
 <template>
-  <div class="container py-5">
-    <h2 class="mb-4">Configuración de Cuenta</h2>
+  <div class="account-settings card p-4 mt-5 shadow-sm border-0">
+		<h2 class="mb-4">Configuración de Cuenta</h2>
 
-    <div class="mb-3">
-      <strong>Usuario:</strong> {{ user.username }}
-    </div>
+		<div class="mb-4">
+			<label class="form-label text-muted">Usuario</label>
+			<div class="fs-5 fw-semibold">{{ user.username }}</div>
+		</div>
 
-    <div class="mb-3">
-      <strong>Email:</strong> {{ user.email }}
-      <button class="btn btn-link" @click="showEmailDialog = true">Modificar Email</button>
-    </div>
+		<div class="mb-4 d-flex justify-content-between align-items-center">
+			<div>
+				<label class="form-label text-muted">Email</label>
+				<div>{{ user.email }}</div>
+			</div>
+			<button class="btn btn-outline-primary btn-sm" @click="showEmailDialog = true">
+				Modificar Email
+			</button>
+		</div>
 
-    <div class="mb-3">
-      <strong>Contraseña:</strong> ********
-      <button class="btn btn-link" @click="showPasswordDialog = true">Cambiar Contraseña</button>
-    </div>
+		<div class="mb-4 d-flex justify-content-between align-items-center">
+			<div>
+				<label class="form-label text-muted">Contraseña</label>
+				<div>********</div>
+			</div>
+			<button class="btn btn-outline-secondary btn-sm" @click="showPasswordDialog = true">
+				Cambiar Contraseña
+			</button>
+		</div>		
+		<div v-if="error" class="alert alert-danger mt-3">{{ error }}</div>
+		<div v-if="success" class="alert alert-success mt-3">{{ success }}</div>
+</div>
+
 
 		<!-- Diálogo para cambiar Email -->
 		<div class="modal fade show d-block" tabindex="-1" role="dialog" aria-modal="true" v-if="showEmailDialog">
@@ -81,7 +96,6 @@
 
     <div v-if="error" class="alert alert-danger mt-3">{{ error }}</div>
     <div v-if="success" class="alert alert-success mt-3">{{ success }}</div>
-  </div>
 </template>
 
 <script setup lang="ts">
@@ -149,3 +163,58 @@ async function updatePassword() {
   }
 }
 </script>
+
+<style scoped>
+.account-settings {
+  background-color: #ffffff;
+  border-radius: 12px;
+  max-width: 600px;
+  margin: auto;
+}
+
+h2 {
+  font-weight: 600;
+  color: #111827;
+}
+
+.form-label {
+  margin-bottom: 0;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.btn-outline-primary,
+.btn-outline-secondary {
+  font-size: 0.875rem;
+  padding: 6px 12px;
+  border-radius: 6px;
+}
+
+.alert {
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.modal-content {
+  border-radius: 10px;
+}
+
+.modal-header {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.modal-title {
+  font-weight: 600;
+}
+
+.modal-footer {
+  border-top: none;
+  padding-top: 0;
+}
+
+.btn-close {
+  background-color: transparent;
+  border: none;
+}
+</style>
