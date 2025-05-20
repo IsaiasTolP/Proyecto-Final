@@ -15,9 +15,9 @@ interface ProfileData {
 }
 
 interface SocialMedia {
-    twitter: string,
-    instagram: string,
-    linkedin: string
+    twitter: string;
+    instagram: string;
+    linkedin: string;
 }
 
 interface FounderProfileData extends ProfileData {
@@ -26,4 +26,10 @@ interface FounderProfileData extends ProfileData {
     social_media: SocialMedia;
 }
 
-export type { User, ProfileData, FounderProfileData };
+interface ProfileStats {
+    created_projects: number;
+    supported_projects: number;
+    given_funds: number;
+}
+
+export type { User, ProfileData, FounderProfileData, ProfileStats };

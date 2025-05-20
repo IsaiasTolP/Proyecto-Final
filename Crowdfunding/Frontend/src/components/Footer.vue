@@ -31,7 +31,13 @@
             <h3 class="footer-title">Recursos</h3>
             <nav class="nav flex-column">
               <router-link class="nav-link px-0 py-1" to="/contact">Contacta</router-link>
-              <a class="nav-link px-0 py-1" href="#">Manual del Creador</a>
+              <a
+                class="nav-link text-decoration-none px-0 py-1"
+                :href="`${api.defaults.baseURL}/download-pdf/`"
+                target="_blank"
+              >
+                Manual de Creador (PDF)
+              </a>
             </nav>
           </div>
 
@@ -71,6 +77,10 @@
   </footer>
 </body>
 </template>
+
+<script setup lang="ts">
+  import api from '@/services/api';
+</script>
 
 <style scoped>
   body {

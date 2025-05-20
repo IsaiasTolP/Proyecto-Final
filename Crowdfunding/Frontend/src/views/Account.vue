@@ -75,16 +75,16 @@
         </div>
       </div>
       <div class="d-flex justify-content-around text-center text-secondary small fw-normal">
-        <div>
-          <p class="stats-number mb-0">12</p>
+        <div v-if="profile.is_founder">
+          <p class="stats-number mb-0">{{ profileStats.created_projects }}</p>
           <p class="mb-0">Proyectos Creados</p>
         </div>
         <div>
-          <p class="stats-number mb-0">47</p>
+          <p class="stats-number mb-0">{{ profileStats.supported_projects }}</p>
           <p class="mb-0">Proyectos Apoyados</p>
         </div>
         <div>
-          <p class="stats-number mb-0">€15,250</p>
+          <p class="stats-number mb-0">{{ profileStats.given_funds }} €</p>
           <p class="mb-0">Fondos Aportados</p>
         </div>
       </div>
@@ -98,7 +98,7 @@
   import { useRoute, useRouter } from 'vue-router';
   import api from '@/services/api';
   import { useAuthStore } from '@/stores/auth';
-  import type { FounderProfileData, ProfileData } from '@/interfaces/Account';
+  import type { FounderProfileData, ProfileData, ProfileStats } from '@/interfaces/Account';
   import GoBackBtn from '@/components/GoBackBtn.vue';
   
   const route = useRoute();
@@ -107,6 +107,7 @@
   
   
   const profile = ref<FounderProfileData>({} as FounderProfileData);
+  const profileStats = ref<ProfileStats>({} as ProfileStats);
   const currentUser = auth.user;
   const loading = ref(true);
   
@@ -118,14 +119,17 @@
       let isFounder: boolean | undefined;
       const userId = route.params.id;
       if (userId !== String(auth.user?.id)) {
-        const { data: user } = await api.get<ProfileData>(`/users/${userId}/`)
-        isFounder = user.is_founder
+        const { data: user } = await api.get<ProfileData>(`/users/${userId}/`);
+        isFounder = user.is_founder;
       } else {
         isFounder = auth.user?.is_founder;
       }
-      const url = isFounder ? `/accounts/founders/user/${userId}/` : `/accounts/profiles/user/${userId}/`
+      const url = isFounder ? `/accounts/founders/user/${userId}/` : `/accounts/profiles/user/${userId}/`;
       const { data } = await api.get<FounderProfileData>(url);
       profile.value = data;
+
+      const { data: stats } = await api.get<ProfileStats>(`/accounts/profile-stats/?user_id=${userId}`);
+      profileStats.value = stats;
     } catch (err: any) {
     } finally {
       loading.value = false;

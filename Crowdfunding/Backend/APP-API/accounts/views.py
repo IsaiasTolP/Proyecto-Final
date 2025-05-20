@@ -5,6 +5,11 @@ from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Profile, FounderProfile
 from .serializers import ProfileSerializer, FounderProfileSerializer
+from rest_framework.views import APIView
+from projects.models import Project
+from contributions.models import Contribution
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.models import User
 
 
 class ProfileViewSet(viewsets.ModelViewSet):
@@ -70,3 +75,25 @@ class FounderProfileViewSet(viewsets.ModelViewSet):
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data)
+
+
+class ProfileStatsView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request):
+        user_id = request.query_params.get('user_id')
+
+        if not user_id:
+            return Response({'error': 'user_id is required'}, status=400)
+        
+        user = get_object_or_404(User, id=user_id)
+
+        created_projects = Project.objects.filter(owner=user).count()
+        supported_projects = Contribution.objects.filter(contributor=user).distinct().count()
+        given_funds = sum(contribution.amount for contribution in Contribution.objects.filter(contributor=user))
+
+        return Response({
+            'created_projects': created_projects,
+            'supported_projects': supported_projects,
+            'given_funds': given_funds
+        })
