@@ -1,5 +1,7 @@
 <template>
+  
   <div class="profile-edit-container">
+    <GoBackBtn />
     <h2 class="title text-success mb-4">Editar Perfil</h2>
 
     <form @submit.prevent="submitProfile" enctype="multipart/form-data" class="profile-form">
@@ -147,6 +149,7 @@ import axios, { AxiosError } from 'axios';
 import { useMessageStore } from '@/stores/message';
 import { useAuthStore } from '@/stores/auth';
 import type { FounderProfileData, ProfileData } from '@/interfaces/Account';
+import GoBackBtn from '@/components/GoBackBtn.vue';
 
 const auth = useAuthStore();
 const router = useRouter();

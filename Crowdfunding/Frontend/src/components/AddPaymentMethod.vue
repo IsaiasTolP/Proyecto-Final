@@ -1,5 +1,6 @@
 <template>
   <div class="payment-form container py-5 my-5">
+    <GoBackBtn />
     <h2 class="mb-4 title">Añadir Método de Pago</h2>
 
     <form @submit.prevent="submitPaymentMethod" class="form">
@@ -67,6 +68,7 @@
   import { useRoute, useRouter } from 'vue-router';
   import api from '@/services/api';
   import { useMessageStore } from '@/stores/message';
+  import GoBackBtn from './GoBackBtn.vue';
 
   const router = useRouter();
   const route = useRoute();

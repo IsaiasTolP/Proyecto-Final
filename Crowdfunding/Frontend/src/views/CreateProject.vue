@@ -1,5 +1,6 @@
 <template>
   <div class="project-form container py-5 my-5">
+    <GoBackBtn />
     <h2 class="mb-4 title">Crear Nuevo Proyecto</h2>
 
     <form @submit.prevent="submitProject" enctype="multipart/form-data" class="form">
@@ -80,6 +81,7 @@
   import api from '@/services/api';
   import type { ProjectCategory } from '@/interfaces/Project';
   import { useMessageStore } from '@/stores/message';
+  import GoBackBtn from '@/components/GoBackBtn.vue';
   
   const router = useRouter();
   const form = ref({

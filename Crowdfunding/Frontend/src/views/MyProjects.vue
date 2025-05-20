@@ -1,5 +1,6 @@
 <template>
   <div class="container py-4">
+    <GoBackBtn />
     <h3 class="mb-4">Mis Proyectos</h3>
 
     <div v-if="projects.length === 0" class="text-muted">
@@ -25,6 +26,10 @@
       	>
         	Ver Detalles
       	</router-link>
+        <button
+        v-if="!project.featured"
+        @click="FeatureForm(project.id)"
+        class="btn btn-sm btn-outline-primary mt-2 me-2">Patrocinar</button>
 				<router-link
         	:to="`/projects/edit/${project.id}`"
         	class="btn btn-sm btn-outline-secondary mt-2 me-2"
@@ -38,10 +43,6 @@
         	Eliminar
       	</button>
 			</div>
-      
-      
-
-      
     </div>
 
     <!-- Modal de confirmación -->
@@ -52,7 +53,7 @@
       style="display: block;"
       v-if="showModal"
     >
-      <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">¿Eliminar proyecto?</h5>
@@ -69,23 +70,21 @@
       </div>
     </div>
   </div>
+  <FeatureProject
+    v-if="showFeatureModal && selectedProjectId"
+    :project-id="selectedProjectId"
+    @close="closeFeatureModal"
+    @featured="markAsFeatured"
+  />
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import api from '@/services/api'
 import { useAuthStore } from '@/stores/auth'
-
-interface Project {
-  id: number
-  name: string
-  description: string
-  goal: number
-  total_donated: number
-  percent_completed: number
-  is_active: boolean
-  start_date: string
-}
+import type { Project } from '@/interfaces/Project'
+import FeatureProject from '@/components/FeatureProject.vue'
+import GoBackBtn from '@/components/GoBackBtn.vue'
 
 const projects = ref<Project[]>([])
 const authStore = useAuthStore()
@@ -94,6 +93,8 @@ const userId = authStore.user?.id
 // Para eliminar
 const showModal = ref(false)
 const projectToDelete = ref<number | null>(null)
+const showFeatureModal = ref(false)
+const selectedProjectId = ref<number | null>(null)
 
 onMounted(() => {
   fetchProjects()
@@ -133,6 +134,21 @@ async function deleteProject() {
   } finally {
     cancelDelete()
   }
+}
+
+function FeatureForm(projectId: number) {
+  selectedProjectId.value = projectId
+  showFeatureModal.value = true
+}
+
+function closeFeatureModal() {
+  showFeatureModal.value = false
+  selectedProjectId.value = null
+}
+
+function markAsFeatured(projectId: number) {
+  const project = projects.value.find(p => p.id === projectId)
+  if (project) project.featured = true
 }
 </script>
 

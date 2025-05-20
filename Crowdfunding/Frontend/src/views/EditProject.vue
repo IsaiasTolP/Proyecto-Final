@@ -1,5 +1,6 @@
 <template>
   <div class="container py-5">
+    <GoBackBtn />
     <h2 class="mb-4 text-primary">Editar Proyecto</h2>
 
     <form @submit.prevent="submitProject" enctype="multipart/form-data">
@@ -74,6 +75,7 @@ import { useRoute, useRouter } from 'vue-router';
 import api from '@/services/api';
 import type { ProjectCategory } from '@/interfaces/Project';
 import { useMessageStore } from '@/stores/message';
+import GoBackBtn from '@/components/GoBackBtn.vue';
 
 const route = useRoute();
 const router = useRouter();

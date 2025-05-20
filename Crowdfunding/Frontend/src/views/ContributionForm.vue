@@ -1,5 +1,6 @@
 <template>
   <main class="container py-5" style="max-width: 640px;">
+    <GoBackBtn />
     <h2 class="text-center fw-semibold mb-4 fs-5 text-dark">Contribuir al Proyecto</h2>
 
     <section class="contribution-card">
@@ -19,6 +20,19 @@
                 {{ method.holder_name }} - **** {{ method.card_last4 }}
               </option>
             </select>
+            <!-- CVV -->
+            <div class="" v-if="form.payment_method">
+              <input
+                v-model="form.cvv"
+                type="password"
+                maxlength="4"
+                minlength="3"
+                class="form-control"
+                id="cvv"
+                placeholder="CVV"
+                required
+              />
+            </div>
             <router-link
               class="btn-outline-secondary-custom text-nowrap"
               :to="{ name: 'AddPaymentMethod', query: { back: 'true' } }"
@@ -76,6 +90,7 @@ import { useRoute, useRouter } from 'vue-router';
 import api from '@/services/api';
 import { useMessageStore } from '@/stores/message';
 import axios from 'axios';
+import GoBackBtn from '@/components/GoBackBtn.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -87,6 +102,7 @@ const form = ref({
   payment_method: '',
   message: '',
   project: projectId,
+  cvv: '',
 });
 
 const paymentMethods = ref<any[]>([]);

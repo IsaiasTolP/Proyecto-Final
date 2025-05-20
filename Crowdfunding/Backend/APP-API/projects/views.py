@@ -1,10 +1,10 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.filters import SearchFilter, OrderingFilter
-from .models import Project, ProjectCategory, ProjectImage
-from .serializers import ProjectSerializer, ProjectCategorySerializer, ProjectImageSerializer, SimpleProjectSerializer
+from .models import Project, ProjectCategory, ProjectImage, ProjectSponsorship
+from .serializers import ProjectSerializer, ProjectCategorySerializer, ProjectImageSerializer, SimpleProjectSerializer, ProjectSponsorshipSerializer
 from .permissions import IsOwnerOrReadOnly
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -71,3 +71,12 @@ class ProjectStatsView(APIView):
             'completed_projects': completed_projects,
             'users': users
         })
+
+
+class ProjectSponsorshipViewSet(viewsets.ModelViewSet):
+    queryset = ProjectSponsorship.objects.all()
+    serializer_class = ProjectSponsorshipSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)

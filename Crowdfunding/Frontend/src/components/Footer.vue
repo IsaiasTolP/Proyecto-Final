@@ -23,7 +23,6 @@
             <h3 class="footer-title">Nosotros</h3>
             <nav class="nav flex-column">
               <router-link to="/story" class="nav-link px-0 py-1" href="#">Nuestra Historia</router-link>
-              <a class="nav-link px-0 py-1" href="#">Cómo funciona</a>
               <a class="nav-link px-0 py-1" href="#">Blog</a>
             </nav>
           </div>
@@ -31,10 +30,8 @@
           <div class="me-5 mb-4">
             <h3 class="footer-title">Recursos</h3>
             <nav class="nav flex-column">
-              <a class="nav-link px-0 py-1" href="#">Centro de Ayuda</a>
+              <router-link class="nav-link px-0 py-1" to="/contact">Contacta</router-link>
               <a class="nav-link px-0 py-1" href="#">Manual del Creador</a>
-              <a class="nav-link px-0 py-1" href="#">Tasas y Pagos</a>
-              <a class="nav-link px-0 py-1" href="#">Confianza y Seguridad</a>
             </nav>
           </div>
 
@@ -66,8 +63,8 @@
       <div class="footer-border mt-5 pt-3 d-flex flex-column flex-sm-row justify-content-between align-items-center text-secondary small">
         <div>© 2025 CrowdFundMe. Todos los derechos reservados.</div>
         <div class="mt-3 mt-sm-0">
-          <a href="#" class="me-4">Términos de Servicio</a>
-          <a href="#" class="me-4">Política de Privacidad</a>
+          <router-link to="/terms" class="me-4">Términos de Servicio</router-link>
+          <router-link to="/privacy" class="me-4">Política de Privacidad</router-link>
         </div>
       </div>
     </div>

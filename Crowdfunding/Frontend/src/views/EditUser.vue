@@ -1,5 +1,8 @@
 <template>
-  <div class="account-settings card p-4 mt-5 shadow-sm border-0">
+	<div class="pt-4 mt-5 d-flex justify-content-center" style="max-width: 600px; margin: auto;">
+		<GoBackBtn />
+	</div>
+  <div class="account-settings card p-4 shadow-sm border-0">
 		<h2 class="mb-4">Configuración de Cuenta</h2>
 
 		<div class="mb-4">
@@ -101,6 +104,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import api from '@/services/api';
+import GoBackBtn from '@/components/GoBackBtn.vue';
 
 const user = ref({
   id: null,

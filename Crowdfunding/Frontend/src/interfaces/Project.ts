@@ -14,6 +14,7 @@ interface Project {
     project_images: ProjectImage[];
     total_donated: string;
     percent_completed: number;
+    featured: boolean;
 }
 interface SimpleProject {
     id: number;

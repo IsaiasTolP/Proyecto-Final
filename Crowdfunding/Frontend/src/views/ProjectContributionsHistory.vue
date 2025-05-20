@@ -1,5 +1,6 @@
 <template>
     <div class="container py-4">
+      <GoBackBtn />
       <h3 class="mb-4">Contribuciones al Proyecto</h3>
 
       <div v-if="contributions.length === 0" class="text-muted">
@@ -47,6 +48,7 @@
   import type { ProfileData } from '@/interfaces/Account';
   import { useRoute } from 'vue-router';
   import type { Contribution } from '@/interfaces/Contribution';
+  import GoBackBtn from '@/components/GoBackBtn.vue';
 
   const route = useRoute();
   const projectId = route.params.id

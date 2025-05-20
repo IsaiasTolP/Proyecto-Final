@@ -21,13 +21,11 @@
     </section>
     <section class="image-container">
       <img
-        src="https://storage.googleapis.com/a1aa/image/e396d4c8-a94f-4f44-b2f8-08de2572fa92.jpg"
-        alt="Top view of a wooden table with multiple laptops, headphones, notebooks, coffee cups, and gadgets arranged, with hands typing on laptops"
-        width="600"
-        height="400"
+        :src="main"
+        alt="Fé de una niña en el santo niño de Cebú, Filipinas"
       />
       <div class="info-box">
-        <span class="highlight-purple">+2.500</span> proyectos exitosos <strong>financiados solo este año</strong>
+        Obra original de <span class="highlight-purple">Michol Sanchez</span>: <a class="text-decoration-none" href="https://creativecommons.org/licenses/by/4.0/deed.es"><strong>C.C 4.0</strong></a>
       </div>
     </section>
   </main>
@@ -38,6 +36,7 @@
 <script setup lang="ts">
 import router from '@/router';
 import { useAuthStore } from '@/stores/auth';
+import main from '@/assets/images/main.jpg'
 
 const auth = useAuthStore();
 
@@ -102,7 +101,7 @@ const auth = useAuthStore();
       border-radius: 1rem;
       overflow: hidden;
       box-shadow: 0 0.5rem 1rem rgb(0 0 0 / 0.1);
-      max-width: 600px;
+      max-width: 700px;
       width: 100%;
     }
     .image-container img {

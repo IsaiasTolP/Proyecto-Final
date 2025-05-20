@@ -22,6 +22,9 @@ const routes = [
     { path: "/projects/edit/:id", name: "EditProject", component: () => import("@/views/EditProject.vue"), meta: { requiresAuth: true, founderRequired: true, onlyProjectOwner: true} },
     { path: "/projects/search", name: "ProjectSearch", component: () => import("@/views/ProjectSearch.vue"), meta: { requiresAuth: true} },
     { path: "/story", name: "Story", component: () => import("@/views/Story.vue") },
+    { path: "/terms", name: "Terms", component: () => import("@/views/TermsOfService.vue") },
+    { path: "/privacy", name: "Privacy", component: () => import("@/views/PrivacyPolicy.vue") },
+    { path: "/contact", name: "Contact", component: () => import("@/views/ContactForm.vue") },
 ]
 
 const router = createRouter({

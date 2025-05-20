@@ -1,5 +1,6 @@
 <template>
   <div class="container py-5">
+    <GoBackBtn />
     <h2 class="mb-4 text-success">Mis Métodos de Pago</h2>
 
     <button class="btn btn-success mb-4" @click="goToAddMethod">
@@ -64,6 +65,7 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import api from '@/services/api';
 import EditPaymentMethodForm from '@/components/EditPaymentMethodForm.vue';
+import GoBackBtn from '@/components/GoBackBtn.vue';
 
 const router = useRouter();
 const paymentMethods = ref<any[]>([]);
