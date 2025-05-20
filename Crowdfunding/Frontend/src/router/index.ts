@@ -25,6 +25,7 @@ const routes = [
     { path: "/terms", name: "Terms", component: () => import("@/views/TermsOfService.vue") },
     { path: "/privacy", name: "Privacy", component: () => import("@/views/PrivacyPolicy.vue") },
     { path: "/contact", name: "Contact", component: () => import("@/views/ContactForm.vue") },
+    { path: "/reset-password", name: "ResetPassword", component: () => import("@/components/ChangePassword.vue"), meta: { requiresToken: true } }
 ]
 
 const router = createRouter({
@@ -92,6 +93,16 @@ router.beforeEach(async (to, _from, next) => {
             return next({ name: "Home" })
         }
     }
+
+    if (to.meta.requiresToken) {
+        const uid = to.query.uid;
+        const token = to.query.token;
+
+        if (!uid || !token) {
+            return router.back();
+        }
+    }
+
     next();
 });
 

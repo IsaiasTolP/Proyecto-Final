@@ -2,7 +2,7 @@
 	<div class="pt-4 mt-5 d-flex justify-content-center" style="max-width: 600px; margin: auto;">
 		<GoBackBtn />
 	</div>
-  <div class="account-settings card p-4 shadow-sm border-0">
+	<div class="account-settings card p-4 shadow-sm border-0">
 		<h2 class="mb-4">Configuración de Cuenta</h2>
 
 		<div class="mb-4">
@@ -34,71 +34,71 @@
 </div>
 
 
-		<!-- Diálogo para cambiar Email -->
-		<div class="modal fade show d-block" tabindex="-1" role="dialog" aria-modal="true" v-if="showEmailDialog">
-			<div class="modal-dialog modal-dialog-centered" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="changeEmailModalLabel">Cambiar Email</h5>
-						<button type="button" class="btn-close" aria-label="Cerrar" @click="showEmailDialog = false"></button>
-					</div>
-					<div class="modal-body">
-						<label for="emailInput" class="form-label">Nuevo email</label>
-						<input
-							id="emailInput"
-							v-model="emailForm.email"
-							type="email"
-							class="form-control"
-							placeholder="ejemplo@correo.com"
-							required
-						/>
-					</div>
-					<div class="modal-footer">
-						<button class="btn btn-secondary" @click="showEmailDialog = false">Cancelar</button>
-						<button class="btn btn-primary" @click="updateEmail">Guardar</button>
-					</div>
+	<!-- Diálogo para cambiar Email -->
+	<div class="modal fade show d-block" tabindex="-1" role="dialog" aria-modal="true" v-if="showEmailDialog">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="changeEmailModalLabel">Cambiar Email</h5>
+					<button type="button" class="btn-close" aria-label="Cerrar" @click="showEmailDialog = false"></button>
+				</div>
+				<div class="modal-body">
+					<label for="emailInput" class="form-label">Nuevo email</label>
+					<input
+						id="emailInput"
+						v-model="emailForm.email"
+						type="email"
+						class="form-control"
+						placeholder="ejemplo@correo.com"
+						required
+					/>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-secondary" @click="showEmailDialog = false">Cancelar</button>
+					<button class="btn btn-primary" @click="updateEmail">Guardar</button>
 				</div>
 			</div>
 		</div>
+	</div>
 
-    <!-- Diálogo para cambiar Contraseña -->
-		<div class="modal fade show d-block" tabindex="-1" role="dialog" aria-modal="true" v-if="showPasswordDialog">
-			<div class="modal-dialog modal-dialog-centered" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="changePasswordModalLabel">Cambiar Contraseña</h5>
-						<button type="button" class="btn-close" aria-label="Cerrar" @click="showPasswordDialog = false"></button>
-					</div>
-					<div class="modal-body">
-						<label for="passwordInput" class="form-label">Nueva contraseña</label>
-						<input
-							id="passwordInput"
-							v-model="passwordForm.password"
-							type="password"
-							class="form-control mb-3"
-							placeholder="Nueva contraseña"
-							required
-						/>
-						<label for="confirmPasswordInput" class="form-label">Confirmar contraseña</label>
-						<input
-							id="confirmPasswordInput"
-							v-model="passwordForm.confirmPassword"
-							type="password"
-							class="form-control"
-							placeholder="Repetir contraseña"
-							required
-						/>
-					</div>
-					<div class="modal-footer">
-						<button class="btn btn-secondary" @click="showPasswordDialog = false">Cancelar</button>
-						<button class="btn btn-primary" @click="updatePassword">Guardar</button>
-					</div>
+  <!-- Diálogo para cambiar Contraseña -->
+	<div class="modal fade show d-block" tabindex="-1" role="dialog" aria-modal="true" v-if="showPasswordDialog">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="changePasswordModalLabel">Cambiar Contraseña</h5>
+					<button type="button" class="btn-close" aria-label="Cerrar" @click="showPasswordDialog = false"></button>
+				</div>
+				<div class="modal-body">
+					<label for="passwordInput" class="form-label">Nueva contraseña</label>
+					<input
+						id="passwordInput"
+						v-model="passwordForm.password"
+						type="password"
+						class="form-control mb-3"
+						placeholder="Nueva contraseña"
+						required
+					/>
+					<label for="confirmPasswordInput" class="form-label">Confirmar contraseña</label>
+					<input
+						id="confirmPasswordInput"
+						v-model="passwordForm.confirmPassword"
+						type="password"
+						class="form-control"
+						placeholder="Repetir contraseña"
+						required
+					/>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-secondary" @click="showPasswordDialog = false">Cancelar</button>
+					<button class="btn btn-primary" @click="updatePassword">Guardar</button>
 				</div>
 			</div>
 		</div>
+	</div>
 
-    <div v-if="error" class="alert alert-danger mt-3">{{ error }}</div>
-    <div v-if="success" class="alert alert-success mt-3">{{ success }}</div>
+  <div v-if="error" class="alert alert-danger mt-3">{{ error }}</div>
+  <div v-if="success" class="alert alert-success mt-3">{{ success }}</div>
 </template>
 
 <script setup lang="ts">

@@ -7,10 +7,10 @@
         Aún no hay contribuciones.
       </div>
 
-      <div v-for="contribution in contributions" :key="contribution.id" class="card mb-3 p-3 shadow-sm">
+      <div v-for="(contribution, index) in contributions" :key="contribution.id" class="card mb-3 p-3 shadow-sm">
         <div class="d-flex align-items-center">
           <div class="flex-grow-1">
-              Contribución número {{ contribution.id }}
+              Contribución número {{ contributions.length - index }}
             <div>
               <small class="text-muted">{{ formatDate(contribution.date) }}</small>
             </div>

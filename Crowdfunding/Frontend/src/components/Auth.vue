@@ -85,12 +85,16 @@
       </form>
 
       <p class="text-center mt-3">
+        <button @click="openResetPasswordDialog" class="auth-toggle-link">
+          ¿Olvidaste tu contraseña?
+        </button>
         <button @click="toggleMode" class="auth-toggle-link">
           {{ isLogin ? '¿No tienes cuenta? Regístrate' : '¿Ya tienes cuenta? Inicia sesión' }}
         </button>
       </p>
     </div>
   </div>
+  <ResetPasswordDialog v-if="showResetPasswordDialog" @close="showResetPasswordDialog = false"/>
 </template>
 
 <script setup lang="ts">
@@ -99,11 +103,13 @@ import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 import { useMessageStore } from '@/stores/message';
 import type { AuthData } from '@/interfaces/Auth.ts';
+import ResetPasswordDialog from './ResetPasswordDialog.vue';
 
 const router = useRouter();
 const messageStore = useMessageStore();
 const isLogin = ref(true);
 const errorMessage = ref('');
+const showResetPasswordDialog = ref(false)
 
 const form = ref<AuthData>({
   username: '',
@@ -168,6 +174,10 @@ async function handleSubmit() {
       errorMessage.value = 'Error de conexión';
     }
   }
+}
+
+function openResetPasswordDialog() {
+  showResetPasswordDialog.value = true;
 }
 </script>
 

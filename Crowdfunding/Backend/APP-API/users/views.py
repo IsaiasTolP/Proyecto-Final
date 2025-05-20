@@ -9,8 +9,10 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth import authenticate
 from rest_framework.permissions import AllowAny
 from django.contrib.auth.models import User
-from .tasks import send_welcome_email
+from .tasks import send_welcome_email, send_recover_email
 from .permissions import IsSelfOrReadOnly
+from django.utils.http import urlsafe_base64_decode
+from django.contrib.auth.tokens import default_token_generator
 
 class RegisterUserAPIView(APIView):
     def post(self, request, *args, **kwargs):
@@ -63,3 +65,34 @@ class UserMeView(APIView):
     def get(self, request):
         serializer = UserSerializer(request.user)
         return Response(serializer.data)
+
+
+class PasswordResetRequestView(APIView):
+    def post(self, request):
+        email = request.data.get('email')
+        username = request.data.get('username')
+        user = User.objects.get(username=username, email=email)
+        if user:
+            send_recover_email(user_email=email, user=user)
+
+        return Response({'detail': 'Si el correo está registrado, se ha enviado un enlace de recuperación'}, status=200)
+
+
+class PasswordResetConfirmView(APIView):
+    def post(self, request):
+        uid = request.data.get('uid')
+        token = request.data.get('token')
+        new_password = request.data.get("new_password")
+
+        try:
+            uid = urlsafe_base64_decode(uid).decode()
+            user = User.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            return Response({'error': 'Usuario inválido'}, status=400)
+        
+        if not default_token_generator.check_token(user, token):
+            return Response({'error': 'Token Inválido o expirado'}, status=400)
+        
+        user.set_password(new_password)
+        user.save()
+        return Response({'detail': 'Contraseña actualizada correctamente.'})

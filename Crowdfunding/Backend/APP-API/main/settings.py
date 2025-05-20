@@ -198,3 +198,6 @@ EMAIL_HOST_PASSWORD = config('SMTP_KEY', default=None)
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 DEFAULT_FROM_EMAIL = 'CrowFundMe <toledoisaias54@gmail.com>'
+
+## Frontend config
+FRONTEND_URL = config('FRONTEND_URL', default='http://localhost:5173')

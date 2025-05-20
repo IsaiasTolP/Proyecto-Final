@@ -3,12 +3,12 @@
   <footer class="footer-bg py-5">
     <div class="container">
       <div class="row gy-4 gy-md-0">
-        <div class="col-md-3 d-flex flex-column">
+        <div class="col-md-4 d-flex flex-column">
           <div class="d-flex align-items-center mb-3">
             <div class="circle-cf me-2">CF</div>
             <span class="fw-semibold fs-5 text-white">CrowdFundMe</span>
           </div>
-          <p class="mb-3" style="max-width: 220px; line-height: 1.4;">
+          <p class="mb-3" style="max-width: 260px; line-height: 1.4;">
             Impulsando a los creadores a realizar proyectos innovadores a través del apoyo de la comunidad.
           </p>
           <div class="social-icons d-flex">
@@ -18,12 +18,11 @@
           </div>
         </div>
 
-        <div class="col-md-4 d-flex flex-wrap">
+        <div class="col-md-8 d-flex flex-wrap justify-content-around">
           <div class="me-5 mb-4">
             <h3 class="footer-title">Nosotros</h3>
             <nav class="nav flex-column">
               <router-link to="/story" class="nav-link px-0 py-1" href="#">Nuestra Historia</router-link>
-              <a class="nav-link px-0 py-1" href="#">Blog</a>
             </nav>
           </div>
 
@@ -42,27 +41,6 @@
           </div>
 
           
-        </div>
-
-        <div class="col-md-5 d-flex flex-wrap">
-          <div class="mb-4" style="min-width: 250px;">
-            <h3 class="footer-title">Subscribirse</h3>
-            <p class="mb-2" style="line-height: 1.4;">
-              Recibe las últimas noticias y actualizaciones en tu bandeja de entrada.
-            </p>
-            <form class="d-flex" role="form" novalidate>
-              <input
-                type="email"
-                class="form-control input-subscribe"
-                placeholder="Tu correo electrónico"
-                aria-label="Tu correo electrónico"
-                required
-              />
-              <button type="submit" class="btn btn-subscribe">
-                Subscribe
-              </button>
-            </form>
-          </div>
         </div>
       </div>
 
