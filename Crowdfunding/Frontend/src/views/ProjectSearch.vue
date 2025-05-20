@@ -15,9 +15,18 @@
     <div v-else class="d-flex flex-column gap-3">
       <div v-for="project in projects" :key="project.id" class="project-card p-3">
         <h5 class="fw-semibold text-dark mb-1">{{ project.name }}</h5>
-        <p class="text-secondary small mb-2" style="line-height: 1.4;">
-          {{ project.description.slice(0, 100) }}...
-        </p>
+        
+        <ul class="list-unstyled text-secondary small mb-2">
+          <li><strong>Meta:</strong> {{ project.goal }} €</li>
+          <li><strong>Fecha de inicio:</strong> {{ formatDate(project.start_date) }}</li>
+          <li>
+            <strong>Estado: </strong>
+            <span :class="project.is_active ? 'text-success' : 'text-danger'">
+              {{ project.is_active ? 'Activo' : 'Cerrado' }}
+            </span>
+          </li>
+        </ul>
+
         <router-link
           :to="`/projects/${project.id}`"
           class="btn-outline-secondary-custom d-inline-flex align-items-center"
@@ -36,27 +45,36 @@ import { useRoute } from 'vue-router';
 import api from '@/services/api';
 import type { Project } from '@/interfaces/Project';
 
-	const route = useRoute();
-	const query = ref<string>(route.query.query as string || '');
-	const projects = ref<Project[]>([]);
-	const loading = ref(false);
-	const error = ref('');
-	
-	watchEffect(async () => {
-	  if (!query.value) return;
-	
-	  loading.value = true;
-	  error.value = '';
-	  try {
-	    const { data } = await api.get(`/projects/list/?search=${encodeURIComponent(query.value)}`);
-	    projects.value = data;
-	  } catch (e) {
-	    error.value = 'Error al buscar proyectos.';
-	    console.error(e);
-	  } finally {
-	    loading.value = false;
-	  }
-	});
+const route = useRoute();
+const query = ref<string>(route.query.query as string || '');
+const projects = ref<Project[]>([]);
+const loading = ref(false);
+const error = ref('');
+
+watchEffect(async () => {
+  if (!query.value) return;
+
+  loading.value = true;
+  error.value = '';
+  try {
+    const { data } = await api.get(`/projects/list/?search=${encodeURIComponent(query.value)}`);
+    projects.value = data;
+  } catch (e) {
+    error.value = 'Error al buscar proyectos.';
+    console.error(e);
+  } finally {
+    loading.value = false;
+  }
+});
+
+function formatDate(dateStr: string): string {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('es-ES', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+  });
+}
 </script>
 
 <style scoped>
@@ -94,5 +112,11 @@ import type { Project } from '@/interfaces/Project';
   color: white;
   text-decoration: none;
 }
-</style>
 
+.text-success {
+  color: #16a34a; /* verde */
+}
+.text-danger {
+  color: #dc2626; /* rojo */
+}
+</style>

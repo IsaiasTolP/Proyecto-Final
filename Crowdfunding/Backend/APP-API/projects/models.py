@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
 from imagekit.models import ProcessedImageField
-from imagekit.processors import ResizeToFill
+from imagekit.processors import ResizeToFill, SmartResize
 from django.db.models import Sum
 from shared.utils import unique_project_image_upload_path
 from colorfield.fields import ColorField
@@ -49,7 +49,7 @@ class ProjectImage(models.Model):
     project = models.ForeignKey(Project, related_name='project_images', on_delete=models.CASCADE)
     image = ProcessedImageField(
         upload_to=unique_project_image_upload_path,
-        processors=[ResizeToFill(800, 600)],
+        processors=[SmartResize(900, 600)],
         format='JPEG',
         options={'quality': 90},
         default='project_images/default.jpg'

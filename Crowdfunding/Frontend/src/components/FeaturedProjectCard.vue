@@ -14,7 +14,6 @@
     </div>
     <div class="card-body p-3">
       <h3 class="card-title mb-1">{{ project.name }}</h3>
-      <p class="card-text mb-3">{{ project.description.length > 140 ? project.description.slice(0, 140) + '...' : project.description }}</p>
       <div class="d-flex align-items-center mb-2 gap-2">
         <div class="progress flex-grow-1">
           <div

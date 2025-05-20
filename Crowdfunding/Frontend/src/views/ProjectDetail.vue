@@ -1,16 +1,17 @@
 <template>
   <div>
-    <section class="container py-5" style="max-width: 960px;">
+    <section class="container py-5" style="max-width: 1080px;">
       <GoBackBtn />
 
       <div v-if="loading" class="text-center text-muted">Cargando proyecto...</div>
       <div v-else-if="error" class="alert alert-danger">{{ error }}</div>
 
-      <div v-else class="row">
-        <!-- Imágenes -->
-        <div class="col-md-6 mb-5">
+      <div v-else>
+        <!-- Encabezado: imágenes + botones -->
+        <div class="project-header d-flex flex-column flex-md-row mb-5 align-items-center">
+          <!-- Carousel de imágenes -->
           <div
-            class="carousel-container rounded shadow-sm overflow-hidden"
+            class="image-carousel flex-grow-1 rounded overflow-hidden"
             @mouseenter="stopAutoRotation"
             @mouseleave="startAutoRotation"
           >
@@ -18,73 +19,113 @@
               <img
                 :src="mainImage"
                 :key="mainImage"
-                class="img-fluid w-100"
+                class="rounded border"
                 :alt="`Imagen de ${project.name}`"
-                style="object-fit: cover; height: 400px;"
               />
             </transition>
-          </div>
-          <div v-if="images.length > 1" class="carousel-controls d-flex justify-content-center align-items-center mt-2">
-            <!-- Flecha anterior -->
-            <button
-              class="carousel-btn"
-              @click="prevImage"
-              aria-label="Imagen anterior"
-            >‹</button>
-              
-            <!-- Indicadores -->
-            <div class="d-flex gap-2 mx-3">
-              <span
-                v-for="(img, idx) in images"
-                :key="idx"
-                class="indicator"
-                :class="{ active: idx === currentImageIndex }"
-                @click="currentImageIndex = idx"
-                aria-label="'Ir a imagen ' + (idx + 1)"
-              ></span>
+            <div
+              v-if="images.length > 1"
+              class="carousel-controls d-flex justify-content-center align-items-center mt-3"
+            >
+              <button class="carousel-btn" @click="prevImage" aria-label="Imagen anterior">‹</button>
+              <div class="d-flex gap-2 mx-3">
+                <span
+                  v-for="(img, idx) in images"
+                  :key="idx"
+                  class="indicator"
+                  :class="{ active: idx === currentImageIndex }"
+                  @click="currentImageIndex = idx"
+                ></span>
+              </div>
+              <button class="carousel-btn" @click="nextImage" aria-label="Imagen siguiente">›</button>
             </div>
-          
-            <!-- Flecha siguiente -->
-            <button
-              class="carousel-btn"
-              @click="nextImage"
-              aria-label="Imagen siguiente"
-            >›</button>
           </div>
 
-          <!-- Contribuciones -->
-          <section class="mt-5">
-            <h3 class="fs-5 fw-semibold text-dark mb-3">Contribuciones al proyecto</h3>
+          <!-- Botones de acción -->
+          <div class="action-buttons d-flex flex-column ms-md-4 mt-4 mt-md-0">
+            <h1 class="fs-3 fw-semibold text-dark mb-4">{{ project.name }}</h1>
+            <p class="text-muted mb-1">Categoría: {{ projectCategory.category }}</p>
+            <p class="text-muted mb-3">Propietario: {{ owner.username }}</p>
 
-            <div v-if="contributions.length">
-              <ul type="none" style="padding-left: 0px;">
-                <li
-                  v-for="contribution in contributions"
-                  :key="contribution.id"
-                  class="p-3 mb-3 bg-white rounded shadow-sm border text-secondary"
+            <ul class="list-unstyled text-secondary mb-4">
+              <li><strong>Meta:</strong> {{ project.goal }} €</li>
+              <li><strong>Fecha de inicio:</strong> {{ formattedDate }}</li>
+              <li>
+                <strong>Estado: </strong>
+                <span :class="project.is_active ? 'text-lila' : 'text-danger'">
+                  {{ project.is_active ? 'Activo' : 'Cerrado' }}
+                </span>
+              </li>
+            </ul>
+
+            <div class="my-3">
+              <label class="form-label">Progreso</label>
+              <div class="progress rounded mb-1">
+                <div
+                  class="progress-bar bg-lila"
+                  role="progressbar"
+                  :style="{ width: project.percent_completed + '%' }"
+                  :aria-valuenow="project.percent_completed.toFixed(0)"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
                 >
-                  <p class="mb-1"><strong>Contribuidor:</strong> {{ contribution.contributor?.username || 'Anónimo' }}</p>
-                  <p class="mb-1 message-text"><strong>Mensaje:</strong> {{ contribution.message || 'Sin mensaje' }}</p>
-                  <div class="d-flex justify-content-between mt-2 align-items-center">
-                    <small class="text-muted">Fecha: {{ formatDate(contribution.date) }}</small>
-                    <span class="badge bg-gradient-lila text-white fs-6">+{{ contribution.amount }} €</span>
-                  </div>
-                </li>
-              </ul>
+                  {{ project.percent_completed.toFixed(0) }}%
+                </div>
+              </div>
+              <small class="text-muted">
+                {{ project.total_donated }} € recaudados de {{ project.goal }} €
+              </small>
             </div>
-            <p v-else class="text-muted">Aún no hay contribuciones.</p>
-          </section>
+
+            <!-- Acciones según estado y rol -->
+            <div class="d-flex h-100 align-items-center">
+              <router-link
+                v-if="isAuthenticated && !isOwner && project.is_active"
+                class="btn btn-outline-secondary-custom w-100 mb-2"
+                :to="`/projects/${project.id}/contribute`"
+              >
+                Contribuir
+              </router-link>
+
+              <div v-else-if="isAuthenticated && isOwner">
+                <router-link
+                  :to="`/projects/${project.id}/contributions`"
+                  class="btn btn-outline-secondary-custom w-100 mb-2"
+                >
+                  Ver contribuciones
+                </router-link>
+                <button
+                  v-if="project.is_active"
+                  class="btn btn-outline-danger-custom w-100 mb-2"
+                  data-bs-toggle="modal"
+                  data-bs-target="#closeModal"
+                >
+                  Cerrar proyecto
+                </button>
+                <router-link
+                  :to="`/projects/edit/${project.id}`"
+                  class="btn btn-outline-secondary text-dark fw-semibold w-100"
+                >
+                  Editar
+                </router-link>
+              </div>
+
+              <router-link
+                v-else-if="!isAuthenticated && project.is_active"
+                to="/auth"
+                class="btn btn-outline-secondary-custom w-100"
+              >
+                Inicia sesión para contribuir
+              </router-link>
+
+              <p v-else class="text-muted">El proyecto ya no está disponible. ¡Gracias por el apoyo!</p>
+            </div>
+          </div>
         </div>
 
-        <!-- Detalles del proyecto -->
-        <div class="col-md-6">
-          <h1 class="mb-3 fs-3 fw-semibold text-dark">{{ project.name }}</h1>
-          <p class="text-muted mb-1">Categoría: {{ projectCategory.category }}</p>
-          <p class="text-muted mb-3">Propietario: {{ owner.username }}</p>
-
-          <p class="mb-4 text-secondary">
-            {{ truncatedDescription }}<span v-if="isTruncated">...</span>
-          </p>
+        <!-- Descripción -->
+        <div class="project-description mb-5">
+          <div class="markdown-body" v-html="renderedTruncatedDescription"></div>
           <button
             v-if="isTruncated"
             class="btn btn-link p-0 text-lila"
@@ -93,96 +134,29 @@
           >
             Ver más
           </button>
-
-          <!-- Modal de descripción -->
-          <div class="modal fade" id="descriptionModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">Descripción completa</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-                <div class="modal-body">{{ project.description }}</div>
-                <div class="modal-footer">
-                  <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <ul class="list-unstyled mt-4 text-secondary">
-            <li><strong>Meta:</strong> {{ project.goal }} €</li>
-            <li><strong>Fecha de inicio:</strong> {{ formattedDate }}</li>
-            <li>
-              <strong>Estado: </strong>
-              <span :class="project.is_active ? 'text-lila' : 'text-danger'">
-                {{ project.is_active ? 'Activo' : 'Cerrado' }}
-              </span>
-            </li>
-          </ul>
-
-          <div class="my-4">
-            <label for="progress" class="form-label">Progreso</label>
-            <div class="progress rounded">
-              <div
-                class="progress-bar bg-lila"
-                role="progressbar"
-                :style="{ width: project.percent_completed + '%' }"
-                :aria-valuenow="project.percent_completed.toFixed(0)"
-                aria-valuemin="0"
-                aria-valuemax="100"
-              >
-                {{ project.percent_completed.toFixed(0) }}%
-              </div>
-            </div>
-            <small class="text-muted">
-              {{ project.total_donated }} € recaudados de {{ project.goal }} €
-            </small>
-          </div>
-
-          <div>
-            <router-link
-              v-if="isAuthenticated && !isOwner && project.is_active"
-              class="btn btn-outline-secondary-custom mt-3"
-              :to="`/projects/${project.id}/contribute`"
-            >
-              Contribuir
-            </router-link>
-
-            <div v-else-if="isAuthenticated && isOwner">
-              <router-link
-                :to="`/projects/${project.id}/contributions`"
-                class="btn btn-outline-secondary-custom mt-3"
-              >
-                Ver contribuciones
-              </router-link>
-              <button
-                v-if="project.is_active"
-                class="btn btn-outline-danger-custom mt-3 ms-2"
-                data-bs-toggle="modal"
-                data-bs-target="#closeModal"
-              >
-                Cerrar proyecto
-              </button>
-              <router-link
-                :to="`/projects/edit/${project.id}`"
-                class="btn btn-outline-secondary text-dark fw-semibold mt-3 ms-2"
-              >
-                Editar
-              </router-link>
-            </div>
-
-            <router-link
-              v-else-if="!isAuthenticated && project.is_active"
-              to="/auth"
-              class="btn btn-outline-secondary-custom mt-3"
-            >
-              Inicia sesión para contribuir
-            </router-link>
-
-            <p v-else class="text-muted mt-3">El proyecto ya no está disponible. ¡Gracias por el apoyo!</p>
-          </div>
         </div>
+
+        <!-- Contribuciones -->
+        <section class="project-contributions">
+          <h3 class="fs-5 fw-semibold text-dark mb-3">Contribuciones al proyecto</h3>
+          <div v-if="contributions.length">
+            <ul class="list-unstyled p-0">
+              <li
+                v-for="c in contributions"
+                :key="c.id"
+                class="contrib-item p-3 mb-3 bg-white rounded shadow-sm border text-secondary"
+              >
+                <p class="mb-1"><strong>Contribuidor:</strong> {{ c.contributor?.username || 'Anónimo' }}</p>
+                <p class="mb-1 message-text"><strong>Mensaje:</strong> {{ c.message || 'Sin mensaje' }}</p>
+                <div class="d-flex justify-content-between mt-2 align-items-center">
+                  <small class="text-muted">Fecha: {{ formatDate(c.date) }}</small>
+                  <span class="badge bg-gradient-lila text-white fs-6">+{{ c.amount }} €</span>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <p v-else class="text-muted">Aún no hay contribuciones.</p>
+        </section>
       </div>
     </section>
 
@@ -204,11 +178,30 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal de descripción -->
+    <div class="modal fade" id="descriptionModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Descripción completa</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body markdown-body" v-html="renderedDescription"></div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
+
 <script setup lang="ts">
   import { ref, onMounted, computed, onUnmounted } from 'vue';
+  import { marked } from 'marked';
+  import DOMPurify from 'dompurify';
   import { useRoute } from 'vue-router';
   import api from '@/services/api';
   import { useAuthStore } from '@/stores/auth';
@@ -243,6 +236,19 @@
   const images = computed(() => project.value.project_images || []);
   const mainImage = computed(() => {
     return images.value[currentImageIndex.value]?.image || '';
+  });
+
+  const renderMarkdown = (markdown: string) => {
+    const rawHtml = marked(markdown)
+    return DOMPurify.sanitize(String(rawHtml))
+  }
+
+  const renderedDescription = computed(() => renderMarkdown(project.value.description || ''))
+  const renderedTruncatedDescription = computed(() => {
+    const truncated = isTruncated.value
+    ? project.value.description.slice(0, limit)
+    : project.value.description;
+    return renderMarkdown(truncated)
   });
 
   async function fetchProject() {
@@ -324,17 +330,10 @@
     clearInterval(imageInterval);
   }
 
-  const limit = 2000
+  const limit = 1000
   const isTruncated = computed(() => {
     return project.value.description.length > limit
   })
-
-  const truncatedDescription = computed(() => {
-    return isTruncated.value
-      ? project.value.description.slice(0, limit)
-      : project.value.description
-  });
-
 
   onMounted(() => {
     fetchProject();
@@ -349,6 +348,14 @@
 <style scoped>
 .text-lila {
   color: #7c3aed;
+}
+
+.action-buttons {
+  max-width: 300px;
+}
+
+.action-buttons .btn {
+  font-size: 0.875rem;
 }
 
 .bg-lila {
@@ -418,6 +425,12 @@
   background: #7c3aed;
 }
 
+.image-carousel img {
+  width: 100%;
+  object-fit: contain;
+  transition: opacity 0.5s ease;
+}
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.5s ease;
@@ -426,6 +439,10 @@
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+.project-header {
+  gap: 2rem;
 }
 
 .btn-outline-danger-custom {
@@ -451,6 +468,129 @@
   transform: translateY(-2px);
   color: white;
   text-decoration: none;
+}
+
+.project-description .markdown-body {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.project-contributions .contrib-item {
+  background-color: #fff;
+}
+
+.markdown-body {
+  font-family: 'Inter', sans-serif;
+  color: #374151;
+  line-height: 1.7;
+  letter-spacing: 0.02em;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3 {
+  color: #1f2937;
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.markdown-body h1 { font-size: 2em; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.3em; }
+.markdown-body h2 { font-size: 1.75em; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.2em; }
+.markdown-body h3 { font-size: 1.5em; }
+
+.markdown-body p {
+  margin-bottom: 1em;
+}
+.markdown-body strong {
+  color: #111827;
+  font-weight: 600;
+}
+.markdown-body em {
+  color: #4b5563;
+  font-style: italic;
+}
+
+.markdown-body a {
+  color: #7c3aed;
+  text-decoration: none;
+  position: relative;
+}
+.markdown-body a::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: -2px;
+  width: 100%;
+  height: 2px;
+  background: #7c3aed;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+.markdown-body a:hover::after {
+  transform: scaleX(1);
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  margin: 1em 0;
+  padding-left: 1.5em;
+}
+.markdown-body li {
+  margin-bottom: 0.5em;
+}
+
+.markdown-body blockquote {
+  border-left: 4px solid #e5e7eb;
+  background: #f9fafb;
+  padding: 0.5em 1em;
+  color: #6b7280;
+  margin: 1.5em 0;
+  font-style: italic;
+}
+
+.markdown-body code {
+  background: #f3f4f6;
+  padding: 0.2em 0.4em;
+  border-radius: 0.3em;
+  font-family: Menlo, Consolas, monospace;
+  font-size: 0.95em;
+}
+.markdown-body pre {
+  background: #1f2937;
+  color: #f9fafb;
+  padding: 1em;
+  border-radius: 0.5em;
+  overflow-x: auto;
+  margin: 1em 0;
+}
+.markdown-body pre code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+  font-size: 0.9em;
+}
+
+.markdown-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1em 0;
+}
+.markdown-body th,
+.markdown-body td {
+  border: 1px solid #e5e7eb;
+  padding: 0.5em 0.75em;
+  text-align: left;
+}
+.markdown-body th {
+  background: #f3f4f6;
+  font-weight: 600;
+}
+
+.markdown-body img {
+  max-width: 100%;
+  border-radius: 0.5em;
+  margin: 1em 0;
 }
 
 </style>

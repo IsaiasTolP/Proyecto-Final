@@ -18,7 +18,7 @@ class UserSerializer(serializers.ModelSerializer):
         is_founder = validated_data.pop('is_founder')
         password = validated_data.pop('password')
         user = User.objects.create_user(**validated_data)
-        user.set_password(password) # Assures the password is hashed
+        user.set_password(password)
         user.save()
 
         if not is_founder:
@@ -31,11 +31,9 @@ class UserSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         password = validated_data.pop('password', None)
 
-        # Update other fields normally
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
 
-        # Set password properly if it was included
         if password:
             instance.set_password(password)
 

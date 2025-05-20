@@ -45,9 +45,6 @@
                 <p class="text-secondary small mb-2">
                   Categoría: {{ projectCategories.find(cat => cat.id === project.category)?.category }}
                 </p>
-                <p class="card-text text-secondary small flex-grow-1" style="line-height: 1.4;">
-                  {{ project.description.length > 140 ? project.description.slice(0, 140) + '...' : project.description }}
-                </p>
                 <router-link
                   :to="`/projects/${project.id}`"
                   class="btn-outline-secondary-custom mt-3 text-decoration-none text-center"

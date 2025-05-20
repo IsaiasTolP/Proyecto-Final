@@ -26,8 +26,12 @@ class ContributionSerializer(serializers.ModelSerializer):
         return value
     
     def validate_project(self, value: Project):
+        request = self.context.get('request')
+        user = request.user if request else None
         if not value.is_active:
             raise serializers.ValidationError("Project is already closed.")
+        if value.owner == user:
+            raise serializers.ValidationError("This project belongs to you")
         return value
     
     def validate(self, data):
