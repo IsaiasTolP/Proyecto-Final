@@ -3,10 +3,17 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils import timezone
 from datetime import datetime
+from unfold.forms import AdminPasswordChangeForm, UserChangeForm, UserCreationForm
+from unfold.admin import ModelAdmin
+from simple_history.admin import SimpleHistoryAdmin
 
 User = get_user_model()
 
-class UserAdmin(BaseUserAdmin):
+class UserAdmin(BaseUserAdmin, SimpleHistoryAdmin, ModelAdmin):
+
+    form = UserChangeForm
+    add_form = UserCreationForm
+    change_password_form = AdminPasswordChangeForm
 
     def changelist_view(self, request, extra_context=None):
         extra_context = extra_context or {}

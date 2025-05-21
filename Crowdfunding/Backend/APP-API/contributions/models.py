@@ -2,6 +2,7 @@ from django.db import models
 from projects.models import Project
 from django.conf import settings
 from PaymentMethod.models import PaymentMethod
+from simple_history.models import HistoricalRecords
 
 class Contribution(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
@@ -10,6 +11,7 @@ class Contribution(models.Model):
     project = models.ForeignKey(Project, related_name='project_contributions', on_delete=models.SET_NULL, null=True)
     contributor = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='user_contributions', on_delete=models.PROTECT)
     payment_method = models.ForeignKey(PaymentMethod, related_name='payment_method_contributions', on_delete=models.PROTECT)
+    history = HistoricalRecords()
 
     def __str__(self):
         return f'Contribution of {self.amount} to {self.project.name} by {self.contributor.username}'

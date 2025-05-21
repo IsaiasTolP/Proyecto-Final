@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from .utils import fernet
 from datetime import date
+from simple_history.models import HistoricalRecords
 
 class PaymentMethod(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='payment_methods', null=True)
@@ -9,6 +10,7 @@ class PaymentMethod(models.Model):
     card_number = models.BinaryField()
     cvv = models.BinaryField()
     expiration_date = models.DateField(null=True, blank=True)
+    history = HistoricalRecords()
 
     def save_card(self, card_number, cvv):
         if isinstance(card_number, str):
@@ -37,7 +39,7 @@ class PaymentMethod(models.Model):
         return fernet.decrypt(self.cvv).decode()
     
     def __str__(self):
-        return f'**** **** **** {self.get_card_number()[-4:]}'
+        return f'**** **** **** {self.get_card_number()[-4:]} de {self.user}'
     
     def is_expired(self):
         if not self.expiration_date:
