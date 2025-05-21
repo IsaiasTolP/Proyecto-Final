@@ -26,7 +26,7 @@ class PaymentMethod(models.Model):
     def save(self, *args, **kwargs):
         if isinstance(self.card_number, str) or isinstance(self.cvv, str):
             self.save_card(self.card_number, self.cvv)
-            super().save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
         if self.payment_method_contributions.exists():
