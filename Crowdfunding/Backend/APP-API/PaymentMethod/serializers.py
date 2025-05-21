@@ -30,12 +30,12 @@ class PaymentMethodSerializer(serializers.ModelSerializer):
         pm.save()
         return pm
     
-    def update(self, instance, validated_data):
+    def update(self, instance: PaymentMethod, validated_data):
         card_number = validated_data.pop('card_number', None)
         cvv = validated_data.pop('cvv', None)
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         if card_number or cvv:
-            instance.save_card(card_number or instance.card_number, cvv or instance.cvv)
+            instance.save(card_number or instance.card_number, cvv or instance.cvv)
         instance.save()
         return instance
