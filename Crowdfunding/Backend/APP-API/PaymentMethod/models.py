@@ -1,3 +1,4 @@
+import base64
 from django.db import models
 from django.conf import settings
 from .utils import fernet
@@ -12,14 +13,16 @@ class PaymentMethod(models.Model):
 
     def save_card(self, card_number, cvv):
         if isinstance(card_number, str):
-            self.card_number = fernet.encrypt(card_number.encode())
+            encrypted_card = fernet.encrypt(card_number.encode())
+            self.card_number = base64.b64encode(encrypted_card)
         elif isinstance(card_number, bytes):
             self.card_number = card_number
         else:
             raise ValueError("card_number debe ser una cadena o bytes")
 
         if isinstance(cvv, str):
-            self.cvv = fernet.encrypt(cvv.encode())
+            encrypted_cvv = fernet.encrypt(cvv.encode())
+            self.cvv = base64.b64encode(encrypted_cvv)
         elif isinstance(cvv, bytes):
             self.cvv = cvv
         else:
