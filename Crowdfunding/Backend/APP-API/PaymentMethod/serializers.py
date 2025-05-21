@@ -23,8 +23,13 @@ class PaymentMethodSerializer(serializers.ModelSerializer):
             return "****"
 
     def create(self, validated_data):
-        card_number = validated_data.pop('card_number')
-        cvv = validated_data.pop('cvv')
+        card_number = validated_data.pop('card_number', '')
+        cvv = validated_data.pop('cvv', '')
+        
+        # Validación adicional
+        if not isinstance(card_number, str) or not isinstance(cvv, str):
+            raise serializers.ValidationError("card_number y cvv deben ser strings.")
+        
         pm = PaymentMethod(**validated_data)
         pm.save_card(card_number, cvv)
         pm.save()
