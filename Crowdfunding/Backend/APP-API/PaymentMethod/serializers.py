@@ -26,8 +26,7 @@ class PaymentMethodSerializer(serializers.ModelSerializer):
         card_number = validated_data.pop('card_number')
         cvv = validated_data.pop('cvv')
         pm = PaymentMethod(**validated_data)
-        pm.save_card(card_number, cvv)
-        pm.save()
+        pm.save(card_number, cvv)
         return pm
     
     def update(self, instance: PaymentMethod, validated_data):
