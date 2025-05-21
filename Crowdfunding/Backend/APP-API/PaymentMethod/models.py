@@ -13,8 +13,12 @@ class PaymentMethod(models.Model):
     def save_card(self, card_number, cvv):
         if isinstance(card_number, str):
             self.card_number = fernet.encrypt(card_number.encode())
+        elif isinstance(card_number, bytes):
+            self.card_number = card_number
         if isinstance(cvv, str):
             self.cvv = fernet.encrypt(cvv.encode())
+        elif isinstance(cvv, bytes):
+            self.cvv = cvv
     
     def save(self, *args, **kwargs):
         self.save_card(self.card_number, self.cvv)
