@@ -336,7 +336,7 @@ Devuelve estadísticas globales:
 - Obtiene/actualiza usuario
 - Permisos: solo propio usuario
 
-# Importante para Windows: Es necesario tener unos contenedores de Docker con Django, Redis, Base de datos PostgreSQL(Se puede usar sqlite) para funcionar en desarrollo.
+# Importante para Windows: Es necesario tener unos contenedores de Docker con Django, Redis, Base de datos PostgreSQL(Se puede usar sqlite) para funcionar en desarrollo, en Linux se puede instalar todo en el equipo aunque no lo he probado y por tanto no lo recomiendo.
 - Una vez están todos los requisitos creados:
     - Generación de clave secret.key
     - Creación de variables de entorno en secret.key
@@ -345,5 +345,8 @@ Devuelve estadísticas globales:
     - `docker-compose build` --> Si no tienes permisos usa sudo o tira la terminal en administrador en windows.
     - `docker-compose up` --> Vuelve a usar permisos de administrador si es necesario.
 - Alternativamente podemos usar la interfaz con docker desktop.
+- Una vez montados los contenedores hay que hacer `python manage.py makemigrations` obligatoriamente, si no, no se crearán los historiales y fallarán las consultas. Una vez hecho esto `python manage.py migrate`.
+- Por último, si vamos a usar el administrador `python manage.py createsuperuser` y creamos nuestro usuario.
+- Para mandar correos hay que lanzar manualmente en una terminal `python manage.py rqworker`. Los antivirus fuertes cambian constantemente los certificados SSL asi que hay que desactivarlos para enviar correos.
 
 ## Comando para borrado de tareas encoladas en el worker (Se puede usar en el contenedor de desarrollo para impedir que se vayan acumulando tareas que no vamos a necesitar) --> rq empty default --url redis://redis:6379/0
