@@ -6,7 +6,6 @@ from unfold.admin import ModelAdmin
 from unfold.contrib.filters.admin import TextFilter
 from django.core.validators import EMPTY_VALUES
 from django.utils.translation import gettext_lazy
-from simple_history.admin import SimpleHistoryAdmin
 
 class PaymentMethodAdminForm(forms.ModelForm):
     card_number_plain = forms.CharField(max_length=16, required=True, help_text="Número de tarjeta")
@@ -35,7 +34,7 @@ class UsernameFilter(TextFilter):
         return queryset
 
 @admin.register(PaymentMethod)
-class PaymentMethodAdmin(SimpleHistoryAdmin, ModelAdmin):
+class PaymentMethodAdmin(ModelAdmin):
     list_filter_submit = True
     list_filter = [
         UsernameFilter
