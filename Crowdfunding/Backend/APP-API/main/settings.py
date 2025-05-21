@@ -113,7 +113,7 @@ DATABASES = {
         'NAME': os.getenv("POSTGRES_DB", "mydb"),
         'USER': os.getenv("POSTGRES_USER", "myuser"),
         'PASSWORD': os.getenv("POSTGRES_PASSWORD", "mypassword"),
-        'HOST': 'db', # Docker
+        'HOST': os.getenv("POSTGRES_HOST", "db"), # Docker
         'PORT': '5432',
     }
 }

@@ -22,9 +22,11 @@ WORKDIR /app
 # Copia los archivos del proyecto
 COPY . /app
 
-# Instala dependencias Python (usa tu requirements.txt)
+# Instala dependencias Python
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
+RUN python manage.py makemigrations
+RUN python manage.py migrate
 
 # Expón el puerto del servidor Django
 EXPOSE 8000
