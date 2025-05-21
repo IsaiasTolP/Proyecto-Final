@@ -61,12 +61,12 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import api from '@/services/api';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/swiper-bundle.css';
 import { Navigation } from 'swiper/modules';
 import type { Project, ProjectCategory } from '@/interfaces/Project';
 import FeaturedProjectCard from './FeaturedProjectCard.vue';
+import { getFeatured } from '@/services/sProject';
 
 const projects = ref<Project[]>([]);
 const router = useRouter();
@@ -80,8 +80,7 @@ defineProps<{
 
 onMounted(async () => {
   try {
-    const { data } = await api.get('/projects/list/featured/');
-    projects.value = data;
+    projects.value = await getFeatured();
   } catch (e) {
     console.error('Error al cargar los proyectos:', e);
   }

@@ -33,9 +33,9 @@
   import { onMounted, ref } from 'vue';
   import api from '@/services/api';
   import { useRoute } from 'vue-router';
-	import type { SimpleProject } from '@/interfaces/Project';
 	import type { Contribution } from '@/interfaces/Contribution';
   import GoBackBtn from '@/components/GoBackBtn.vue';
+  import { getSimpleProject } from '@/services/sProject';
 
   const route = useRoute();
   const userId = route.params.id
@@ -69,8 +69,7 @@
 
 	async function fetchProject(projectId: number) {
 		try {
-			const { data: simpleProject } = await api.get<SimpleProject>(`/projects/simple-project-list/${projectId}/`)
-			return simpleProject
+			return await getSimpleProject(projectId)
 		} catch(err: any) {
 			console.error('Error al obtener el perfil', err);
 			return null

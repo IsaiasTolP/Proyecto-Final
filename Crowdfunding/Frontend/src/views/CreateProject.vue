@@ -82,6 +82,7 @@
   import type { ProjectCategory } from '@/interfaces/Project';
   import { useMessageStore } from '@/stores/message';
   import GoBackBtn from '@/components/GoBackBtn.vue';
+  import { getCategories } from '@/services/sProject';
   
   const router = useRouter();
   const form = ref({
@@ -98,9 +99,8 @@
   const previewImages = ref<{ file: File; url: string }[]>([]);
   
   onMounted(async () => {
-    try {
-      const { data } = await api.get('/projects/categories/');
-      categories.value = data;
+    try {;
+      categories.value = await getCategories();
     } catch (e) {
       error.value = 'No se pudieron cargar las categorías.';
     }

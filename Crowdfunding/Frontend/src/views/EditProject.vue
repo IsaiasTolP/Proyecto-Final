@@ -76,6 +76,7 @@ import api from '@/services/api';
 import type { ProjectCategory } from '@/interfaces/Project';
 import { useMessageStore } from '@/stores/message';
 import GoBackBtn from '@/components/GoBackBtn.vue';
+import { getProject, getCategories, getProjectsImagesByProject } from '@/services/sProject';
 
 const route = useRoute();
 const router = useRouter();
@@ -97,10 +98,10 @@ const error = ref('');
 
 onMounted(async () => {
   try {
-    const [{ data: project }, { data: catData }, { data: projectImages }] = await Promise.all([
-      api.get(`/projects/list/${projectId}/`),
-      api.get('/projects/categories/'),
-      api.get(`/projects/project-images/?project=${projectId}`)
+    const [ project, catData, projectImages ] = await Promise.all([
+      getProject(projectId),
+      getCategories(),
+      getProjectsImagesByProject(projectId)
     ]);
 
     form.value = {

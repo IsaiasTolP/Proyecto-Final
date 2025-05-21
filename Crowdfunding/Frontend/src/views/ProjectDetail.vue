@@ -209,6 +209,7 @@
   import type { User } from '@/interfaces/Account';
   import type { Contribution } from '@/interfaces/Contribution';
   import GoBackBtn from '@/components/GoBackBtn.vue';
+  import { getCategory, getProject } from '@/services/sProject';
 
   const route = useRoute();
   const auth = useAuthStore();
@@ -256,10 +257,8 @@
     error.value = '';
     try {
       const id = route.params.id;
-      const projectData = await api.get<Project>(`/projects/list/${id}/`);
-      project.value = projectData.data;
-      const categoryData = await api.get<ProjectCategory>(`/projects/categories/${project.value.category}/`);
-      projectCategory.value = categoryData.data;
+      project.value = await getProject(Number(id));
+      projectCategory.value = await getCategory(project.value.category);
     } catch (err: any) {
       error.value = 'Error al cargar el proyecto.';
     } finally {

@@ -68,6 +68,7 @@ import { useRoute, useRouter } from 'vue-router';
 import api from '@/services/api';
 import { useAuthStore } from '@/stores/auth';
 import type { Project, ProjectCategory } from '@/interfaces/Project';
+import { getCategories } from '@/services/sProject';
 
 const projects = ref<Project[]>([]);
 const projectCategories = ref<ProjectCategory[]>([]);
@@ -85,11 +86,11 @@ onMounted(async () => {
           ordering: '-start_date'
         }
       }),
-      api.get<ProjectCategory[]>('/projects/categories/')
+      getCategories()
     ]);
 
     projects.value = projectData.data;
-    projectCategories.value = categoriesData.data;
+    projectCategories.value = categoriesData;
 
     // Si la URL ya tiene un filtro al cargar
     const initialCategory = route.query.category as string;

@@ -42,8 +42,8 @@
 <script setup lang="ts">
 import { ref, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
-import api from '@/services/api';
 import type { Project } from '@/interfaces/Project';
+import { getProjectByQuery } from '@/services/sProject';
 
 const route = useRoute();
 const query = ref<string>(route.query.query as string || '');
@@ -56,9 +56,8 @@ watchEffect(async () => {
 
   loading.value = true;
   error.value = '';
-  try {
-    const { data } = await api.get(`/projects/list/?search=${encodeURIComponent(query.value)}`);
-    projects.value = data;
+  try {;
+    projects.value = await getProjectByQuery(query.value);
   } catch (e) {
     error.value = 'Error al buscar proyectos.';
     console.error(e);

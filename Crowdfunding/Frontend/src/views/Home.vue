@@ -15,15 +15,14 @@ import HowItWorks from '@/components/HowItWorks.vue';
 import SearchByCategories from '@/components/SearchByCategories.vue';
 import Impact from '@/components/Impact.vue';
 import { onMounted, ref } from 'vue';
-import api from '@/services/api';
 import type { ProjectCategory } from '@/interfaces/Project';
+import { getCategories } from '@/services/sProject';
 
   const projectCategories = ref<ProjectCategory[]>([]);
 
 	onMounted(async () => {
 		try {
-			const { data: categories } = await api.get('/projects/categories/');
-			projectCategories.value = categories;
+			projectCategories.value = await getCategories();
 		} catch (error: any) {
 			console.log('Error al cargar las categorías:', error);
 		}

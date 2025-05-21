@@ -39,10 +39,10 @@
 </template>
 
 <script setup lang="ts">
-	import api from '@/services/api';
 	import { onMounted, ref } from 'vue';
 	import type { ProjectCategory, Project } from '@/interfaces/Project';
 	import router from '@/router';
+  import { getLatest } from '@/services/sProject';
 
 	const projects = ref<Project[]>([]);
 
@@ -57,8 +57,7 @@
 
 	onMounted(async () => {
 		try {
-			const { data: projectsData } = await api.get('/projects/list/latest/');
-			projects.value = projectsData;
+			projects.value = await getLatest();
 		} catch (error: any) {
 			console.log('Error al cargar los proyectos:', error);
 		}
