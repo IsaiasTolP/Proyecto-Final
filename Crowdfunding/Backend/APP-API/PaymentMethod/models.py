@@ -4,26 +4,22 @@ from .utils import fernet
 from datetime import date
 
 class PaymentMethod(models.Model):
-    user = models.ForeignKey(
-    settings.AUTH_USER_MODEL,
-    on_delete=models.CASCADE,
-    related_name='payment_methods',
-    null=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='payment_methods', null=True)
     holder_name = models.CharField(max_length=100)
     card_number = models.BinaryField()
     cvv = models.BinaryField()
     expiration_date = models.DateField(null=True, blank=True)
 
-    @staticmethod
-    def encrypt_text(text: str) -> bytes:
-        return fernet.encrypt(text.encode())
-
-    def get_card_number(self) -> str:
-        return fernet.decrypt(self.card_number).decode()
-
-    def get_cvv(self) -> str:
-        return fernet.decrypt(self.cvv).decode()
+    def save_card(self, card_number, cvv):
+        if isinstance(card_number, str):
+            self.card_number = fernet.encrypt(card_number.encode())
+        if isinstance(cvv, str):
+            self.cvv = fernet.encrypt(cvv.encode())
     
+    def save(self, *args, **kwargs):
+        self.save_card(self.card_number, self.cvv)
+        super().save(*args, **kwargs)
+
     def delete(self, *args, **kwargs):
         if self.payment_method_contributions.exists():
             self.user = None
@@ -34,12 +30,19 @@ class PaymentMethod(models.Model):
         else:
             super().delete(*args, **kwargs)
 
+    def get_card_number(self):
+        return fernet.decrypt(self.card_number).decode()
+    
+    def get_cvv(self):
+        return fernet.decrypt(self.cvv).decode()
+    
     def __str__(self):
         try:
             return f'**** **** **** {self.get_card_number()[-4:]} de {self.user}'
         except Exception:
-            return f'Método de pago inválido de {self.user}'
-
-    def is_expired(self) -> bool:
-        return not self.expiration_date or self.expiration_date < date.today()
-
+            return 'Método de pago inválido'
+    
+    def is_expired(self):
+        if not self.expiration_date:
+            return True
+        return self.expiration_date < date.today()
