@@ -190,7 +190,7 @@ REST_FRAMEWORK = {
 # CORS settings
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
-    
+    'https://crowdfundme-production.up.railway.app'
 ]
 
 # CSRF settings
