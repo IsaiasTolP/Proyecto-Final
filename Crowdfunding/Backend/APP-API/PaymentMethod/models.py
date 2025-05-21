@@ -13,12 +13,21 @@ class PaymentMethod(models.Model):
     def save_card(self, card_number, cvv):
         if isinstance(card_number, str):
             self.card_number = fernet.encrypt(card_number.encode())
+        elif isinstance(card_number, bytes):
+            self.card_number = card_number
+        else:
+            raise ValueError("card_number debe ser una cadena o bytes")
+
         if isinstance(cvv, str):
             self.cvv = fernet.encrypt(cvv.encode())
+        elif isinstance(cvv, bytes):
+            self.cvv = cvv
+        else:
+            raise ValueError("cvv debe ser una cadena o bytes")
     
-    def save(self, *args, **kwargs):
-        self.save_card(self.card_number, self.cvv)
-        super().save(*args, **kwargs)
+    #  def save(self, *args, **kwargs):
+    #      self.save_card(self.card_number, self.cvv)
+    #      super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
         if self.payment_method_contributions.exists():
