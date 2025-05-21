@@ -3,32 +3,27 @@ from django.conf import settings
 from .utils import fernet
 from datetime import date
 
-
 class PaymentMethod(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='payment_methods', null=True)
+    user = models.ForeignKey(
+    settings.AUTH_USER_MODEL,
+    on_delete=models.CASCADE,
+    related_name='payment_methods',
+    null=True)
     holder_name = models.CharField(max_length=100)
     card_number = models.BinaryField()
     cvv = models.BinaryField()
     expiration_date = models.DateField(null=True, blank=True)
 
-    def encrypt_if_needed(self, value):
-        if isinstance(value, str):
-            return fernet.encrypt(value.encode())
-        elif isinstance(value, bytes):
-            return value
-        raise ValueError("Valor no válido para cifrado")
+    @staticmethod
+    def encrypt_text(text: str) -> bytes:
+        return fernet.encrypt(text.encode())
 
-    def save(self, *args, **kwargs):
-        self.card_number = self.encrypt_if_needed(self.card_number)
-        self.cvv = self.encrypt_if_needed(self.cvv)
-        super().save(*args, **kwargs)
-
-    def get_card_number(self):
+    def get_card_number(self) -> str:
         return fernet.decrypt(self.card_number).decode()
 
-    def get_cvv(self):
+    def get_cvv(self) -> str:
         return fernet.decrypt(self.cvv).decode()
-
+    
     def delete(self, *args, **kwargs):
         if self.payment_method_contributions.exists():
             self.user = None
@@ -45,7 +40,6 @@ class PaymentMethod(models.Model):
         except Exception:
             return f'Método de pago inválido de {self.user}'
 
-    def is_expired(self):
-        if not self.expiration_date:
-            return True
-        return self.expiration_date < date.today()
+    def is_expired(self) -> bool:
+        return not self.expiration_date or self.expiration_date < date.today()
+
