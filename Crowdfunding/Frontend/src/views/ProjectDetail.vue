@@ -30,7 +30,7 @@
               <button class="carousel-btn" @click="prevImage" aria-label="Imagen anterior">‹</button>
               <div class="d-flex gap-2 mx-3">
                 <span
-                  v-for="(img, idx) in images"
+                  v-for="(_img, idx) in images"
                   :key="idx"
                   class="indicator"
                   :class="{ active: idx === currentImageIndex }"

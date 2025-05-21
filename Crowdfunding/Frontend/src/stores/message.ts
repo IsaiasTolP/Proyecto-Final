@@ -10,7 +10,7 @@ export const useMessageStore = defineStore("message", () => {
         message.value = msg;
         type.value = t;
         if (!persist) {
-            router.beforeEach((to, from, next) => {
+            router.beforeEach((_to, _from, next) => {
                 clearMessage();
                 next();
             })

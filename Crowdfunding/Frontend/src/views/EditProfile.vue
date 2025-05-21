@@ -74,7 +74,7 @@
           <h5 class="form-label mb-3">Redes Sociales</h5>
 
           <div
-            v-for="(url, key) in form.social_media"
+            v-for="(_url, key) in form.social_media"
             :key="key"
             class="social-input d-flex align-items-center mb-2"
           >
