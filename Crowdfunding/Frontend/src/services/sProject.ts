@@ -47,7 +47,7 @@ async function getProjectsImages() {
 }
 
 async function getProjectsImagesByProject(id: number) {
-    const { data } = await api.get<ProjectImage>(`/projects/project-images/?project=${id}`)
+    const { data } = await api.get<ProjectImage[]>(`/projects/project-images/?project=${id}`)
     return data;
 }
 
