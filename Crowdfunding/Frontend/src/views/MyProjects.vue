@@ -93,6 +93,7 @@ const userId = authStore.user?.id
 // Para eliminar
 const showModal = ref(false)
 const projectToDelete = ref<number | null>(null)
+// Para patrocinar
 const showFeatureModal = ref(false)
 const selectedProjectId = ref<number | null>(null)
 

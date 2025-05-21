@@ -1,7 +1,6 @@
 <template>
   <body v-if="projects.length">
     <main class="container py-4">
-      <!-- Cabecera idéntica -->
       <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
         <div>
           <h2 class="fw-semibold mb-1" style="font-size: 1.5rem; line-height: 1.25;">Proyectos Destacados</h2>
@@ -17,7 +16,6 @@
       <!-- SWITCH: slider si hay más de 3, si no la grid normal -->
       <template v-if="projects.length > 3">
         <div class="projects-slider-wrapper position-relative">
-          <!-- Botones fuera del slider -->
           <button class="custom-swiper-button-prev" ref="prevEl">‹</button>
           <button class="custom-swiper-button-next" ref="nextEl">›</button>
         
