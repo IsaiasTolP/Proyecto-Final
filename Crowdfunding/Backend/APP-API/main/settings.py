@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-za3!1us&owvkt3%i=#dv@v@*1sn4v157w)ku^ky!4c-6f^j5ep
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['proyecto-final-production-d438.up.railway.app']
 
 
 # Application definition
@@ -189,7 +189,8 @@ REST_FRAMEWORK = {
 
 # CORS settings
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:5173',  # Vite dev server
+    'http://localhost:5173',
+    
 ]
 
 ## RQ config

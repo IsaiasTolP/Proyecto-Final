@@ -29,5 +29,5 @@ RUN pip install -r requirements.txt
 # Expón el puerto del servidor Django
 EXPOSE 8000
 
-# Comando por defecto (puedes modificarlo si usas entrypoint)
+# Comando por defecto
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
