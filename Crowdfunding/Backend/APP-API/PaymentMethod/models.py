@@ -2,7 +2,6 @@ from django.db import models
 from django.conf import settings
 from .utils import fernet
 from datetime import date
-from simple_history.models import HistoricalRecords
 
 
 class PaymentMethod(models.Model):
@@ -11,7 +10,6 @@ class PaymentMethod(models.Model):
     card_number = models.BinaryField()
     cvv = models.BinaryField()
     expiration_date = models.DateField(null=True, blank=True)
-    history = HistoricalRecords()
 
     def encrypt_if_needed(self, value):
         if isinstance(value, str):
