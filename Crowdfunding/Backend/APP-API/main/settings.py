@@ -193,6 +193,11 @@ CORS_ALLOWED_ORIGINS = [
     
 ]
 
+# CSRF settings
+CSRF_TRUSTED_ORIGINS = [
+    "https://proyecto-final-production-d438.up.railway.app",
+]
+
 ## RQ config
 RQ_QUEUES = {
     'default': {
