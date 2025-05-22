@@ -33,7 +33,7 @@
             </div>
             <div class="d-flex align-items-center gap-1">
               <i class="fas fa-link"></i>
-              <a href="#" class="text-secondary">{{ profile.website }}</a>
+              <a :href="`${profile.website}`" class="text-secondary">{{ profile.website }}</a>
             </div>
             <div class="d-flex align-items-center gap-1">
               <i class="fas fa-envelope"></i>
