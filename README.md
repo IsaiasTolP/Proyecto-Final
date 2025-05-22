@@ -1,6 +1,9 @@
 # Proyecto-Final
 Este repositorio corresponde al proyecto final de 2º DAW
 
+# LA DOCUMENTACIÓN DEL BACKEND ESTÁ EN EL README DE ESA CARPETA
+# LA DOCUMENTACIÓN DEL FRONTEND ESTÁ EN EL README DE ESA CARPETA
+
 ## Requisitos del proyecto
 1. Módulo APL: Auntenticación y roles
 - Inicio de sesión: Los usuarios deberán iniciar sesión para acceder a ciertas partes de la aplicación.
