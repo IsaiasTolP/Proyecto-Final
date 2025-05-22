@@ -1,4 +1,3 @@
-import base64
 from django.db import models
 from django.conf import settings
 from .utils import fernet
@@ -13,16 +12,14 @@ class PaymentMethod(models.Model):
 
     def save_card(self, card_number, cvv):
         if isinstance(card_number, str):
-            encrypted_card = fernet.encrypt(card_number.encode())
-            self.card_number = base64.b64encode(encrypted_card)
+            self.card_number = fernet.encrypt(card_number.encode())
         elif isinstance(card_number, bytes):
             self.card_number = card_number
         else:
             raise ValueError("card_number debe ser una cadena o bytes")
 
         if isinstance(cvv, str):
-            encrypted_cvv = fernet.encrypt(cvv.encode())
-            self.cvv = base64.b64encode(encrypted_cvv)
+            self.cvv = fernet.encrypt(cvv.encode())
         elif isinstance(cvv, bytes):
             self.cvv = cvv
         else:
@@ -43,10 +40,20 @@ class PaymentMethod(models.Model):
             super().delete(*args, **kwargs)
 
     def get_card_number(self):
-        return fernet.decrypt(self.card_number).decode()
-    
+        try:
+            encrypted_data = bytes(self.card_number) if not isinstance(self.card_number, bytes) else self.card_number
+            return fernet.decrypt(encrypted_data).decode()
+        except Exception as e:
+            print(f"Error desencriptando card_number: {e}")
+            return "****"
+
     def get_cvv(self):
-        return fernet.decrypt(self.cvv).decode()
+        try:
+            encrypted_data = bytes(self.cvv) if not isinstance(self.cvv, bytes) else self.cvv
+            return fernet.decrypt(encrypted_data).decode()
+        except Exception as e:
+            print(f"Error desencriptando cvv: {e}")
+            return "***"
     
     def __str__(self):
         try:

@@ -26,7 +26,6 @@ class PaymentMethodSerializer(serializers.ModelSerializer):
         card_number = validated_data.pop('card_number', '')
         cvv = validated_data.pop('cvv', '')
         
-        # Validación adicional
         if not isinstance(card_number, str) or not isinstance(cvv, str):
             raise serializers.ValidationError("card_number y cvv deben ser strings.")
         
@@ -34,7 +33,7 @@ class PaymentMethodSerializer(serializers.ModelSerializer):
         pm.save_card(card_number, cvv)
         pm.save()
         return pm
-    
+
     def update(self, instance: PaymentMethod, validated_data):
         card_number = validated_data.pop('card_number', None)
         cvv = validated_data.pop('cvv', None)
@@ -55,3 +54,10 @@ class PaymentMethodSerializer(serializers.ModelSerializer):
         
         instance.save()
         return instance
+
+    def to_internal_value(self, data):
+        if 'card_number' in data and not isinstance(data['card_number'], str):
+            raise serializers.ValidationError({"card_number": "Debe ser una cadena."})
+        if 'cvv' in data and not isinstance(data['cvv'], str):
+            raise serializers.ValidationError({"cvv": "Debe ser una cadena."})
+        return super().to_internal_value(data)
